@@ -1,0 +1,8 @@
+#!/bin/bash
+#SBATCH --job-name=RSN
+#SBATCH -o %x.%J.out
+#SBATCH --cpus-per-task=48
+#SBATCH --mem 180G
+#SBATCH -p batch
+#### SBATCH -w c04
+bash fpga.sh
