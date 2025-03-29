@@ -212,8 +212,6 @@ RSN-XNN-FPGA.........................top-level directory for RSN-XNN FPGA build
 |__init_env.sh.......................script for sourcing environment variables
 |__compile_hw.sh.....................launch command for hardware compilation
 |__Makefile..........................top-level makefile with recipes for building the design
-|__dma_hls_csynth.rpt................example report referencing HLS-based (C/C++) synthesis 
-|__full_util_routed.rpt..............example report containing overall resource utilization after routing
 |__design............................contains all source code and configuration files for the design
    |__aie_src........................AI Engine source files (Runing at AIE)
    |__directives.....................additional build directives or constraints
@@ -223,4 +221,7 @@ RSN-XNN-FPGA.........................top-level directory for RSN-XNN FPGA build
    |__profiling_configs..............contains xrt.ini configuration file
    |__system_configs.................specifies system-level connections between FPGA, AIE, and CPU 
    |__host_different_config..........alternative host_app_src folders for testing different problem settings
+   |__dma_hls_csynth.rpt.............reference RSN-XNN report for HLS-based (C/C++) synthesis 
+   |__full_util_routed.rpt...........reference RSN-XNN report containing overall resource utilization after routing
+
 ```
