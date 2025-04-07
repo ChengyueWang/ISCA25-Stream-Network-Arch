@@ -135,7 +135,7 @@ You can use **`isca25-rsn.sif`** (available at [Zenodo](https://doi.org/10.5281/
 1. Install apptainer
 2. Build the sandbox container:
    ```bash
-   apptainer build --sandbox isca25-ae-sandbox isca25-rsn.sif
+   apptainer build --sandbox isca25-rsn-sandbox isca25-rsn.sif
    ```
 3. Specify `SANDBOX_LOC` and `CUR_RSN_WORKSPACE` in `env.sh`.
 4. Run the BERT script:
