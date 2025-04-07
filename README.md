@@ -175,7 +175,7 @@ After completion, you should see a `python_gold/` folder under `BERT_HuggingFace
 
 2. Configuration
    In `env.sh`, specify the following environment variables:
-   - `CUR_RSN_WORKSPACE`: Path to the `Reconfig-Stream-Network-Arch` repository  
+   - `CUR_RSN_WORKSPACE`: Path to the `ISCA25-Stream-Network-Arch` repository  
    - `VITIS_LIB`: Path to the directory where you git cloned `Vitis_Libraries`  
    - `XILINX_INSTALL_PATH`: Path where Vitis (and related tools like Vivado, Vitis_HLS) is installed; typically `/tools/Xilinx`  
    - `VERSAL_COMMON_LOC`: Path to the unzipped “Versal common image” (`xilinx-versal-common-v2024.1`) downloaded from  
