@@ -128,7 +128,7 @@ Example (in macOS):
    ```
 
 
-## Get `python_gold.zip` Using BERT_HuggingFace/ (Approximate 20 Minutes)
+## Generate Reference Data: Get `python_gold.zip` Using BERT_HuggingFace/ (Approximate 20 Minutes)
 
 You can use **`isca25-rsn.sif`** (available at [Zenodo](https://doi.org/10.5281/zenodo.15102698))—a container with all the required packages installed to generate the `python_gold.zip` file.
 
