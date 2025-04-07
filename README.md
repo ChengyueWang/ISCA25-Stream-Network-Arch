@@ -132,12 +132,12 @@ Example (in macOS):
 
 You can use **`isca25-rsn.sif`** (available at [Zenodo](https://doi.org/10.5281/zenodo.15102698))—a container with all the required packages installed to generate the `python_gold.zip` file.
 
-1. Specify `SANDBOX_LOC` and `CUR_RSN_WORKSPACE` in `env.sh`.
-2. Install apptainer
-3. Build the sandbox container:
+1. Install apptainer
+2. Build the sandbox container:
    ```bash
    apptainer build --sandbox isca25-ae-sandbox isca25-ae.sif
    ```
+3. Specify `SANDBOX_LOC` and `CUR_RSN_WORKSPACE` in `env.sh`.
 4. Run the BERT script:
    ```bash
    ./bert.sh
