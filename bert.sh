@@ -1,4 +1,4 @@
-./env.sh
+source env.sh 
 module load apptainer
 chmod +wxr -R $CUR_RSN_WORKSPACE
 export CUR_RSN_WORKSPACE_IN_CONTAINER=$(realpath --relative-to="$HOME" "$CUR_RSN_WORKSPACE")
