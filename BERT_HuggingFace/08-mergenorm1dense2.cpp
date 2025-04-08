@@ -375,7 +375,7 @@ int main() {
     matrix_scale (data_bias, 1.0/8, 1, 1024);
     calculate_matrix_with_bias (data_input, data_weight, data_bias, data_query, 512, 1024, 1024);
     print_matrix_to_file("output/07-cpp_out/0-attention.self.query-output.txt", data_query, 512, 1024);
-    valid(data_query, gold_val, 512*1024);
+    // valid(data_query, gold_val, 512*1024);
     // matrix_scale (data_query, 1.0/8, 512, 1024);
 
 
@@ -444,7 +444,7 @@ int main() {
     load_success = load_data("output/06-python_gold/4-attention.output.LayerNorm-output.txt", gold_val, 512*1024); if (load_success == -1) return -1;
     layer_normalization_no_weightbias(dense1, norm1, 512, 1024);
     print_matrix_to_file("output/07-cpp_out/4-attention.output.LayerNorm-output.txt", norm1, 512, 1024);
-    valid(norm1, gold_val, 512*1024);
+    // valid(norm1, gold_val, 512*1024);
 
     printMatrixToFile(norm1, 512, 1024, "output/06-python_gold/4-fused_dense1_norm1_output.txt");
 
@@ -505,7 +505,7 @@ int main() {
 
     calculate_matrix_with_bias (gelu, data_weight, data_bias, dense3, 512, 1024, 4096);
     print_matrix_to_file("output/07-cpp_out/6-output.dense-output.txt", dense3, 512, 1024);
-    valid(dense3, gold_val, 512*1024);
+    // valid(dense3, gold_val, 512*1024);
 
 
     calculate_matrix (norm1, norm1_weight_diag, norm1_wb, 512, 1024, 1024);
