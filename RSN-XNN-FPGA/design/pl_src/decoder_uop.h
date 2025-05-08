@@ -2,23 +2,14 @@
 #include "common.h"
 
 void mop2uop_memcore_A(
-#ifdef SW_EMU_PRINT
-    int core_id,
-#endif
     hls::stream<mop_memcore_A_type> &stream_mOP_memcore_A,
     hls::stream<uop_memcore_A_type> &stream_uOP_memcore_A);
 
 void mop2uop_memcore_B(
-#ifdef SW_EMU_PRINT
-    int core_id,
-#endif
     hls::stream<mop_memcore_B_type> &stream_mOP_memcore_B,
     hls::stream<uop_memcore_B_type> &stream_uOP_memcore_B);
 
 void mop2uop_memcore_C(
-#ifdef SW_EMU_PRINT
-    int core_id,
-#endif
     hls::stream<mop_memcore_C_type> &stream_mOP_memcore_C,
     hls::stream<uop_memcore_C_type> &stream_uOP_memcore_C);
 
