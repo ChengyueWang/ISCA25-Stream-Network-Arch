@@ -15,11 +15,8 @@
 
 extern "C" {
 
-#ifdef SW_EMU_PRINT
-int dma_hls(
-#else
+
 void dma_hls(
-#endif
 
     ap_uint<512>* inB_port0, ap_uint<512>* inB_port1, ap_uint<512>* ddr_port0,
     ap_uint<512>* ddr_port1, uint32_t* vliw_mem,
@@ -655,24 +652,7 @@ void dma_hls(
   hls_thread_local hls::stream<uop_mesh_sendA_type> stream_uOP_mesh_sendA;
   hls_thread_local hls::stream<uop_mesh_sendB_type> stream_uOP_mesh_sendB;
 
-#ifdef HW_EMU
-#pragma HLS STREAM variable = stream_uOP_ddr depth = 16
-#pragma HLS STREAM variable = stream_uOP_loadB_dram depth = 16
-#pragma HLS STREAM variable = stream_uOP_memcore0_A depth = 16
-#pragma HLS STREAM variable = stream_uOP_memcore1_A depth = 16
-#pragma HLS STREAM variable = stream_uOP_memcore2_A depth = 16
-#pragma HLS STREAM variable = stream_uOP_memcore0_B depth = 16
-#pragma HLS STREAM variable = stream_uOP_memcore1_B depth = 16
-#pragma HLS STREAM variable = stream_uOP_memcore2_B depth = 16
-#pragma HLS STREAM variable = stream_uOP_memcore0_C depth = 16
-#pragma HLS STREAM variable = stream_uOP_memcore1_C depth = 16
-#pragma HLS STREAM variable = stream_uOP_memcore2_C depth = 16
-#pragma HLS STREAM variable = stream_uOP_memcore3_C depth = 16
-#pragma HLS STREAM variable = stream_uOP_memcore4_C depth = 16
-#pragma HLS STREAM variable = stream_uOP_memcore5_C depth = 16
-#pragma HLS STREAM variable = stream_uOP_mesh_sendA depth = 16
-#pragma HLS STREAM variable = stream_uOP_mesh_sendB depth = 16
-#endif
+
 
   hls_thread_local hls::stream<ap_uint<64>> from_memCore0_to_mesh_A0_CASC0,
       from_memCore0_to_mesh_A0_CASC1, from_memCore0_to_mesh_A0_CASC2,
@@ -828,12 +808,8 @@ void dma_hls(
   loadB_from_dram(stream_uOP_loadB_dram, inB_port0, inB_port1, stream_from_lpddr_to_memCoreB0,
                   stream_from_lpddr_to_memCoreB1);
 
-#ifdef SW_EMU_PRINT
-  hls_thread_local hls::task ddr_task(
-      ddr,
-#else
+
   ddr(
-#endif
       stream_uOP_ddr, ddr_port0, ddr_port1, stream_from_ddr_to_memCoreA0,
       stream_from_ddr_to_memCoreA1, stream_from_ddr_to_memCoreA2, stream_from_ddr_to_memCoreB0,
       stream_from_ddr_to_memCoreB1, stream_from_ddr_to_memCoreB2, stream_from_ddr_to_memCoreC0,
@@ -841,18 +817,10 @@ void dma_hls(
       stream_from_ddr_to_memCoreC4, stream_from_ddr_to_memCoreC5, stream_to_ddr_from_memCoreC0,
       stream_to_ddr_from_memCoreC1, stream_to_ddr_from_memCoreC2, stream_to_ddr_from_memCoreC3,
       stream_to_ddr_from_memCoreC4, stream_to_ddr_from_memCoreC5
-#ifdef SW_EMU_PRINT
-      ,
-      return_stream
-#endif
   );
 
-#ifdef SW_EMU_PRINT
-  hls_thread_local hls::task memcore_A_task0(
-      memcore_A, 0,
-#else
+
   memcore_A(
-#endif
       stream_uOP_memcore0_A, stream_from_ddr_to_memCoreA0, from_memCore0_to_mesh_A0_CASC0,
       from_memCore0_to_mesh_A0_CASC1, from_memCore0_to_mesh_A0_CASC2,
       from_memCore0_to_mesh_A0_CASC3, from_memCore0_to_mesh_A1_CASC0,
@@ -863,12 +831,8 @@ void dma_hls(
       from_memCore0_to_mesh_A3_CASC1, from_memCore0_to_mesh_A3_CASC2,
       from_memCore0_to_mesh_A3_CASC3);
 
-#ifdef SW_EMU_PRINT
-  hls_thread_local hls::task memcore_A_task1(
-      memcore_A, 1,
-#else
+
   memcore_A(
-#endif
       stream_uOP_memcore1_A, stream_from_ddr_to_memCoreA1, from_memCore1_to_mesh_A0_CASC0,
       from_memCore1_to_mesh_A0_CASC1, from_memCore1_to_mesh_A0_CASC2,
       from_memCore1_to_mesh_A0_CASC3, from_memCore1_to_mesh_A1_CASC0,
@@ -879,12 +843,8 @@ void dma_hls(
       from_memCore1_to_mesh_A3_CASC1, from_memCore1_to_mesh_A3_CASC2,
       from_memCore1_to_mesh_A3_CASC3);
 
-#ifdef SW_EMU_PRINT
-  hls_thread_local hls::task memcore_A_task2(
-      memcore_A, 2,
-#else
+
   memcore_A(
-#endif
       stream_uOP_memcore2_A, stream_from_ddr_to_memCoreA2, from_memCore2_to_mesh_A0_CASC0,
       from_memCore2_to_mesh_A0_CASC1, from_memCore2_to_mesh_A0_CASC2,
       from_memCore2_to_mesh_A0_CASC3, from_memCore2_to_mesh_A1_CASC0,
@@ -895,12 +855,8 @@ void dma_hls(
       from_memCore2_to_mesh_A3_CASC1, from_memCore2_to_mesh_A3_CASC2,
       from_memCore2_to_mesh_A3_CASC3);
 
-#ifdef SW_EMU_PRINT
-  hls_thread_local hls::task memcore_B_task0(
-      memcore_B, 0,
-#else
+
   memcore_B(
-#endif
       stream_uOP_memcore0_B, stream_from_ddr_to_memCoreB0, stream_from_lpddr_to_memCoreB0,
       from_memCore0_to_mesh_B0_CASC0, from_memCore0_to_mesh_B0_CASC1,
       from_memCore0_to_mesh_B0_CASC2, from_memCore0_to_mesh_B0_CASC3,
@@ -911,12 +867,7 @@ void dma_hls(
       from_memCore0_to_mesh_B3_CASC0, from_memCore0_to_mesh_B3_CASC1,
       from_memCore0_to_mesh_B3_CASC2, from_memCore0_to_mesh_B3_CASC3);
 
-#ifdef SW_EMU_PRINT
-  hls_thread_local hls::task memcore_B_task1(
-      memcore_B, 1,
-#else
   memcore_B(
-#endif
       stream_uOP_memcore1_B, stream_from_ddr_to_memCoreB1, stream_from_lpddr_to_memCoreB1,
       from_memCore1_to_mesh_B0_CASC0, from_memCore1_to_mesh_B0_CASC1,
       from_memCore1_to_mesh_B0_CASC2, from_memCore1_to_mesh_B0_CASC3,
@@ -926,12 +877,8 @@ void dma_hls(
       from_memCore1_to_mesh_B2_CASC2, from_memCore1_to_mesh_B2_CASC3,
       from_memCore1_to_mesh_B3_CASC0, from_memCore1_to_mesh_B3_CASC1,
       from_memCore1_to_mesh_B3_CASC2, from_memCore1_to_mesh_B3_CASC3);
-#ifdef SW_EMU_PRINT
-  hls_thread_local hls::task memcore_B_colmajor_task(
-      memcore_B_colmajor, 2,
-#else
+
   memcore_B_colmajor(
-#endif
       stream_uOP_memcore2_B, stream_from_ddr_to_memCoreB2, from_memCore2_to_mesh_B0_CASC0,
       from_memCore2_to_mesh_B0_CASC1, from_memCore2_to_mesh_B0_CASC2,
       from_memCore2_to_mesh_B0_CASC3, from_memCore2_to_mesh_B1_CASC0,
@@ -941,12 +888,8 @@ void dma_hls(
       from_memCore2_to_mesh_B2_CASC3, from_memCore2_to_mesh_B3_CASC0,
       from_memCore2_to_mesh_B3_CASC1, from_memCore2_to_mesh_B3_CASC2,
       from_memCore2_to_mesh_B3_CASC3);
-#ifdef SW_EMU_PRINT
-  hls_thread_local hls::task memcore_C_to_mesh_task0(
-      memcore_C_to_mesh, 0,
-#else
+
   memcore_C_to_mesh(
-#endif
       stream_uOP_memcore0_C, stream_to_ddr_from_memCoreC0, stream_from_ddr_to_memCoreC0,
       from_computeCore0_C00, from_computeCore0_C01, from_computeCore0_C02, from_computeCore0_C03,
       from_computeCore0_C10, from_computeCore0_C11, from_computeCore0_C12, from_computeCore0_C13,
@@ -961,12 +904,8 @@ void dma_hls(
       from_memCore0_to_mesh_C3_CASC0, from_memCore0_to_mesh_C3_CASC1,
       from_memCore0_to_mesh_C3_CASC2, from_memCore0_to_mesh_C3_CASC3, data_channel_core0to1,
       data_channel_core0to1_recvmesh, data_channel_core1to0, data_channel_core1to0_recvmesh);
-#ifdef SW_EMU_PRINT
-  hls_thread_local hls::task memcore_C_to_mesh_task1(
-      memcore_C_to_mesh, 1,
-#else
+
   memcore_C_to_mesh(
-#endif
       stream_uOP_memcore1_C, stream_to_ddr_from_memCoreC1, stream_from_ddr_to_memCoreC1,
       from_computeCore1_C00, from_computeCore1_C01, from_computeCore1_C02, from_computeCore1_C03,
       from_computeCore1_C10, from_computeCore1_C11, from_computeCore1_C12, from_computeCore1_C13,
@@ -981,12 +920,8 @@ void dma_hls(
       from_memCore1_to_mesh_C3_CASC0, from_memCore1_to_mesh_C3_CASC1,
       from_memCore1_to_mesh_C3_CASC2, from_memCore1_to_mesh_C3_CASC3, data_channel_core1to0,
       data_channel_core1to0_recvmesh, data_channel_core0to1, data_channel_core0to1_recvmesh);
-#ifdef SW_EMU_PRINT
-  hls_thread_local hls::task memcore_C_to_mesh_task2(
-      memcore_C_to_mesh, 2,
-#else
+
   memcore_C_to_mesh(
-#endif
       stream_uOP_memcore2_C, stream_to_ddr_from_memCoreC2, stream_from_ddr_to_memCoreC2,
       from_computeCore2_C00, from_computeCore2_C01, from_computeCore2_C02, from_computeCore2_C03,
       from_computeCore2_C10, from_computeCore2_C11, from_computeCore2_C12, from_computeCore2_C13,
@@ -1001,12 +936,8 @@ void dma_hls(
       from_memCore2_to_mesh_C3_CASC0, from_memCore2_to_mesh_C3_CASC1,
       from_memCore2_to_mesh_C3_CASC2, from_memCore2_to_mesh_C3_CASC3, data_channel_core2to3,
       data_channel_core2to3_recvmesh, data_channel_core3to2, data_channel_core3to2_recvmesh);
-#ifdef SW_EMU_PRINT
-  hls_thread_local hls::task memcore_C_to_mesh_task3(
-      memcore_C_to_mesh, 3,
-#else
+
   memcore_C_to_mesh(
-#endif
       stream_uOP_memcore3_C, stream_to_ddr_from_memCoreC3, stream_from_ddr_to_memCoreC3,
       from_computeCore3_C00, from_computeCore3_C01, from_computeCore3_C02, from_computeCore3_C03,
       from_computeCore3_C10, from_computeCore3_C11, from_computeCore3_C12, from_computeCore3_C13,
@@ -1022,101 +953,8 @@ void dma_hls(
       from_memCore3_to_mesh_C3_CASC2, from_memCore3_to_mesh_C3_CASC3, data_channel_core3to2,
       data_channel_core3to2_recvmesh, data_channel_core2to3, data_channel_core2to3_recvmesh);
 
-#ifdef SW_EMU_PRINT
-  hls_thread_local hls::task memcore_C_to_mesh_task4(
-      memcore_C, 4, stream_uOP_memcore4_C, stream_to_ddr_from_memCoreC4,
-      stream_from_ddr_to_memCoreC4, from_computeCore4_C00, from_computeCore4_C01,
-      from_computeCore4_C02, from_computeCore4_C03, from_computeCore4_C10, from_computeCore4_C11,
-      from_computeCore4_C12, from_computeCore4_C13, from_computeCore4_C20, from_computeCore4_C21,
-      from_computeCore4_C22, from_computeCore4_C23, from_computeCore4_C30, from_computeCore4_C31,
-      from_computeCore4_C32, from_computeCore4_C33, data_channel_core4to5, data_channel_core5to4);
 
-  hls_thread_local hls::task memcore_C_to_mesh_task5(
-      memcore_C, 5, stream_uOP_memcore5_C, stream_to_ddr_from_memCoreC5,
-      stream_from_ddr_to_memCoreC5, from_computeCore5_C00, from_computeCore5_C01,
-      from_computeCore5_C02, from_computeCore5_C03, from_computeCore5_C10, from_computeCore5_C11,
-      from_computeCore5_C12, from_computeCore5_C13, from_computeCore5_C20, from_computeCore5_C21,
-      from_computeCore5_C22, from_computeCore5_C23, from_computeCore5_C30, from_computeCore5_C31,
-      from_computeCore5_C32, from_computeCore5_C33, data_channel_core5to4, data_channel_core4to5);
-#endif
 
-#ifdef SW_EMU_PRINT
-  hls_thread_local hls::stream<uop_mesh_sendB_type> stream_uOP_mesh_sendB_split_casc0,
-      stream_uOP_mesh_sendB_split_casc1, stream_uOP_mesh_sendB_split_casc2,
-      stream_uOP_mesh_sendB_split_casc3;
-  hls_thread_local hls::task duplicate_uop_meshB_task(
-      duplicate_uop_meshB, stream_uOP_mesh_sendB, stream_uOP_mesh_sendB_split_casc0,
-      stream_uOP_mesh_sendB_split_casc1, stream_uOP_mesh_sendB_split_casc2,
-      stream_uOP_mesh_sendB_split_casc3);
-  hls_thread_local hls::task mesh_sendB_task_casc0(
-      mesh_sendB_split, 0, stream_uOP_mesh_sendB_split_casc0, from_memCore0_to_mesh_B0_CASC0,
-      from_memCore0_to_mesh_B1_CASC0, from_memCore0_to_mesh_B2_CASC0,
-      from_memCore0_to_mesh_B3_CASC0, from_memCore1_to_mesh_B0_CASC0,
-      from_memCore1_to_mesh_B1_CASC0, from_memCore1_to_mesh_B2_CASC0,
-      from_memCore1_to_mesh_B3_CASC0, from_memCore2_to_mesh_B0_CASC0,
-      from_memCore2_to_mesh_B1_CASC0, from_memCore2_to_mesh_B2_CASC0,
-      from_memCore2_to_mesh_B3_CASC0, to_computeCore0_B0_CASC0, to_computeCore0_B1_CASC0,
-      to_computeCore0_B2_CASC0, to_computeCore0_B3_CASC0, to_computeCore1_B0_CASC0,
-      to_computeCore1_B1_CASC0, to_computeCore1_B2_CASC0, to_computeCore1_B3_CASC0,
-      to_computeCore2_B0_CASC0, to_computeCore2_B1_CASC0, to_computeCore2_B2_CASC0,
-      to_computeCore2_B3_CASC0, to_computeCore3_B0_CASC0, to_computeCore3_B1_CASC0,
-      to_computeCore3_B2_CASC0, to_computeCore3_B3_CASC0, to_computeCore4_B0_CASC0,
-      to_computeCore4_B1_CASC0, to_computeCore4_B2_CASC0, to_computeCore4_B3_CASC0,
-      to_computeCore5_B0_CASC0, to_computeCore5_B1_CASC0, to_computeCore5_B2_CASC0,
-      to_computeCore5_B3_CASC0);
-
-  hls_thread_local hls::task mesh_sendB_task_casc1(
-      mesh_sendB_split, 1, stream_uOP_mesh_sendB_split_casc1, from_memCore0_to_mesh_B0_CASC1,
-      from_memCore0_to_mesh_B1_CASC1, from_memCore0_to_mesh_B2_CASC1,
-      from_memCore0_to_mesh_B3_CASC1, from_memCore1_to_mesh_B0_CASC1,
-      from_memCore1_to_mesh_B1_CASC1, from_memCore1_to_mesh_B2_CASC1,
-      from_memCore1_to_mesh_B3_CASC1, from_memCore2_to_mesh_B0_CASC1,
-      from_memCore2_to_mesh_B1_CASC1, from_memCore2_to_mesh_B2_CASC1,
-      from_memCore2_to_mesh_B3_CASC1, to_computeCore0_B0_CASC1, to_computeCore0_B1_CASC1,
-      to_computeCore0_B2_CASC1, to_computeCore0_B3_CASC1, to_computeCore1_B0_CASC1,
-      to_computeCore1_B1_CASC1, to_computeCore1_B2_CASC1, to_computeCore1_B3_CASC1,
-      to_computeCore2_B0_CASC1, to_computeCore2_B1_CASC1, to_computeCore2_B2_CASC1,
-      to_computeCore2_B3_CASC1, to_computeCore3_B0_CASC1, to_computeCore3_B1_CASC1,
-      to_computeCore3_B2_CASC1, to_computeCore3_B3_CASC1, to_computeCore4_B0_CASC1,
-      to_computeCore4_B1_CASC1, to_computeCore4_B2_CASC1, to_computeCore4_B3_CASC1,
-      to_computeCore5_B0_CASC1, to_computeCore5_B1_CASC1, to_computeCore5_B2_CASC1,
-      to_computeCore5_B3_CASC1);
-
-  hls_thread_local hls::task mesh_sendB_task_casc2(
-      mesh_sendB_split, 2, stream_uOP_mesh_sendB_split_casc2, from_memCore0_to_mesh_B0_CASC2,
-      from_memCore0_to_mesh_B1_CASC2, from_memCore0_to_mesh_B2_CASC2,
-      from_memCore0_to_mesh_B3_CASC2, from_memCore1_to_mesh_B0_CASC2,
-      from_memCore1_to_mesh_B1_CASC2, from_memCore1_to_mesh_B2_CASC2,
-      from_memCore1_to_mesh_B3_CASC2, from_memCore2_to_mesh_B0_CASC2,
-      from_memCore2_to_mesh_B1_CASC2, from_memCore2_to_mesh_B2_CASC2,
-      from_memCore2_to_mesh_B3_CASC2, to_computeCore0_B0_CASC2, to_computeCore0_B1_CASC2,
-      to_computeCore0_B2_CASC2, to_computeCore0_B3_CASC2, to_computeCore1_B0_CASC2,
-      to_computeCore1_B1_CASC2, to_computeCore1_B2_CASC2, to_computeCore1_B3_CASC2,
-      to_computeCore2_B0_CASC2, to_computeCore2_B1_CASC2, to_computeCore2_B2_CASC2,
-      to_computeCore2_B3_CASC2, to_computeCore3_B0_CASC2, to_computeCore3_B1_CASC2,
-      to_computeCore3_B2_CASC2, to_computeCore3_B3_CASC2, to_computeCore4_B0_CASC2,
-      to_computeCore4_B1_CASC2, to_computeCore4_B2_CASC2, to_computeCore4_B3_CASC2,
-      to_computeCore5_B0_CASC2, to_computeCore5_B1_CASC2, to_computeCore5_B2_CASC2,
-      to_computeCore5_B3_CASC2);
-
-  hls_thread_local hls::task mesh_sendB_task_casc3(
-      mesh_sendB_split, 3, stream_uOP_mesh_sendB_split_casc3, from_memCore0_to_mesh_B0_CASC3,
-      from_memCore0_to_mesh_B1_CASC3, from_memCore0_to_mesh_B2_CASC3,
-      from_memCore0_to_mesh_B3_CASC3, from_memCore1_to_mesh_B0_CASC3,
-      from_memCore1_to_mesh_B1_CASC3, from_memCore1_to_mesh_B2_CASC3,
-      from_memCore1_to_mesh_B3_CASC3, from_memCore2_to_mesh_B0_CASC3,
-      from_memCore2_to_mesh_B1_CASC3, from_memCore2_to_mesh_B2_CASC3,
-      from_memCore2_to_mesh_B3_CASC3, to_computeCore0_B0_CASC3, to_computeCore0_B1_CASC3,
-      to_computeCore0_B2_CASC3, to_computeCore0_B3_CASC3, to_computeCore1_B0_CASC3,
-      to_computeCore1_B1_CASC3, to_computeCore1_B2_CASC3, to_computeCore1_B3_CASC3,
-      to_computeCore2_B0_CASC3, to_computeCore2_B1_CASC3, to_computeCore2_B2_CASC3,
-      to_computeCore2_B3_CASC3, to_computeCore3_B0_CASC3, to_computeCore3_B1_CASC3,
-      to_computeCore3_B2_CASC3, to_computeCore3_B3_CASC3, to_computeCore4_B0_CASC3,
-      to_computeCore4_B1_CASC3, to_computeCore4_B2_CASC3, to_computeCore4_B3_CASC3,
-      to_computeCore5_B0_CASC3, to_computeCore5_B1_CASC3, to_computeCore5_B2_CASC3,
-      to_computeCore5_B3_CASC3);
-
-#else
   mesh_sendB(stream_uOP_mesh_sendB, from_memCore0_to_mesh_B0_CASC0, from_memCore0_to_mesh_B0_CASC1,
              from_memCore0_to_mesh_B0_CASC2, from_memCore0_to_mesh_B0_CASC3,
              from_memCore0_to_mesh_B1_CASC0, from_memCore0_to_mesh_B1_CASC1,
@@ -1173,7 +1011,6 @@ void dma_hls(
              to_computeCore5_B1_CASC3, to_computeCore5_B2_CASC0, to_computeCore5_B2_CASC1,
              to_computeCore5_B2_CASC2, to_computeCore5_B2_CASC3, to_computeCore5_B3_CASC0,
              to_computeCore5_B3_CASC1, to_computeCore5_B3_CASC2, to_computeCore5_B3_CASC3);
-#endif
 
   mesh_sendA(stream_uOP_mesh_sendA, from_memCore0_to_mesh_A0_CASC0, from_memCore0_to_mesh_A0_CASC1,
              from_memCore0_to_mesh_A0_CASC2, from_memCore0_to_mesh_A0_CASC3,
@@ -1266,8 +1103,7 @@ void dma_hls(
              to_computeCore5_A2_CASC2, to_computeCore5_A2_CASC3, to_computeCore5_A3_CASC0,
              to_computeCore5_A3_CASC1, to_computeCore5_A3_CASC2, to_computeCore5_A3_CASC3);
 
-#ifdef SW_EMU_PRINT
-#else
+
   memcore_C(stream_uOP_memcore4_C, stream_to_ddr_from_memCoreC4, stream_from_ddr_to_memCoreC4,
             from_computeCore4_C00, from_computeCore4_C01, from_computeCore4_C02,
             from_computeCore4_C03, from_computeCore4_C10, from_computeCore4_C11,
@@ -1284,12 +1120,8 @@ void dma_hls(
             from_computeCore5_C30, from_computeCore5_C31, from_computeCore5_C32,
             from_computeCore5_C33, data_channel_core5to4, data_channel_core4to5);
 
-#endif
 
-#ifdef SW_EMU_PRINT
-  return return_stream.read();
-#else
+
   return;
-#endif
 }
 }
