@@ -2,9 +2,6 @@
 #include "common.h"
 
 void memcore_A(
-#ifdef SW_EMU_PRINT
-    int core_id,
-#endif
 
     hls::stream<uop_memcore_A_type>& stream_uOP_memcore_A,
     hls::stream<ap_uint<1024>>& stream_from_dramA,
