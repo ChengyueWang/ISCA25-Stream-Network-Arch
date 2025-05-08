@@ -2,9 +2,6 @@
 #include "common.h"
 
 void memcore_C_to_mesh(
-#ifdef SW_EMU_PRINT
-    int core_id,
-#endif
 
     hls::stream<uop_memcore_C_type> &stream_uOP_memcore_C,
     hls::stream<ap_uint<1024>> &stream_to_ddr, hls::stream<ap_uint<1024>> &stream_from_ddr,
