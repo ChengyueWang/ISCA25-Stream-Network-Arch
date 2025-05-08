@@ -277,11 +277,8 @@ void storeC_to_dramStream_to_mesh(
 #pragma HLS PIPELINE II = 1
         float v0 = data_channel_from_neighbour.read();
         v0 += var_buf[row];
-#ifdef SW_EMU_PRINT
-        var_buf[row] = sqrt(v0 + 1e-6);
-#else
+
         var_buf[row] = hls::sqrtf(v0 + 1e-6);
-#endif
       }
 
 
