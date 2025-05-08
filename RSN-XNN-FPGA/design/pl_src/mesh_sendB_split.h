@@ -2,9 +2,6 @@
 #include "common.h"
 
 void mesh_sendB_split(
-#ifdef SW_EMU_PRINT
-    int core_id,
-#endif
 
     hls::stream<uop_mesh_sendB_type> &stream_uOP_mesh_sendB,
     hls::stream<ap_uint<64>> &from_memCore0_to_mesh_B0_CASC0,
