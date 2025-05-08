@@ -14,8 +14,7 @@
 
 #include "hls_math.h"
 
-// #define SW_EMU_PRINT
-// #define HW_EMU
+
 
 #define OPCODE_NULL 0
 #define OPCODE_DDR_DRAM 1
