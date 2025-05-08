@@ -23,20 +23,7 @@ void ddr(hls::stream<uop_ddr_type> &stream_uOP_ddr, ap_uint<512> *ddr_port0,
          hls::stream<ap_uint<1024>> &stream_to_dramC_from_memCore3,
          hls::stream<ap_uint<1024>> &stream_to_dramC_from_memCore4,
          hls::stream<ap_uint<1024>> &stream_to_dramC_from_memCore5
-#ifdef SW_EMU_PRINT
-         ,
-         hls::stream<bool> &return_stream
-#endif
 ) {
-
-#ifdef SW_EMU_PRINT
-  std::ofstream outFile(
-      "/home/cw4/github/versal-float32/20-inputlen384/design/pl_src/output/ddr.txt",
-      std::ios_base::app);
-  if (!outFile.is_open()) {
-    std::cerr << "Unable to open file for writing." << std::endl;
-  }
-#endif
 
   uop_ddr_type uOP;
   bool is_last_uOP = false;
@@ -45,11 +32,6 @@ WHILE_LOOP:
     uOP = stream_uOP_ddr.read();
     is_last_uOP = uOP.is_last_uOP;
 
-#ifdef SW_EMU_PRINT
-    outFile << "uOP.is_load = " << uOP.is_load << " uOP.is_store = " << uOP.is_store
-            << " uOP.start_address = " << uOP.start_address
-            << " uOP.chunck_size = " << uOP.chunck_size << std::endl;
-#endif
 
     if (uOP.is_load == true) {
       for (uint32_t e = 0; e < uOP.chunck_size / 16; e = e + 128) {
@@ -78,14 +60,6 @@ WHILE_LOOP:
             stream_from_dramA_to_memCoreB2.write(temp);
           }
 
-#ifdef SW_EMU_PRINT
-          for (int word = 0; word < 32; word++) {  // outFile
-            UNION_FP_UINT32 temp_union;
-            temp_union.uint32_val = temp(word * 32 + 31, word * 32);  // outFile
-            outFile << temp_union.float_val << " ";
-          }
-          outFile << std::endl;
-#endif
         }
       }
     } else if (uOP.is_store == true) {
@@ -111,25 +85,11 @@ WHILE_LOOP:
           ddr_port0[uOP.start_address + e + s] = temp(511, 0);
           ddr_port1[uOP.start_address + e + s + 64] = temp(1023, 512);
 
-#ifdef SW_EMU_PRINT
-          for (int word = 0; word < 32; word++) {  // outFile
-            UNION_FP_UINT32 temp_union;
-            temp_union.uint32_val = temp(word * 32 + 31, word * 32);  // outFile
-            outFile << temp_union.float_val << " ";
-          }
-          outFile << std::endl;
-#endif
         }
       }
     }
   }
 
-#ifdef SW_EMU_PRINT
-  return_stream.write(true);
-#endif
 
-#ifdef SW_EMU_PRINT
-  outFile << "EXIT ddr  ==========================   ";
-  outFile.close();
-#endif
+
 }
