@@ -1,9 +1,5 @@
 #include "memcore_C.h"
 
-#ifdef SW_EMU_PRINT
-
-#else
-
 float my_tanh(float t_in) {
 #pragma HLS inline recursive
   static const int exp_bias = fp_struct<float>::EXP_BIAS;
@@ -60,15 +56,11 @@ float my_tanh(float t_in) {
   };
 }
 
-#endif
 
 float gelu(float x) {
   float x1;
-#ifdef SW_EMU_PRINT
-  x1 = 0.5f * x * (1.0f + tanh(0.7978845608f * (x + 0.044715f * x * x * x)));
-#else
+
   x1 = 0.5f * x * (1.0f + my_tanh(0.7978845608f * (x + 0.044715f * x * x * x)));
-#endif
   return x1;
 }
 
@@ -163,23 +155,13 @@ init_C:
 }
 
 void storeC_to_dramStream(
-#ifdef SW_EMU_PRINT
-    int core_id,
-#endif
+
     float buf_C[BUFC_DIM1][BUFC_DIM2 / 2][2], bool enable_store_to_dram, ap_uint<9> size_dim1,
     ap_uint<10> size_dim2, hls::stream<ap_uint<1024>> &stream_to_ddr, bool enable_layer_norm,
     bool enable_gelu, hls::stream<ap_uint<1024>> &stream_from_ddr,
     hls::stream<float> &data_channel_to_neighbour,
     hls::stream<float> &data_channel_from_neighbour) {
-#ifdef SW_EMU_PRINT
-  std::ofstream outFile(
-      "/home/cw4/github/versal-float32/20-inputlen384/design/pl_src/output/memcoreC" +
-          std::to_string(core_id) + "_storeC_to_dramStream.txt",
-      std::ios_base::app);
-  if (!outFile.is_open()) {
-    std::cerr << "Unable to open file for writing." << std::endl;
-  }
-#endif
+
 
 #pragma HLS STREAM variable = data_channel_to_neighbour depth = 256 type = fifo
 #pragma HLS STREAM variable = data_channel_from_neighbour depth = 256 type = fifo
@@ -200,9 +182,6 @@ void storeC_to_dramStream(
     }
 
     if (enable_layer_norm) {
-#ifdef SW_EMU_PRINT
-      outFile << " enable_layer_norm " << std::endl;
-#endif
 
       float mean_buf[256];
 #pragma HLS ARRAY_PARTITION variable = mean_buf dim = 1 cyclic factor = 4
@@ -245,12 +224,7 @@ void storeC_to_dramStream(
         data_channel_to_neighbour.write(v0);
       }
 
-#ifdef SW_EMU_PRINT
-      outFile << "mean_buf before " << std::endl;
-      for (uint16_t row = 0; row < 256; row++) {
-        outFile << "mean_buf[" << row << "] " << mean_buf[row] << std::endl;
-      }
-#endif
+
 
     RECV_MEAN:
       for (uint16_t row = 0; row < size_dim1; row = row + 1) {
@@ -258,12 +232,7 @@ void storeC_to_dramStream(
         mean_buf[row] += data_channel_from_neighbour.read();
       }
 
-#ifdef SW_EMU_PRINT
-      outFile << "mean_buf after" << std::endl;
-      for (uint16_t row = 0; row < 256; row++) {
-        outFile << "mean_buf[" << row << "] " << mean_buf[row] << std::endl;
-      }
-#endif
+
 
     // calculate variance
     CAL_VAR:
@@ -288,12 +257,7 @@ void storeC_to_dramStream(
         }
       }
 
-#ifdef SW_EMU_PRINT
-      outFile << "var_buf before" << std::endl;
-      for (uint16_t row = 0; row < 256; row++) {
-        outFile << "var_buf[" << row << "] " << var_buf[row] << std::endl;
-      }
-#endif
+
 
     SEND_VAR:
       for (uint16_t row = 0; row < size_dim1; row = row + 1) {
@@ -308,19 +272,10 @@ void storeC_to_dramStream(
 #pragma HLS PIPELINE II = 1
         float v0 = data_channel_from_neighbour.read();
         v0 += var_buf[row];
-#ifdef SW_EMU_PRINT
-        var_buf[row] = sqrt(v0 + 1e-6);
-#else
+
         var_buf[row] = hls::sqrtf(v0 + 1e-6);
-#endif
       }
 
-#ifdef SW_EMU_PRINT
-      outFile << "var_buf after" << std::endl;
-      for (uint16_t row = 0; row < 256; row++) {
-        outFile << "var_buf[" << row << "] " << var_buf[row] << std::endl;
-      }
-#endif
 
     // normalize
     NROM:
@@ -817,16 +772,12 @@ WHILE_LOOP:
 
     if (is_computing_buf1 == 1) {
       storeC_to_dramStream(
-#ifdef SW_EMU_PRINT
-          core_id,
-#endif
+
           buf0_C, enable_store_to_dram, one_mem_tile_dim1, one_mem_tile_dim2, stream_to_ddr,
           enable_layer_norm, enable_gelu, stream_from_ddr, data_channel_to_neighbour,
           data_channel_from_neighbour);
       recvC_from_aie(
-#ifdef SW_EMU_PRINT
-          core_id,
-#endif
+
           buf1_C, enable_recv_from_aie, enable_gelu, k_iter, one_compute_tile_dim1,
           one_compute_tile_dim2, compute_tile_recv_access_A, compute_tile_recv_access_B,
           from_computeCore0_C00, from_computeCore0_C01, from_computeCore0_C02,
@@ -837,16 +788,12 @@ WHILE_LOOP:
           from_computeCore0_C33);
     } else {
       storeC_to_dramStream(
-#ifdef SW_EMU_PRINT
-          core_id,
-#endif
+
           buf1_C, enable_store_to_dram, one_mem_tile_dim1, one_mem_tile_dim2, stream_to_ddr,
           enable_layer_norm, enable_gelu, stream_from_ddr, data_channel_to_neighbour,
           data_channel_from_neighbour);
       recvC_from_aie(
-#ifdef SW_EMU_PRINT
-          core_id,
-#endif
+
           buf0_C, enable_recv_from_aie, enable_gelu, k_iter, one_compute_tile_dim1,
           one_compute_tile_dim2, compute_tile_recv_access_A, compute_tile_recv_access_B,
           from_computeCore0_C00, from_computeCore0_C01, from_computeCore0_C02,
@@ -863,8 +810,5 @@ WHILE_LOOP:
       is_computing_buf1 = 1;
     }
   }
-#ifdef SW_EMU_PRINT
-  outFile << "EXIT memcore_C   ==========================   ";
-  outFile.close();
-#endif
+
 }
