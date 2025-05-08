@@ -2,9 +2,6 @@
 #include "common.h"
 
 void memcore_B(
-#ifdef SW_EMU_PRINT
-    int core_id,
-#endif
 
     hls::stream<uop_memcore_B_type> &stream_uOP_memcore_B,
     hls::stream<ap_uint<1024>> &stream_from_ddr, hls::stream<ap_uint<1024>> &stream_from_lpddr,
