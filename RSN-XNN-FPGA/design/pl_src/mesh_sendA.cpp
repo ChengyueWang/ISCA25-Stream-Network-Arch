@@ -241,14 +241,7 @@ void mesh_sendA(hls::stream<uop_mesh_sendA_type> &stream_uOP_mesh_sendA,
                 hls::stream<ap_axiu<64, 0, 0, 0>> &to_computeCore5_A3_CASC3
 
 ) {
-#ifdef SW_EMU_PRINT
-  std::ofstream outFile(
-      "/home/cw4/github/versal-float32/20-inputlen384/design/pl_src/output/mesh_sendA.txt",
-      std::ios_base::app);
-  if (!outFile.is_open()) {
-    std::cerr << "Unable to open file for writing." << std::endl;
-  }
-#endif
+
 
   uop_mesh_sendA_type uOP;
   bool is_last_uOP = false;
@@ -259,9 +252,7 @@ WHILE_LOOP:
     is_last_uOP = uOP.is_last_uOP;
   FOR_UOPSIZE:
     for (ap_int<32> i = 0; i < uOP.size; i++) {
-#ifdef SW_EMU_PRINT
-      outFile << "i: " << i << std::endl;
-#endif
+
 #pragma HLS PIPELINE II = 1
       ap_uint<64> memCore0_A0_CASC0, memCore0_A0_CASC1, memCore0_A0_CASC2, memCore0_A0_CASC3;
       ap_uint<64> memCore0_A1_CASC0, memCore0_A1_CASC1, memCore0_A1_CASC2, memCore0_A1_CASC3;
@@ -650,77 +641,6 @@ WHILE_LOOP:
       }
 
       if (uOP.memcoreA0_to_computecore0) {
-#ifdef SW_EMU_PRINT
-        outFile << "core0 ";
-        UNION_FP_UINT32 temp_union;
-        temp_union.uint32_val = computeCore0_A0_CASC0(31, 0);
-        outFile << temp_union.float_val << " ";
-        temp_union.uint32_val = computeCore0_A0_CASC0(63, 32);
-        outFile << temp_union.float_val << " ";
-        temp_union.uint32_val = computeCore0_A0_CASC1(31, 0);
-        outFile << temp_union.float_val << " ";
-        temp_union.uint32_val = computeCore0_A0_CASC1(63, 32);
-        outFile << temp_union.float_val << " ";
-        temp_union.uint32_val = computeCore0_A0_CASC2(31, 0);
-        outFile << temp_union.float_val << " ";
-        temp_union.uint32_val = computeCore0_A0_CASC2(63, 32);
-        outFile << temp_union.float_val << " ";
-        temp_union.uint32_val = computeCore0_A0_CASC3(31, 0);
-        outFile << temp_union.float_val << " ";
-        temp_union.uint32_val = computeCore0_A0_CASC3(63, 32);
-        outFile << temp_union.float_val << " ";
-
-        temp_union.uint32_val = computeCore0_A1_CASC0(31, 0);
-        outFile << temp_union.float_val << " ";
-        temp_union.uint32_val = computeCore0_A1_CASC0(63, 32);
-        outFile << temp_union.float_val << " ";
-        temp_union.uint32_val = computeCore0_A1_CASC1(31, 0);
-        outFile << temp_union.float_val << " ";
-        temp_union.uint32_val = computeCore0_A1_CASC1(63, 32);
-        outFile << temp_union.float_val << " ";
-        temp_union.uint32_val = computeCore0_A1_CASC2(31, 0);
-        outFile << temp_union.float_val << " ";
-        temp_union.uint32_val = computeCore0_A1_CASC2(63, 32);
-        outFile << temp_union.float_val << " ";
-        temp_union.uint32_val = computeCore0_A1_CASC3(31, 0);
-        outFile << temp_union.float_val << " ";
-        temp_union.uint32_val = computeCore0_A1_CASC3(63, 32);
-        outFile << temp_union.float_val << " ";
-
-        temp_union.uint32_val = computeCore0_A2_CASC0(31, 0);
-        outFile << temp_union.float_val << " ";
-        temp_union.uint32_val = computeCore0_A2_CASC0(63, 32);
-        outFile << temp_union.float_val << " ";
-        temp_union.uint32_val = computeCore0_A2_CASC1(31, 0);
-        outFile << temp_union.float_val << " ";
-        temp_union.uint32_val = computeCore0_A2_CASC1(63, 32);
-        outFile << temp_union.float_val << " ";
-        temp_union.uint32_val = computeCore0_A2_CASC2(31, 0);
-        outFile << temp_union.float_val << " ";
-        temp_union.uint32_val = computeCore0_A2_CASC2(63, 32);
-        outFile << temp_union.float_val << " ";
-        temp_union.uint32_val = computeCore0_A2_CASC3(31, 0);
-        outFile << temp_union.float_val << " ";
-        temp_union.uint32_val = computeCore0_A2_CASC3(63, 32);
-        outFile << temp_union.float_val << " ";
-
-        temp_union.uint32_val = computeCore0_A3_CASC0(31, 0);
-        outFile << temp_union.float_val << " ";
-        temp_union.uint32_val = computeCore0_A3_CASC0(63, 32);
-        outFile << temp_union.float_val << " ";
-        temp_union.uint32_val = computeCore0_A3_CASC1(31, 0);
-        outFile << temp_union.float_val << " ";
-        temp_union.uint32_val = computeCore0_A3_CASC1(63, 32);
-        outFile << temp_union.float_val << " ";
-        temp_union.uint32_val = computeCore0_A3_CASC2(31, 0);
-        outFile << temp_union.float_val << " ";
-        temp_union.uint32_val = computeCore0_A3_CASC2(63, 32);
-        outFile << temp_union.float_val << " ";
-        temp_union.uint32_val = computeCore0_A3_CASC3(31, 0);
-        outFile << temp_union.float_val << " ";
-        temp_union.uint32_val = computeCore0_A3_CASC3(63, 32);
-        outFile << temp_union.float_val << " ";
-#endif
 
         meshA_write_to_computecore(computeCore0_A0_CASC0, to_computeCore0_A0_CASC0);
         meshA_write_to_computecore(computeCore0_A0_CASC1, to_computeCore0_A0_CASC1);
@@ -740,12 +660,7 @@ WHILE_LOOP:
         meshA_write_to_computecore(computeCore0_A3_CASC3, to_computeCore0_A3_CASC3);
       }
       if (uOP.memcoreA0_to_computecore1) {
-#ifdef SW_EMU_PRINT
-        outFile << "core1 ";
-        UNION_FP_UINT32 temp_union;
-        temp_union.uint32_val = computeCore1_A0_CASC0(31, 0);
-        outFile << temp_union.float_val << " ";
-#endif
+
 
         meshA_write_to_computecore(computeCore1_A0_CASC0, to_computeCore1_A0_CASC0);
         meshA_write_to_computecore(computeCore1_A0_CASC1, to_computeCore1_A0_CASC1);
@@ -766,12 +681,6 @@ WHILE_LOOP:
       }
 
       if (uOP.memcoreA1_to_computecore2) {
-#ifdef SW_EMU_PRINT
-        outFile << "core2 ";
-        UNION_FP_UINT32 temp_union;
-        temp_union.uint32_val = computeCore2_A0_CASC0(31, 0);
-        outFile << temp_union.float_val << " ";
-#endif
 
         meshA_write_to_computecore(computeCore2_A0_CASC0, to_computeCore2_A0_CASC0);
         meshA_write_to_computecore(computeCore2_A0_CASC1, to_computeCore2_A0_CASC1);
@@ -792,12 +701,7 @@ WHILE_LOOP:
       }
 
       if (uOP.memcoreA1_to_computecore3) {
-#ifdef SW_EMU_PRINT
-        outFile << "core3 ";
-        UNION_FP_UINT32 temp_union;
-        temp_union.uint32_val = computeCore3_A0_CASC0(31, 0);
-        outFile << temp_union.float_val << " ";
-#endif
+
 
         meshA_write_to_computecore(computeCore3_A0_CASC0, to_computeCore3_A0_CASC0);
         meshA_write_to_computecore(computeCore3_A0_CASC1, to_computeCore3_A0_CASC1);
@@ -819,12 +723,7 @@ WHILE_LOOP:
 
       if (uOP.memcoreA2_to_computecore4 || uOP.memcoreC0_to_computecore4 ||
           uOP.memcoreC1_to_computecore4) {
-#ifdef SW_EMU_PRINT
-        outFile << "core4 ";
-        UNION_FP_UINT32 temp_union;
-        temp_union.uint32_val = computeCore4_A0_CASC0(31, 0);
-        outFile << temp_union.float_val << " ";
-#endif
+
 
         meshA_write_to_computecore(computeCore4_A0_CASC0, to_computeCore4_A0_CASC0);
         meshA_write_to_computecore(computeCore4_A0_CASC1, to_computeCore4_A0_CASC1);
@@ -845,12 +744,6 @@ WHILE_LOOP:
       }
       if (uOP.memcoreA2_to_computecore5 || uOP.memcoreC2_to_computecore5 ||
           uOP.memcoreC3_to_computecore5) {
-#ifdef SW_EMU_PRINT
-        outFile << "core5 ";
-        UNION_FP_UINT32 temp_union;
-        temp_union.uint32_val = computeCore5_A0_CASC0(31, 0);
-        outFile << temp_union.float_val << " ";
-#endif
 
         meshA_write_to_computecore(computeCore5_A0_CASC0, to_computeCore5_A0_CASC0);
         meshA_write_to_computecore(computeCore5_A0_CASC1, to_computeCore5_A0_CASC1);
@@ -871,8 +764,5 @@ WHILE_LOOP:
       }
     }
   }
-#ifdef SW_EMU_PRINT
-  outFile << "EXIT mesh_sendA   ==========================   ";
-  outFile.close();
-#endif
+
 }
