@@ -339,24 +339,7 @@ void storeC_to_dramStream(
         }
       }
 
-#ifdef SW_EMU_PRINT
-      outFile << "Size: (" << BUFC_DIM1 << "," << BUFC_DIM2 << ")\n";
-      // Print column headers
-      outFile << "   ";  // Indentation for row headers
-      for (int j = 0; j < BUFC_DIM2; j++) {
-        outFile << std::setw(3) << j;
-      }
-      outFile << "\n";
 
-      // Print matrix data with row headers
-      for (int i = 0; i < BUFC_DIM1; i++) {
-        outFile << i << " ";  // Row header
-        for (int j = 0; j < BUFC_DIM2 / 2; j++) {
-          outFile << " " << buf_C[i][j][0] << " " << buf_C[i][j][1];
-        }
-        outFile << "\n";
-      }
-#endif
     }
 
     for (uint16_t dim1 = 0; dim1 < size_dim1; dim1 += 128) {
@@ -434,14 +417,7 @@ void storeC_to_dramStream(
             data_1024b(1023, 992) = temp.uint32_val;
 
             stream_to_ddr.write(data_1024b);
-#ifdef SW_EMU_PRINT
-            for (int word = 0; word < 16; word++) {  // outFile
-              UNION_FP_UINT32 temp_union;
-              temp_union.uint32_val = data_1024b(word * 32 + 31, word * 32);  // outFile
-              outFile << temp_union.float_val << " ";
-            }
-            outFile << std::endl;
-#endif
+
           }
         }
       }
@@ -449,16 +425,11 @@ void storeC_to_dramStream(
     // init_C(buf_C, size_dim1/128, size_dim2/128);
   }
 
-#ifdef SW_EMU_PRINT
-  outFile << "EXIT storeC_to_dramStream   ==========================   ";
-  outFile.close();
-#endif
+
 }
 
 void recvC_from_aie(
-#ifdef SW_EMU_PRINT
-    int core_id,
-#endif
+
     float buf_C[BUFC_DIM1][BUFC_DIM2 / 2][2], bool enable_sendrecv_aie, bool enable_gelu,
     uint16_t k_iter, uint16_t size_dim1, uint16_t size_dim2, ap_uint<3> compute_tile_recv_access_A,
     ap_uint<3> compute_tile_recv_access_B, hls::stream<ap_axiu<64, 0, 0, 0>> &from_computeCore0_C00,
@@ -477,20 +448,7 @@ void recvC_from_aie(
     hls::stream<ap_axiu<64, 0, 0, 0>> &from_computeCore0_C31,
     hls::stream<ap_axiu<64, 0, 0, 0>> &from_computeCore0_C32,
     hls::stream<ap_axiu<64, 0, 0, 0>> &from_computeCore0_C33) {
-#ifdef SW_EMU_PRINT
-  std::ofstream outFile(
-      "/home/cw4/github/versal-float32/20-inputlen384/design/pl_src/output/memcoreC" +
-          std::to_string(core_id) + "_recvC_from_aie.txt",
-      std::ios_base::app);
-  outFile << "ENTER recvC_from_aie enable_sendrecv_aie " << enable_sendrecv_aie << " k_iter "
-          << k_iter << " size_dim1 " << size_dim1 << " size_dim2 " << size_dim2
-          << " compute_tile_recv_access_A " << compute_tile_recv_access_A
-          << " compute_tile_recv_access_B " << compute_tile_recv_access_B
-          << " ========================  ";
-  if (!outFile.is_open()) {
-    std::cerr << "Unable to open file for writing." << std::endl;
-  }
-#endif
+
 
   if (enable_sendrecv_aie) {
   RECV0:
@@ -611,73 +569,22 @@ void recvC_from_aie(
                   buf_C[row_addr + 3][col_addr + 3][1] += data1_C33;
                 }
 
-#ifdef SW_EMU_PRINT
-                outFile << "row_addr " << row_addr << " col_addr " << col_addr << "  ";
-                for (int i = 0; i < 4; i++) {
-                  for (int j = 0; j < 4; j++) {
-                    float temp0 = buf_C[row_addr + i][col_addr + j][0];
-                    float temp1 = buf_C[row_addr + i][col_addr + j][1];
-                    outFile << temp0 << " " << temp1 << " ";
-                  }
-                }
-                outFile << std::endl;
-#endif
+
               }
             }
           }
-#ifdef SW_EMU_PRINT
-          // print loop
-          outFile << "k: " << k << " reuse_a: " << reuse_a << " reuse_b: " << reuse_b << "\n";
-          outFile << "Size: (" << BUFC_DIM1 << "," << BUFC_DIM2 << ")\n";
-          // Print column headers
-          outFile << "   ";  // Indentation for row headers
-          for (int j = 0; j < BUFC_DIM2; j++) {
-            outFile << std::setw(3) << j;
-          }
-          outFile << "\n";
 
-          // Print matrix data with row headers
-          for (int i = 0; i < BUFC_DIM1; i++) {
-            outFile << i << " ";  // Row header
-            for (int j = 0; j < BUFC_DIM2 / 2; j++) {
-              outFile << " " << buf_C[i][j][0] << " " << buf_C[i][j][1];
-            }
-            outFile << "\n";
-          }
-#endif
         }
       }
     }
 
-#ifdef SW_EMU_PRINT
-    outFile << "Size: (" << BUFC_DIM1 << "," << BUFC_DIM2 << ")\n";
-    // Print column headers
-    outFile << "   ";  // Indentation for row headers
-    for (int j = 0; j < BUFC_DIM2; j++) {
-      outFile << std::setw(3) << j;
-    }
-    outFile << "\n";
 
-    // Print matrix data with row headers
-    for (int i = 0; i < BUFC_DIM1; i++) {
-      outFile << i << " ";  // Row header
-      for (int j = 0; j < BUFC_DIM2 / 2; j++) {
-        outFile << " " << buf_C[i][j][0] << " " << buf_C[i][j][1];
-      }
-      outFile << "\n";
-    }
-#endif
   }
-#ifdef SW_EMU_PRINT
-  outFile << "EXIT recvC_from_aie   ==========================   ";
-  outFile.close();
-#endif
+
 };
 
 void memcore_C(
-#ifdef SW_EMU_PRINT
-    int core_id,
-#endif
+
 
     hls::stream<uop_memcore_C_type> &stream_uOP_memcore_C,
     hls::stream<ap_uint<1024>> &stream_to_ddr, hls::stream<ap_uint<1024>> &stream_from_ddr,
@@ -721,17 +628,6 @@ void memcore_C(
 #pragma HLS ARRAY_PARTITION variable = buf1_C dim = 2 cyclic factor = 4
 #pragma HLS ARRAY_RESHAPE variable = buf1_C dim = 3 complete
 
-#ifdef SW_EMU_PRINT
-  std::ofstream outFile(
-      "/home/cw4/github/versal-float32/20-inputlen384/design/pl_src/output/memcoreC" +
-          std::to_string(core_id) + ".txt",
-      std::ios_base::app);
-  if (!outFile.is_open()) {
-    std::cerr << "Unable to open file for writing." << std::endl;
-  }
-  outFile << "ENTER memcore_C   ==========================   ";
-#endif
-
   bool is_computing_buf1 = 0;
 
   uop_memcore_C_type uOP;
@@ -740,17 +636,7 @@ WHILE_LOOP:
   while (is_last_uOP == false) {
     uOP = stream_uOP_memcore_C.read();
 
-#ifdef SW_EMU_PRINT
-    outFile << "stream_uOP_memcore_C uOP.is_last_uOP " << uOP.is_last_uOP
-            << " uOP.enable_store_to_dram " << uOP.enable_store_to_dram
-            << " uOP.enable_send_to_aie " << uOP.enable_send_to_aie << " uOP.enable_recv_from_aie "
-            << uOP.enable_recv_from_aie << " uOP.one_mem_tile_dim1 " << uOP.one_mem_tile_dim1
-            << " uOP.one_mem_tile_dim2 " << uOP.one_mem_tile_dim2
-            << " uOP.compute_tile_recv_access_A " << uOP.compute_tile_recv_access_A
-            << " uOP.compute_tile_recv_access_B " << uOP.compute_tile_recv_access_B
-            << " uOP.compute_tile_recv_access_K " << uOP.compute_tile_recv_access_K
-            << " uOP.k_iter " << uOP.k_iter << " ========================  ";
-#endif
+
 
     is_last_uOP = uOP.is_last_uOP;
 
