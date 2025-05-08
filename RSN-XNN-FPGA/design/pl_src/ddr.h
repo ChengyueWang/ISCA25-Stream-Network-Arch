@@ -24,8 +24,5 @@ void ddr(hls::stream<uop_ddr_type> &stream_uOP_ddr, ap_uint<512> *ddr_port0,
          hls::stream<ap_uint<1024>> &stream_to_dramC_from_memCore3,
          hls::stream<ap_uint<1024>> &stream_to_dramC_from_memCore4,
          hls::stream<ap_uint<1024>> &stream_to_dramC_from_memCore5
-#ifdef SW_EMU_PRINT
-         ,
-         hls::stream<bool> &return_stream
-#endif
+
 );
