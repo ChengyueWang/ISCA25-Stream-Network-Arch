@@ -1,8 +1,6 @@
 #include "memcore_C_to_mesh.h"
 
-#ifdef SW_EMU_PRINT
 
-#else
 
 float my_tanh_to_mesh(float t_in) {
 #pragma HLS inline recursive
@@ -60,16 +58,12 @@ float my_tanh_to_mesh(float t_in) {
     return -resultf;
   };
 }
-#endif
 
 float gelu_to_mesh(float x) {
   // #pragma HLS inline
   float x1;
-#ifdef SW_EMU_PRINT
-  x1 = 0.5f * x * (1.0f + tanh(0.7978845608f * (x + 0.044715f * x * x * x)));
-#else
+
   x1 = 0.5f * x * (1.0f + my_tanh_to_mesh(0.7978845608f * (x + 0.044715f * x * x * x)));
-#endif
   return x1;
 }
 
@@ -168,44 +162,15 @@ init_C_to_mesh:
 }
 
 void storeC_to_dramStream_to_mesh(
-#ifdef SW_EMU_PRINT
-    int core_id,
-#endif
+
     float buf_C[BUFC_DIM1][BUFC_DIM2 / 2][2], bool enable_store_to_dram, ap_uint<9> size_dim1,
     ap_uint<10> size_dim2, hls::stream<ap_uint<1024>> &stream_to_ddr, bool enable_layer_norm,
     bool enable_gelu, hls::stream<ap_uint<1024>> &stream_from_ddr,
     hls::stream<float> &data_channel_to_neighbour,
     hls::stream<float> &data_channel_from_neighbour) {
-#ifdef SW_EMU_PRINT
-  std::ofstream outFile(
-      "/home/cw4/github/versal-float32/20-inputlen384/design/pl_src/output/memcoreC" +
-          std::to_string(core_id) + "_storeC_to_dramStream_tomesh.txt",
-      std::ios_base::app);
-  if (!outFile.is_open()) {
-    std::cerr << "Unable to open file for writing." << std::endl;
-  }
-  outFile << "ENTER storeC_to_dramStream_to_mesh ==========================   ";
-#endif
+
 
   if (enable_store_to_dram) {
-#ifdef SW_EMU_PRINT
-    std::ofstream outFile_layernorm(
-        "/home/cw4/github/versal-float32/20-inputlen384/design/pl_src/output/memcoreC" +
-            std::to_string(core_id) + "_cal_layer_normalization.txt",
-        std::ios_base::app);
-    if (!outFile_layernorm.is_open()) {
-      std::cerr << "Unable to open file for writing." << std::endl;
-    }
-    outFile_layernorm << "ENTER layernorm ==========================   ";
-    for (int i = 0; i < 256; i++) {
-      for (int j = 0; j < 256 / 2; j++) {
-        float temp0 = buf_C[i][j][0];
-        float temp1 = buf_C[i][j][1];
-        outFile_layernorm << temp0 << " " << temp1 << " ";
-      }
-      outFile_layernorm << std::endl;
-    }
-#endif
 
     if (enable_gelu == true) {
     GELU0:
@@ -265,12 +230,6 @@ void storeC_to_dramStream_to_mesh(
         data_channel_to_neighbour.write(v0);
       }
 
-#ifdef SW_EMU_PRINT
-      outFile_layernorm << "mean_buf before " << std::endl;
-      for (uint16_t row = 0; row < 256; row++) {
-        outFile_layernorm << "mean_buf[" << row << "] " << mean_buf[row] << std::endl;
-      }
-#endif
 
     RECV_MEAN:
       for (uint16_t row = 0; row < size_dim1; row = row + 1) {
@@ -278,12 +237,7 @@ void storeC_to_dramStream_to_mesh(
         mean_buf[row] += data_channel_from_neighbour.read();
       }
 
-#ifdef SW_EMU_PRINT
-      outFile_layernorm << "mean_buf after" << std::endl;
-      for (uint16_t row = 0; row < 256; row++) {
-        outFile_layernorm << "mean_buf[" << row << "] " << mean_buf[row] << std::endl;
-      }
-#endif
+
 
     // calculate variance
     CAL_VAR:
@@ -308,12 +262,7 @@ void storeC_to_dramStream_to_mesh(
         }
       }
 
-#ifdef SW_EMU_PRINT
-      outFile_layernorm << "var_buf before" << std::endl;
-      for (uint16_t row = 0; row < 256; row++) {
-        outFile_layernorm << "var_buf[" << row << "] " << var_buf[row] << std::endl;
-      }
-#endif
+
 
     SEND_VAR:
       for (uint16_t row = 0; row < size_dim1; row = row + 1) {
@@ -335,12 +284,7 @@ void storeC_to_dramStream_to_mesh(
 #endif
       }
 
-#ifdef SW_EMU_PRINT
-      outFile_layernorm << "var_buf after" << std::endl;
-      for (uint16_t row = 0; row < 256; row++) {
-        outFile_layernorm << "var_buf[" << row << "] " << var_buf[row] << std::endl;
-      }
-#endif
+
 
     // normalize
     NROM:
@@ -403,39 +347,9 @@ void storeC_to_dramStream_to_mesh(
         }
       }
 
-#ifdef SW_EMU_PRINT
-      outFile_layernorm << "Size: (" << BUFC_DIM1 << "," << BUFC_DIM2 << ")\n";
-      // Print column headers
-      outFile_layernorm << "   ";  // Indentation for row headers
-      for (int j = 0; j < BUFC_DIM2; j++) {
-        outFile_layernorm << std::setw(3) << j;
-      }
-      outFile_layernorm << "\n";
 
-      // Print matrix data with row headers
-      for (int i = 0; i < BUFC_DIM1; i++) {
-        outFile_layernorm << i << " ";  // Row header
-        for (int j = 0; j < BUFC_DIM2 / 2; j++) {
-          outFile_layernorm << " " << buf_C[i][j][0] << " " << buf_C[i][j][1];
-        }
-        outFile_layernorm << "\n";
-      }
-#endif
     }
 
-#ifdef SW_EMU_PRINT
-    outFile_layernorm << "RESULT  layer normalization ==========================   ";
-    for (int i = 0; i < 256; i++) {
-      for (int j = 0; j < 256 / 2; j++) {
-        float temp0 = buf_C[i][j][0];
-        float temp1 = buf_C[i][j][1];
-        outFile_layernorm << temp0 << " " << temp1 << " ";
-      }
-      outFile_layernorm << std::endl;
-    }
-    outFile_layernorm << "EXIT   ==========================   ";
-    outFile_layernorm.close();
-#endif
 
     for (uint16_t dim1 = 0; dim1 < size_dim1; dim1 += 128) {
       for (uint16_t dim2 = 0; dim2 < size_dim2 / 2; dim2 += 32) {
@@ -512,14 +426,7 @@ void storeC_to_dramStream_to_mesh(
             data_1024b(1023, 992) = temp.uint32_val;
 
             stream_to_ddr.write(data_1024b);
-#ifdef SW_EMU_PRINT
-            for (int word = 0; word < 16; word++) {  // outFile
-              UNION_FP_UINT32 temp_union;
-              temp_union.uint32_val = data_1024b(word * 32 + 31, word * 32);  // outFile
-              outFile << temp_union.float_val << " ";
-            }
-            outFile << std::endl;
-#endif
+
           }
         }
       }
@@ -527,16 +434,11 @@ void storeC_to_dramStream_to_mesh(
     // init_C_to_mesh(buf_C, 2, 4);
   }
 
-#ifdef SW_EMU_PRINT
-  outFile << "EXIT storeC_to_dramStream_to_mesh   ==========================   ";
-  outFile.close();
-#endif
+
 }
 
 void recvC_from_aie_to_mesh(
-#ifdef SW_EMU_PRINT
-    int core_id,
-#endif
+
     float buf_C[BUFC_DIM1][BUFC_DIM2 / 2][2], bool enable_recv_aie, bool enable_softmax,
     bool enable_gelu, uint16_t k_iter, uint16_t size_dim1, uint16_t size_dim2,
     ap_uint<2> compute_tile_recv_access_A, ap_uint<3> compute_tile_recv_access_B,
@@ -558,16 +460,7 @@ void recvC_from_aie_to_mesh(
     hls::stream<ap_axiu<64, 0, 0, 0>> &from_computeCore0_C33,
     hls::stream<float> &data_channel_to_neighbour,
     hls::stream<float> &data_channel_from_neighbour) {
-#ifdef SW_EMU_PRINT
-  std::ofstream outFile(
-      "/home/cw4/github/versal-float32/20-inputlen384/design/pl_src/output/memcoreC" +
-          std::to_string(core_id) + "_recvC_from_aie_tomesh.txt",
-      std::ios_base::app);
-  if (!outFile.is_open()) {
-    std::cerr << "Unable to open file for writing." << std::endl;
-  }
-  outFile << "ENTER recvC_from_aie_to_mesh ==========================   ";
-#endif
+
 
   if (enable_recv_aie) {
   RECV0:
@@ -685,63 +578,16 @@ void recvC_from_aie_to_mesh(
                   buf_C[row_addr + 3][col_addr + 3][1] += data1_C33;
                 }
 
-#ifdef SW_EMU_PRINT
-                outFile << "row_addr " << row_addr << " col_addr " << col_addr << "  ";
-                for (int i = 0; i < 4; i++) {
-                  for (int j = 0; j < 4; j++) {
-                    float temp0 = buf_C[row_addr + i][col_addr + j][0];
-                    float temp1 = buf_C[row_addr + i][col_addr + j][1];
-                    outFile << temp0 << " " << temp1 << " ";
-                  }
-                }
-                outFile << std::endl;
-#endif
+
               }
             }
           }
 
-#ifdef SW_EMU_PRINT
-          // print loop
-          outFile << "k: " << k << " reuse_a: " << reuse_a << " reuse_b: " << reuse_b << "\n";
-          outFile << "Size: (" << BUFC_DIM1 << "," << BUFC_DIM2 << ")\n";
-          // Print column headers
-          outFile << "   ";  // Indentation for row headers
-          for (int j = 0; j < BUFC_DIM2; j++) {
-            outFile << std::setw(8) << j;
-          }
-          outFile << "\n";
-          // Print matrix data with row headers
-          for (int i = 0; i < BUFC_DIM1; i++) {
-            outFile << std::setw(8) << i;  // Row header
-            for (int j = 0; j < BUFC_DIM2 / 2; j++) {
-              outFile << std::setw(8) << std::fixed << std::setprecision(0) << " " << buf_C[i][j][0]
-                      << " " << buf_C[i][j][1];
-            }
-            outFile << "\n";
-          }
-#endif
+
         }
       }
     }
 
-#ifdef SW_EMU_PRINT
-    std::ofstream outFile_softmax(
-        "/home/cw4/github/versal-float32/20-inputlen384/design/pl_src/output/memcoreC" +
-            std::to_string(core_id) + "_recvC_from_aie_softmax_tomesh.txt",
-        std::ios_base::app);
-    if (!outFile_softmax.is_open()) {
-      std::cerr << "Unable to open file for writing." << std::endl;
-    }
-    outFile_softmax << "ENTER softmax ==========================   ";
-    for (int i = 0; i < 256; i++) {
-      for (int j = 0; j < 256 / 2; j++) {
-        float temp0 = buf_C[i][j][0];
-        float temp1 = buf_C[i][j][1];
-        outFile_softmax << temp0 << " " << temp1 << " ";
-      }
-      outFile_softmax << std::endl;
-    }
-#endif
 
     if (enable_softmax) {
       // size_dim1 = 128 * compute_tile_recv_access_A; // note that size_dim1 is set to be 128 at
@@ -938,13 +784,7 @@ void recvC_from_aie_to_mesh(
 #pragma HLS STREAM variable = data_channel_to_neighbour depth = 256 type = fifo
 #pragma HLS STREAM variable = data_channel_from_neighbour depth = 256 type = fifo
 
-#ifdef SW_EMU_PRINT
-      outFile_softmax << "START ACCUM BUFF ======= BEFORE SEND ===================   ";
-      for (int i = 0; i < 256; i++) {
-        outFile_softmax << "row " << i << ": " << accum_buf[i] << std::endl;
-      }
-      outFile_softmax << "END ACCUM BUFF   ==========================   ";
-#endif
+
 
       float rcv_accum0, rcv_accum1, rcv_accum2, rcv_accum3;
       float rcv_accum0_q, rcv_accum1_q, rcv_accum2_q, rcv_accum3_q;
@@ -1030,50 +870,15 @@ void recvC_from_aie_to_mesh(
       }
     }
 
-#ifdef SW_EMU_PRINT
-    outFile_softmax << "RESULT softmax ==========================   ";
-    for (int i = 0; i < 256; i++) {
-      for (int j = 0; j < 256 / 2; j++) {
-        float temp0 = buf_C[i][j][0];
-        float temp1 = buf_C[i][j][1];
-        outFile_softmax << temp0 << " " << temp1 << " ";
-      }
-      outFile_softmax << std::endl;
-    }
-    outFile_softmax << "EXIT softmax   ==========================   ";
-    outFile_softmax.close();
-#endif
 
-#ifdef SW_EMU_PRINT
-    outFile << "Size: (" << BUFC_DIM1 << "," << BUFC_DIM2 << ")\n";
-    // Print column headers
-    outFile << "   ";  // Indentation for row headers
-    for (int j = 0; j < BUFC_DIM2; j++) {
-      outFile << std::setw(3) << j;
-    }
-    outFile << "\n";
 
-    // Print matrix data with row headers
-    for (int i = 0; i < BUFC_DIM1; i++) {
-      outFile << i << " ";  // Row header
-      for (int j = 0; j < BUFC_DIM2 / 2; j++) {
-        outFile << " " << buf_C[i][j][0] << " " << buf_C[i][j][1];
-      }
-      outFile << "\n";
-    }
-#endif
+
   }
 
-#ifdef SW_EMU_PRINT
-  outFile << "EXIT recvC_from_aie_to_mesh   ==========================   ";
-  outFile.close();
-#endif
 };
 
 void sendC_to_meshA(
-#ifdef SW_EMU_PRINT
-    int core_id,
-#endif
+
     float buf_C[BUFC_DIM1][BUFC_DIM2 / 2][2], bool enable_send_to_aie, uint16_t k_iter,
     uint16_t size_dim1, uint16_t size_dim2, ap_uint<3> compute_tile_send_access_A,
     ap_uint<3> compute_tile_send_access_B, ap_uint<2> compute_tile_send_access_K,
@@ -1085,26 +890,11 @@ void sendC_to_meshA(
     hls::stream<ap_uint<64>> &to_meshA_C22, hls::stream<ap_uint<64>> &to_meshA_C23,
     hls::stream<ap_uint<64>> &to_meshA_C30, hls::stream<ap_uint<64>> &to_meshA_C31,
     hls::stream<ap_uint<64>> &to_meshA_C32, hls::stream<ap_uint<64>> &to_meshA_C33) {
-#ifdef SW_EMU_PRINT
-  std::ofstream outFile(
-      "/home/cw4/github/versal-float32/20-inputlen384/design/pl_src/output/memcoreC" +
-          std::to_string(core_id) + "_sendC_to_meshA_tomesh.txt",
-      std::ios_base::app);
-  if (!outFile.is_open()) {
-    std::cerr << "Unable to open file for writing." << std::endl;
-  }
-  outFile << "ENTER sendC_to_meshA ==========================   ";
-#endif
+
 
   if (enable_send_to_aie) {
     // compute_tile_send_access_K = 2; // compute_tile_send_access_K only be assigned with value 2
 
-#ifdef SW_EMU_PRINT
-    outFile << "k_iter: " << k_iter << " size_dim1: " << size_dim1 << " size_dim2: " << size_dim2
-            << " compute_tile_send_access_A: " << compute_tile_send_access_A
-            << " compute_tile_send_access_B: " << compute_tile_send_access_B
-            << " compute_tile_send_access_K: " << compute_tile_send_access_K << std::endl;
-#endif
 
     for (uint16_t reuse_a = 0; reuse_a < compute_tile_send_access_A * 128; reuse_a += 128) {
       for (uint16_t reuse_b = 0; reuse_b < compute_tile_send_access_B; reuse_b++) {
@@ -1124,18 +914,6 @@ void sendC_to_meshA(
                   ap_uint<64> data_A2_casc0, data_A2_casc1, data_A2_casc2, data_A2_casc3;
                   ap_uint<64> data_A3_casc0, data_A3_casc1, data_A3_casc2, data_A3_casc3;
 
-#ifdef SW_EMU_PRINT
-                  outFile << "row_addr " << row_addr << " col_addr " << col_addr << "  ";
-                  // print buf_C 32 data, 4 in dim1, 4 in dim2, and 2 in dim3
-                  for (int i = 0; i < 4; i++) {
-                    for (int j = 0; j < 4; j++) {
-                      float temp0 = buf_C[row_addr + i][col_addr + j][0];
-                      float temp1 = buf_C[row_addr + i][col_addr + j][1];
-                      outFile << temp0 << " " << temp1 << " ";
-                    }
-                  }
-                  outFile << std::endl;
-#endif
 
                   data_A0_casc0 = concat_32b_to_64b_coreC(buf_C[row_addr + 0][col_addr + 0][0],
                                                           buf_C[row_addr + 0][col_addr + 0][1]);
@@ -1195,16 +973,10 @@ void sendC_to_meshA(
     }
   }
 
-#ifdef SW_EMU_PRINT
-  outFile << "EXIT sendC_to_meshA   ==========================   ";
-  outFile.close();
-#endif
+
 };
 
 void memcore_C_to_mesh(
-#ifdef SW_EMU_PRINT
-    int core_id,
-#endif
 
     hls::stream<uop_memcore_C_type> &stream_uOP_memcore_C,
     hls::stream<ap_uint<1024>> &stream_to_ddr, hls::stream<ap_uint<1024>> &stream_from_ddr,
@@ -1293,16 +1065,12 @@ WHILE_LOOP:
 
     if (is_computing_buf1 == 1 && enable_send_to_aie == 0) {
       storeC_to_dramStream_to_mesh(
-#ifdef SW_EMU_PRINT
-          core_id,
-#endif
+
           buf0_C, enable_store_to_dram, one_mem_tile_dim1, one_mem_tile_dim2, stream_to_ddr,
           enable_layer_norm, enable_gelu, stream_from_ddr, data_channel_to_neighbour_storedram,
           data_channel_from_neighbour_storedram);
       recvC_from_aie_to_mesh(
-#ifdef SW_EMU_PRINT
-          core_id,
-#endif
+
           buf1_C, enable_recv_from_aie, enable_softmax, enable_gelu, k_iter, one_compute_tile_dim1,
           one_compute_tile_dim2, compute_tile_recv_access_A, compute_tile_recv_access_B,
           from_computeCore0_C00, from_computeCore0_C01, from_computeCore0_C02,
@@ -1314,16 +1082,12 @@ WHILE_LOOP:
           data_channel_from_neighbour_recvmesh);
     } else if (is_computing_buf1 == 0 && enable_send_to_aie == 0) {
       storeC_to_dramStream_to_mesh(
-#ifdef SW_EMU_PRINT
-          core_id,
-#endif
+
           buf1_C, enable_store_to_dram, one_mem_tile_dim1, one_mem_tile_dim2, stream_to_ddr,
           enable_layer_norm, enable_gelu, stream_from_ddr, data_channel_to_neighbour_storedram,
           data_channel_from_neighbour_storedram);
       recvC_from_aie_to_mesh(
-#ifdef SW_EMU_PRINT
-          core_id,
-#endif
+
           buf0_C, enable_recv_from_aie, enable_softmax, enable_gelu, k_iter, one_compute_tile_dim1,
           one_compute_tile_dim2, compute_tile_recv_access_A, compute_tile_recv_access_B,
           from_computeCore0_C00, from_computeCore0_C01, from_computeCore0_C02,
@@ -1335,18 +1099,14 @@ WHILE_LOOP:
           data_channel_from_neighbour_recvmesh);
     } else if (is_computing_buf1 == 1 && enable_send_to_aie == 1) {
       sendC_to_meshA(
-#ifdef SW_EMU_PRINT
-          core_id,
-#endif
+
           buf0_C, enable_send_to_aie, k_iter, one_compute_tile_dim1, one_compute_tile_dim2,
           compute_tile_send_access_A, compute_tile_send_access_B, compute_tile_send_access_K,
           to_meshA_C00, to_meshA_C01, to_meshA_C02, to_meshA_C03, to_meshA_C10, to_meshA_C11,
           to_meshA_C12, to_meshA_C13, to_meshA_C20, to_meshA_C21, to_meshA_C22, to_meshA_C23,
           to_meshA_C30, to_meshA_C31, to_meshA_C32, to_meshA_C33);
       recvC_from_aie_to_mesh(
-#ifdef SW_EMU_PRINT
-          core_id,
-#endif
+
           buf1_C, enable_recv_from_aie, enable_softmax, enable_gelu, k_iter, one_compute_tile_dim1,
           one_compute_tile_dim2, compute_tile_recv_access_A, compute_tile_recv_access_B,
           from_computeCore0_C00, from_computeCore0_C01, from_computeCore0_C02,
@@ -1359,18 +1119,14 @@ WHILE_LOOP:
 
     } else if (is_computing_buf1 == 0 && enable_send_to_aie == 1) {
       sendC_to_meshA(
-#ifdef SW_EMU_PRINT
-          core_id,
-#endif
+
           buf1_C, enable_send_to_aie, k_iter, one_compute_tile_dim1, one_compute_tile_dim2,
           compute_tile_send_access_A, compute_tile_send_access_B, compute_tile_send_access_K,
           to_meshA_C00, to_meshA_C01, to_meshA_C02, to_meshA_C03, to_meshA_C10, to_meshA_C11,
           to_meshA_C12, to_meshA_C13, to_meshA_C20, to_meshA_C21, to_meshA_C22, to_meshA_C23,
           to_meshA_C30, to_meshA_C31, to_meshA_C32, to_meshA_C33);
       recvC_from_aie_to_mesh(
-#ifdef SW_EMU_PRINT
-          core_id,
-#endif
+
           buf0_C, enable_recv_from_aie, enable_softmax, enable_gelu, k_iter, one_compute_tile_dim1,
           one_compute_tile_dim2, compute_tile_recv_access_A, compute_tile_recv_access_B,
           from_computeCore0_C00, from_computeCore0_C01, from_computeCore0_C02,
