@@ -1,25 +1,8 @@
 #include "decoder_uop.h"
 
 void mop2uop_memcore_A(
-#ifdef SW_EMU_PRINT
-    int core_id,
-#endif
     hls::stream<mop_memcore_A_type> &stream_mOP_memcore_A,
     hls::stream<uop_memcore_A_type> &stream_uOP_memcore_A) {
-
-#ifdef SW_EMU_PRINT
-  std::ofstream outFile(
-      "/home/cw4/github/versal-float32/20-inputlen384/design/pl_src/output/"
-      "decoder_uop_mop2uop_memcore_A" +
-          std::to_string(core_id) + ".txt",
-      std::ios_base::app);
-  if (!outFile.is_open()) {
-    std::cerr << "Unable to open file for writing." << std::endl;
-  }
-  outFile << "\n\nENTER mop2uop_memcore_A core" + std::to_string(core_id) +
-                 " ========================="
-          << std::endl;
-#endif
 
   mop_memcore_A_type mOP;
 
@@ -27,13 +10,6 @@ void mop2uop_memcore_A(
 
   while (is_last_mOP == false) {
     mOP = stream_mOP_memcore_A.read();
-#ifdef SW_EMU_PRINT
-    outFile << "mop2uop_memcore_A: is_last_mOP " << mOP.is_last_mOP << " repeat_num "
-            << mOP.repeat_num << " one_mem_tile_dim1 " << mOP.one_mem_tile_dim1
-            << " one_mem_tile_dim2 " << mOP.one_mem_tile_dim2 << " compute_tile_access_A "
-            << mOP.compute_tile_access_A << " compute_tile_access_B " << mOP.compute_tile_access_B
-            << std::endl;
-#endif
     is_last_mOP = mOP.is_last_mOP;
     if (is_last_mOP == false) {
       for (uint32_t iter = 0; iter < mOP.repeat_num; iter++) {
@@ -47,10 +23,6 @@ void mop2uop_memcore_A(
         uop.compute_tile_access_A = mOP.compute_tile_access_A;
         uop.compute_tile_access_B = mOP.compute_tile_access_B;
 
-#ifdef SW_EMU_PRINT
-        outFile << "iter " << iter << ": enable_load_from_dram " << uop.enable_load_from_dram
-                << " enable_send_to_aie " << uop.enable_send_to_aie << std::endl;
-#endif
         stream_uOP_memcore_A.write(uop);
       }
 
@@ -63,32 +35,13 @@ void mop2uop_memcore_A(
   uop.is_last_uOP = true;
   stream_uOP_memcore_A.write(uop);
 
-#ifdef SW_EMU_PRINT
-  outFile << "EXIT mop2uop_memcore_A ================= " << std::endl;
-  outFile.close();
-#endif
 }
 
 void mop2uop_memcore_B(
-#ifdef SW_EMU_PRINT
-    int core_id,
-#endif
+
     hls::stream<mop_memcore_B_type> &stream_mOP_memcore_B,
     hls::stream<uop_memcore_B_type> &stream_uOP_memcore_B) {
 
-#ifdef SW_EMU_PRINT
-  std::ofstream outFile(
-      "/home/cw4/github/versal-float32/20-inputlen384/design/pl_src/output/"
-      "decoder_uop_mop2uop_memcore_B" +
-          std::to_string(core_id) + ".txt",
-      std::ios_base::app);
-  if (!outFile.is_open()) {
-    std::cerr << "Unable to open file for writing." << std::endl;
-  }
-  outFile << "\n\nENTER mop2uop_memcore_B core" + std::to_string(core_id) +
-                 " ========================="
-          << std::endl;
-#endif
 
   mop_memcore_B_type mOP;
 
@@ -96,13 +49,7 @@ void mop2uop_memcore_B(
 
   while (is_last_mOP == false) {
     mOP = stream_mOP_memcore_B.read();
-#ifdef SW_EMU_PRINT
-    outFile << "mop2uop_memcore_B: is_last_mOP " << mOP.is_last_mOP << " repeat_num "
-            << mOP.repeat_num << " one_mem_tile_dim1 " << mOP.one_mem_tile_dim1
-            << " one_mem_tile_dim2 " << mOP.one_mem_tile_dim2 << " compute_tile_access_A "
-            << mOP.compute_tile_access_A << " compute_tile_access_B " << mOP.compute_tile_access_B
-            << std::endl;
-#endif
+
     is_last_mOP = mOP.is_last_mOP;
     if (is_last_mOP == false) {
       for (uint32_t iter = 0; iter < mOP.repeat_num; iter++) {
@@ -119,11 +66,6 @@ void mop2uop_memcore_B(
         uop.compute_tile_access_B = mOP.compute_tile_access_B;
         uop.compute_tile_access_K = mOP.compute_tile_access_K;
 
-#ifdef SW_EMU_PRINT
-        outFile << "iter " << iter << ": enable_load_from_dram " << uop.enable_load_from_dram
-                << " enable_send_to_aie " << uop.enable_send_to_aie << " is_loading_bias "
-                << uop.is_loading_bias << " enable_transpose " << uop.enable_transpose << std::endl;
-#endif
         stream_uOP_memcore_B.write(uop);
       }
     }
@@ -135,32 +77,14 @@ void mop2uop_memcore_B(
   uop.is_last_uOP = true;
   stream_uOP_memcore_B.write(uop);
 
-#ifdef SW_EMU_PRINT
-  outFile << "EXIT mop2uop_memcore_B ================= " << std::endl;
-  outFile.close();
-#endif
 }
 
 void mop2uop_memcore_C(
-#ifdef SW_EMU_PRINT
-    int core_id,
-#endif
+
     hls::stream<mop_memcore_C_type> &stream_mOP_memcore_C,
     hls::stream<uop_memcore_C_type> &stream_uOP_memcore_C) {
 
-#ifdef SW_EMU_PRINT
-  std::ofstream outFile(
-      "/home/cw4/github/versal-float32/20-inputlen384/design/pl_src/output/"
-      "decoder_uop_mop2uop_memcore_C" +
-          std::to_string(core_id) + ".txt",
-      std::ios_base::app);
-  if (!outFile.is_open()) {
-    std::cerr << "Unable to open file for writing." << std::endl;
-  }
-  outFile << "\n\nENTER mop2uop_memcore_C core" + std::to_string(core_id) +
-                 " ========================="
-          << std::endl;
-#endif
+
 
   mop_memcore_C_type mOP;
 
@@ -168,17 +92,7 @@ void mop2uop_memcore_C(
 
   while (is_last_mOP == false) {
     mOP = stream_mOP_memcore_C.read();
-#ifdef SW_EMU_PRINT
-    outFile << "mop2uop_memcore_C: is_last_mOP " << mOP.is_last_mOP << " repeat_num "
-            << mOP.repeat_num << " one_mem_tile_dim1 " << mOP.one_mem_tile_dim1
-            << " one_mem_tile_dim2 " << mOP.one_mem_tile_dim2 << " compute_tile_recv_access_A "
-            << mOP.compute_tile_recv_access_A << " compute_tile_recv_access_B "
-            << mOP.compute_tile_recv_access_B << " compute_tile_recv_access_K "
-            << mOP.compute_tile_recv_access_K << " compute_tile_send_access_A "
-            << mOP.compute_tile_send_access_A << " compute_tile_send_access_B "
-            << mOP.compute_tile_send_access_B << " compute_tile_send_access_K "
-            << mOP.compute_tile_send_access_K << std::endl;
-#endif
+
     is_last_mOP = mOP.is_last_mOP;
     if (is_last_mOP == false) {
       for (uint32_t iter = 0; iter < mOP.repeat_num; iter++) {
@@ -202,13 +116,7 @@ void mop2uop_memcore_C(
         uop.compute_tile_send_access_K = mOP.compute_tile_send_access_K;
         uop.k_iter = mOP.k_iter;
         uop.is_last_uOP = false;
-#ifdef SW_EMU_PRINT
-        outFile << "iter " << iter << ": enable_store_to_dram " << uop.enable_store_to_dram
-                << " enable_send_to_aie " << uop.enable_send_to_aie << " enable_recv_from_aie "
-                << uop.enable_recv_from_aie << " enable_softmax " << uop.enable_softmax
-                << " enable_layer_norm " << uop.enable_layer_norm << " enable_gelu "
-                << uop.enable_gelu << std::endl;
-#endif
+
         stream_uOP_memcore_C.write(uop);
       }
     }
@@ -221,24 +129,12 @@ void mop2uop_memcore_C(
   uop.is_last_uOP = true;
   stream_uOP_memcore_C.write(uop);
 
-#ifdef SW_EMU_PRINT
-  outFile << "EXIT mop2uop_memcore_C ================= " << std::endl;
-  outFile.close();
-#endif
+
 }
 
 void mop2uop_ddr(hls::stream<mop_ddr_type> &stream_mOP_ddr,
                  hls::stream<uop_ddr_type> &stream_uOP_ddr) {
-#ifdef SW_EMU_PRINT
-  std::ofstream outFile(
-      "/home/cw4/github/versal-float32/20-inputlen384/design/pl_src/output/"
-      "decoder_uop_mop2uop_ddr.txt",
-      std::ios_base::app);
-  if (!outFile.is_open()) {
-    std::cerr << "Unable to open file for writing." << std::endl;
-  }
-  outFile << "\n\nENTER mop2uop_ddr ================= " << std::endl;
-#endif
+
 
   bool is_last_mOP = false;
 
@@ -248,11 +144,7 @@ void mop2uop_ddr(hls::stream<mop_ddr_type> &stream_mOP_ddr,
 
     union_mop_ddr_dram mOP_union;
     mOP_union.val = stream_mOP_ddr.read();
-#ifdef SW_EMU_PRINT
-    outFile << "mop2uop_ddr: is_last_mOP " << mOP_union.val.is_last_mOP << " repeat_num "
-            << mOP_union.val.repeat_num << " mop_buffer_window_size"
-            << mOP_union.val.mop_buffer_window_size << std::endl;
-#endif
+
     is_last_mOP = mOP_union.val.is_last_mOP;
     uint16_t mop_buffer_window_size = mOP_union.val.mop_buffer_window_size;
     uint32_t repeat_num = mOP_union.val.repeat_num;
@@ -306,24 +198,7 @@ void mop2uop_ddr(hls::stream<mop_ddr_type> &stream_mOP_ddr,
 
             uop.is_last_uOP = false;
             stream_uOP_ddr.write(uop);
-#ifdef SW_EMU_PRINT
-            int window_id_32b = window_id;
-            int chunk_id_32b = chunk_id;
-            outFile << "uop: iter " << iter << " window_id " << window_id_32b << " chunk_id "
-                    << chunk_id_32b << ": addr " << uop.start_address << " chunck_size "
-                    << uop.chunck_size << " is_load " << uop.is_load << " is_store " << uop.is_store
-                    << " load_to_memcoreA0 " << uop.load_to_memcoreA0 << " load_to_memcoreA1 "
-                    << uop.load_to_memcoreA1 << " load_to_memcoreA2 " << uop.load_to_memcoreA2
-                    << " load_to_memcoreB0 " << uop.load_to_memcoreB0 << " load_to_memcoreB1 "
-                    << uop.load_to_memcoreB1 << " load_to_memcoreB2 " << uop.load_to_memcoreB2
-                    << " store_from_memcoreC0 " << uop.store_from_memcoreC0
-                    << " store_from_memcoreC1 " << uop.store_from_memcoreC1
-                    << " store_from_memcoreC2 " << uop.store_from_memcoreC2
-                    << " store_from_memcoreC3 " << uop.store_from_memcoreC3
-                    << " store_from_memcoreC4 " << uop.store_from_memcoreC4
-                    << " store_from_memcoreC5 " << uop.store_from_memcoreC5 << " is_last_uOP "
-                    << uop.is_last_uOP << std::endl;
-#endif
+
           }
         }
       }
@@ -349,24 +224,12 @@ void mop2uop_ddr(hls::stream<mop_ddr_type> &stream_mOP_ddr,
   uop.is_last_uOP = true;
   stream_uOP_ddr.write(uop);
 
-#ifdef SW_EMU_PRINT
-  outFile << "EXIT mop2uop_ddr ================= " << std::endl;
-  outFile.close();
-#endif
+
 }
 
 void mop2uop_loadB_dram(hls::stream<mop_loadB_dram_type> &stream_mOP_loadB_dram,
                         hls::stream<uop_loadB_dram_type> &stream_uOP_loadB_dram) {
-#ifdef SW_EMU_PRINT
-  std::ofstream outFile(
-      "/home/cw4/github/versal-float32/20-inputlen384/design/pl_src/output/"
-      "decoder_uop_mop2uop_loadB_dram.txt",
-      std::ios_base::app);
-  if (!outFile.is_open()) {
-    std::cerr << "Unable to open file for writing." << std::endl;
-  }
-  outFile << "\n\nENTER mop2uop_loadB_dram ================= " << std::endl;
-#endif
+
 
   bool is_last_mOP = false;
 
@@ -376,11 +239,7 @@ void mop2uop_loadB_dram(hls::stream<mop_loadB_dram_type> &stream_mOP_loadB_dram,
 
     union_mop_load_B_dram mOP_union;
     mOP_union.val = stream_mOP_loadB_dram.read();
-#ifdef SW_EMU_PRINT
-    outFile << "mop2uop_loadB_dram: is_last_mOP " << mOP_union.val.is_last_mOP << " repeat_num "
-            << mOP_union.val.repeat_num << " mop_buffer_window_size"
-            << mOP_union.val.mop_buffer_window_size << std::endl;
-#endif
+
     is_last_mOP = mOP_union.val.is_last_mOP;
     uint16_t mop_buffer_window_size = mOP_union.val.mop_buffer_window_size;
     uint32_t repeat_num = mOP_union.val.repeat_num;
@@ -420,15 +279,7 @@ void mop2uop_loadB_dram(hls::stream<mop_loadB_dram_type> &stream_mOP_loadB_dram,
             uop.is_loading_bias = mOP.is_loading_bias;
             uop.is_last_uOP = false;
             stream_uOP_loadB_dram.write(uop);
-#ifdef SW_EMU_PRINT
-            int window_id_32b = window_id;
-            int chunk_id_32b = chunk_id;
-            outFile << "uop: iter " << iter << " window_id " << window_id_32b << " chunk_id "
-                    << chunk_id_32b << ": addr " << uop.start_address << " chunck_size "
-                    << uop.chunck_size << " load_to_memcoreB0 " << uop.load_to_memcoreB0
-                    << " load_to_memcoreB1 " << uop.load_to_memcoreB1 << " is_last_uOP "
-                    << uop.is_last_uOP << std::endl;
-#endif
+
           }
         }
       }
@@ -443,24 +294,12 @@ void mop2uop_loadB_dram(hls::stream<mop_loadB_dram_type> &stream_mOP_loadB_dram,
   uop.is_last_uOP = true;
   stream_uOP_loadB_dram.write(uop);
 
-#ifdef SW_EMU_PRINT
-  outFile << "EXIT mop2uop_loadB_dram ================= " << std::endl;
-  outFile.close();
-#endif
+
 }
 
 void mop2uop_mesh_sendA(hls::stream<mop_mesh_sendA_type> &stream_mOP_mesh_sendA,
                         hls::stream<uop_mesh_sendA_type> &stream_uOP_mesh_sendA) {
-#ifdef SW_EMU_PRINT
-  std::ofstream outFile(
-      "/home/cw4/github/versal-float32/20-inputlen384/design/pl_src/output/"
-      "decoder_uop_mop2uop_mesh_sendA.txt",
-      std::ios_base::app);
-  if (!outFile.is_open()) {
-    std::cerr << "Unable to open file for writing." << std::endl;
-  }
-  outFile << "\n\nENTER mop2uop_mesh_sendA =============== v1 == " << std::endl;
-#endif
+
 
   bool is_last_mOP = false;
 WHILE_LOOP:
@@ -470,11 +309,7 @@ WHILE_LOOP:
 
     union_mop_meshA mOP_union;
     mOP_union.val = stream_mOP_mesh_sendA.read();
-#ifdef SW_EMU_PRINT
-    outFile << "mop2uop_mesh_sendA: is_last_mOP " << mOP_union.val.is_last_mOP << " repeat_num "
-            << mOP_union.val.repeat_num << " mop_buffer_window_size"
-            << mOP_union.val.mop_buffer_window_size << std::endl;
-#endif
+
     is_last_mOP = mOP_union.val.is_last_mOP;
     uint8_t mop_buffer_window_size = mOP_union.val.mop_buffer_window_size;
     uint16_t repeat_num = mOP_union.val.repeat_num;
@@ -512,21 +347,7 @@ WHILE_LOOP:
           uop.memcoreC3_to_computecore5 = mOP.memcoreC3_to_computecore5;
           uop.is_last_uOP = false;
           stream_uOP_mesh_sendA.write(uop);
-#ifdef SW_EMU_PRINT
-          int window_id_32b = window_id;
-          outFile << "uop iter " << iter << " window_id " << window_id_32b << ": size " << uop.size
-                  << " memcoreA0_to_computecore0 " << uop.memcoreA0_to_computecore0
-                  << " memcoreA0_to_computecore1 " << uop.memcoreA0_to_computecore1
-                  << " memcoreA1_to_computecore2 " << uop.memcoreA1_to_computecore2
-                  << " memcoreA1_to_computecore3 " << uop.memcoreA1_to_computecore3
-                  << " memcoreA2_to_computecore4 " << uop.memcoreA2_to_computecore4
-                  << " memcoreA2_to_computecore5 " << uop.memcoreA2_to_computecore5
-                  << " memcoreC0_to_computecore4 " << uop.memcoreC0_to_computecore4
-                  << " memcoreC1_to_computecore4 " << uop.memcoreC1_to_computecore4
-                  << " memcoreC2_to_computecore5 " << uop.memcoreC2_to_computecore5
-                  << " memcoreC3_to_computecore5 " << uop.memcoreC3_to_computecore5
-                  << " is_last_uOP " << uop.is_last_uOP << std::endl;
-#endif
+
         }
       }
     }
@@ -547,24 +368,11 @@ WHILE_LOOP:
   uop.is_last_uOP = true;
   stream_uOP_mesh_sendA.write(uop);
 
-#ifdef SW_EMU_PRINT
-  outFile << "EXIT mop2uop_mesh_sendA ================= " << std::endl;
-  outFile.close();
-#endif
 }
 
 void mop2uop_mesh_sendB(hls::stream<mop_mesh_sendB_type> &stream_mOP_mesh_sendB,
                         hls::stream<uop_mesh_sendB_type> &stream_uOP_mesh_sendB) {
-#ifdef SW_EMU_PRINT
-  std::ofstream outFile(
-      "/home/cw4/github/versal-float32/20-inputlen384/design/pl_src/output/"
-      "decoder_uop_mop2uop_mesh_sendB.txt",
-      std::ios_base::app);
-  if (!outFile.is_open()) {
-    std::cerr << "Unable to open file for writing." << std::endl;
-  }
-  outFile << "\n\nENTER mop2uop_mesh_sendB ================== " << std::endl;
-#endif
+
 
   mop_mesh_sendB_type mOP;
   bool is_last_mOP = false;
@@ -574,11 +382,7 @@ void mop2uop_mesh_sendB(hls::stream<mop_mesh_sendB_type> &stream_mOP_mesh_sendB,
 
     union_mop_meshB mOP_union;
     mOP_union.val = stream_mOP_mesh_sendB.read();
-#ifdef SW_EMU_PRINT
-    outFile << "mop2uop_mesh_sendB: is_last_mOP " << mOP_union.val.is_last_mOP << " repeat_num "
-            << mOP_union.val.repeat_num << " mop_buffer_window_size"
-            << mOP_union.val.mop_buffer_window_size << std::endl;
-#endif
+
     is_last_mOP = mOP_union.val.is_last_mOP;
     uint8_t mop_buffer_window_size = mOP_union.val.mop_buffer_window_size;
     uint32_t repeat_num = mOP_union.val.repeat_num;
@@ -614,19 +418,7 @@ void mop2uop_mesh_sendB(hls::stream<mop_mesh_sendB_type> &stream_mOP_mesh_sendB,
           uop.memcore2_to_computecore5 = mOP.memcore2_to_computecore5;
           uop.is_last_uOP = false;
           stream_uOP_mesh_sendB.write(uop);
-#ifdef SW_EMU_PRINT
-          int window_id_32b = window_id;
-          outFile << "uop iter " << iter << " window_id " << window_id_32b << ": size " << uop.size
-                  << " memcore0_to_computecore0 " << uop.memcore0_to_computecore0
-                  << " memcore0_to_computecore2 " << uop.memcore0_to_computecore2
-                  << " memcore0_to_computecore4 " << uop.memcore0_to_computecore4
-                  << " memcore1_to_computecore1 " << uop.memcore1_to_computecore1
-                  << " memcore1_to_computecore3 " << uop.memcore1_to_computecore3
-                  << " memcore1_to_computecore5 " << uop.memcore1_to_computecore5
-                  << " memcore2_to_computecore4 " << uop.memcore2_to_computecore4
-                  << " memcore2_to_computecore5 " << uop.memcore2_to_computecore5 << " is_last_uOP "
-                  << uop.is_last_uOP << std::endl;
-#endif
+
         }
       }
     }
@@ -645,10 +437,6 @@ void mop2uop_mesh_sendB(hls::stream<mop_mesh_sendB_type> &stream_mOP_mesh_sendB,
   uop.is_last_uOP = true;
   stream_uOP_mesh_sendB.write(uop);
 
-#ifdef SW_EMU_PRINT
-  outFile << "EXIT mop2uop_mesh_sendB ================= " << std::endl;
-  outFile.close();
-#endif
 }
 
 void read_instructions_from_offchip(uint32_t *vliw_memory,
@@ -678,16 +466,7 @@ void instructions_to_mop_dispenser(hls::stream<uint32_t> &stream_instruction_seq
                                    hls::stream<mop_memcore_C_type> &stream_mOP_memcore5_C,
                                    hls::stream<mop_mesh_sendA_type> &stream_mOP_mesh_sendA,
                                    hls::stream<mop_mesh_sendB_type> &stream_mOP_mesh_sendB) {
-#ifdef SW_EMU_PRINT
-  std::ofstream outFile(
-      "/home/cw4/github/versal-float32/20-inputlen384/design/pl_src/output/"
-      "decoder_uop_instructions_to_mop_dispenser.txt",
-      std::ios_base::app);
-  if (!outFile.is_open()) {
-    std::cerr << "Unable to open file for writing." << std::endl;
-  }
-  outFile << "\n\nENTER instructions_to_mop_dispenser ================= " << std::endl;
-#endif
+
 
   uint32_t countInstPkt = stream_instruction_sequence.read();
 
@@ -696,32 +475,7 @@ void instructions_to_mop_dispenser(hls::stream<uint32_t> &stream_instruction_seq
 
 INST_PKT:
   for (uint32_t inst_pkt_id = 0; inst_pkt_id < countInstPkt; inst_pkt_id++) {
-#ifdef SW_EMU_PRINT
-    outFile << "inst_pkt_id " << inst_pkt_id << " inst_header ";
-    if (inst_header.inst_val.opcode == OPCODE_DDR_DRAM) {
-      outFile << "OPCODE_DDR_DRAM" << std::endl;
-    } else if (inst_header.inst_val.opcode == OPCODE_LOADB_DRAM) {
-      outFile << "OPCODE_LOADB_DRAM" << std::endl;
-    } else if (inst_header.inst_val.opcode == OPCODE_MEMCORE_A) {
-      outFile << "OPCODE_MEMCORE_A" << std::endl;
-    } else if (inst_header.inst_val.opcode == OPCODE_MEMCORE_B) {
-      outFile << "OPCODE_MEMCORE_B" << std::endl;
-    } else if (inst_header.inst_val.opcode == OPCODE_MEMCORE_C) {
-      outFile << "OPCODE_MEMCORE_C" << std::endl;
-    } else if (inst_header.inst_val.opcode == OPCODE_MESH_SEND_A) {
-      outFile << "OPCODE_MESH_SEND_A" << std::endl;
-    } else if (inst_header.inst_val.opcode == OPCODE_MESH_SEND_B) {
-      outFile << "OPCODE_MESH_SEND_B" << std::endl;
-    } else if (inst_header.inst_val.opcode == OPCODE_NULL) {
-      outFile << "OPCODE_NULL" << std::endl;
-    } else {
-      outFile << "OPCODE_UNKNOWN" << std::endl;
-    }
-    outFile << " is_last_mOP " << inst_header.inst_val.is_last_mOP << " mop_buffer_window_size "
-            << inst_header.inst_val.mop_buffer_window_size << " repeat_num "
-            << inst_header.inst_val.repeat_num << " mask " << inst_header.inst_val.mask
-            << std::endl;
-#endif
+
 
     ap_uint<LEN_OPCODE> opcode = inst_header.inst_val.opcode;
     ap_uint<LEN_MASK> mask = inst_header.inst_val.mask;
@@ -767,23 +521,7 @@ INST_PKT:
           mOP.store_from_memcoreC5 = inst.inst_val.store_from_memcoreC5;
 
           mOP.is_last_mOP = false;
-#ifdef SW_EMU_PRINT
-          outFile << "mop_ddr: repeat_num " << mOP.repeat_num << " mop_buffer_window_size"
-                  << mOP.mop_buffer_window_size << " start_address " << mOP.start_address
-                  << " chunck_size " << mOP.chunck_size << " stride_offset " << mOP.stride_offset
-                  << "is_store " << mOP.is_store << " is_load " << mOP.is_load
-                  << " load_to_memcoreA0 " << mOP.load_to_memcoreA0 << " load_to_memcoreA1 "
-                  << mOP.load_to_memcoreA1 << " load_to_memcoreA2 " << mOP.load_to_memcoreA2
-                  << " load_to_memcoreB0 " << mOP.load_to_memcoreB0 << " load_to_memcoreB1 "
-                  << mOP.load_to_memcoreB1 << " load_to_memcoreB2 " << mOP.load_to_memcoreB2
-                  << " store_from_memcoreC0 " << mOP.store_from_memcoreC0
-                  << " store_from_memcoreC1 " << mOP.store_from_memcoreC1
-                  << " store_from_memcoreC2 " << mOP.store_from_memcoreC2
-                  << " store_from_memcoreC3 " << mOP.store_from_memcoreC3
-                  << " store_from_memcoreC4 " << mOP.store_from_memcoreC4
-                  << " store_from_memcoreC5 " << mOP.store_from_memcoreC5 << " is_last_mOP "
-                  << mOP.is_last_mOP << std::endl;
-#endif
+
           stream_mOP_ddr.write(mOP);
         }
       } else {
@@ -813,13 +551,7 @@ INST_PKT:
           mOP.load_to_memcoreB1 = inst.inst_val.load_to_memcoreB1;
           mOP.is_loading_bias = inst.inst_val.is_loading_bias;
           mOP.is_last_mOP = false;
-#ifdef SW_EMU_PRINT
-          outFile << "mop_loadB_dram: repeat_num " << mOP.repeat_num << " mop_buffer_window_size"
-                  << mOP.mop_buffer_window_size << " start_address " << mOP.start_address
-                  << " chunck_size " << mOP.chunck_size << " stride_offset " << mOP.stride_offset
-                  << " load_to_memcoreB0 " << mOP.load_to_memcoreB0 << " load_to_memcoreB1 "
-                  << mOP.load_to_memcoreB1 << " is_last_mOP " << mOP.is_last_mOP << std::endl;
-#endif
+
           stream_mOP_loadB_dram.write(mOP);
         }
       } else {
@@ -843,14 +575,7 @@ INST_PKT:
           mOP.compute_tile_access_A = inst.inst_val.compute_tile_access_A;
           mOP.compute_tile_access_B = inst.inst_val.compute_tile_access_B;
           mOP.is_last_mOP = false;
-#ifdef SW_EMU_PRINT
-          outFile << "mop_memcore_A_type: repeat_num " << mOP.repeat_num << " one_mem_tile_dim1 "
-                  << mOP.one_mem_tile_dim1 << " one_mem_tile_dim2 " << mOP.one_mem_tile_dim2
-                  << " compute_tile_access_A " << mOP.compute_tile_access_A
-                  << " compute_tile_access_B " << mOP.compute_tile_access_B << " is_last_mOP "
-                  << mOP.is_last_mOP << std::endl;
-          outFile << "mask " << mask << std::endl;
-#endif
+
           if (mask(0, 0) == true) {
             stream_mOP_memcore0_A.write(mOP);
           }
@@ -894,13 +619,7 @@ INST_PKT:
           mOP.is_loading_bias = inst.inst_val.is_loading_bias;
           mOP.enable_transpose = inst.inst_val.enable_transpose;
           mOP.is_last_mOP = false;
-#ifdef SW_EMU_PRINT
-          outFile << "mop_memcore_B_type: repeat_num " << mOP.repeat_num << " one_mem_tile_dim1 "
-                  << mOP.one_mem_tile_dim1 << " one_mem_tile_dim2 " << mOP.one_mem_tile_dim2
-                  << " compute_tile_access_A " << mOP.compute_tile_access_A
-                  << " compute_tile_access_B " << mOP.compute_tile_access_B << " is_last_mOP "
-                  << mOP.is_last_mOP << std::endl;
-#endif
+
           if (mask(0, 0) == true) {
             stream_mOP_memcore0_B.write(mOP);
           }
@@ -951,21 +670,7 @@ INST_PKT:
           mOP.compute_tile_send_access_K = inst.inst_val.compute_tile_send_access_K;
           mOP.k_iter = inst.inst_val.k_iter;
           mOP.is_last_mOP = false;
-#ifdef SW_EMU_PRINT
-          outFile << "mop_memcore_C_type: repeat_num " << mOP.repeat_num << " enable_store_to_dram "
-                  << mOP.enable_store_to_dram << " enable_send_to_aie " << mOP.enable_send_to_aie
-                  << " enable_recv_from_aie " << mOP.enable_recv_from_aie << " enable_softmax "
-                  << mOP.enable_softmax << " enable_gelu " << mOP.enable_gelu
-                  << " one_mem_tile_dim1 " << mOP.one_mem_tile_dim1 << " one_mem_tile_dim2 "
-                  << mOP.one_mem_tile_dim2 << " compute_tile_recv_access_A "
-                  << mOP.compute_tile_recv_access_A << " compute_tile_recv_access_B "
-                  << mOP.compute_tile_recv_access_B << " compute_tile_recv_access_K "
-                  << mOP.compute_tile_recv_access_K << " compute_tile_send_access_A "
-                  << mOP.compute_tile_send_access_A << " compute_tile_send_access_B "
-                  << mOP.compute_tile_send_access_B << " compute_tile_send_access_K "
-                  << mOP.compute_tile_send_access_K << " k_iter " << mOP.k_iter << " is_last_mOP "
-                  << mOP.is_last_mOP << std::endl;
-#endif
+
           if (mask(0, 0) == true) {
             stream_mOP_memcore0_C.write(mOP);
           }
@@ -1032,21 +737,7 @@ INST_PKT:
           mOP.memcoreC2_to_computecore5 = inst.inst_val.memcoreC2_to_computecore5;
           mOP.memcoreC3_to_computecore5 = inst.inst_val.memcoreC3_to_computecore5;
           mOP.is_last_mOP = false;
-#ifdef SW_EMU_PRINT
-          outFile << "mop_mesh_sendA_type: repeat_num " << mOP.repeat_num
-                  << " mop_buffer_window_size" << mOP.mop_buffer_window_size << " size " << mOP.size
-                  << " memcoreA0_to_computecore0 " << mOP.memcoreA0_to_computecore0
-                  << " memcoreA0_to_computecore1 " << mOP.memcoreA0_to_computecore1
-                  << " memcoreA1_to_computecore2 " << mOP.memcoreA1_to_computecore2
-                  << " memcoreA1_to_computecore3 " << mOP.memcoreA1_to_computecore3
-                  << " memcoreA2_to_computecore4 " << mOP.memcoreA2_to_computecore4
-                  << " memcoreA2_to_computecore5 " << mOP.memcoreA2_to_computecore5
-                  << " memcoreC0_to_computecore4 " << mOP.memcoreC0_to_computecore4
-                  << " memcoreC1_to_computecore4 " << mOP.memcoreC1_to_computecore4
-                  << " memcoreC2_to_computecore5 " << mOP.memcoreC2_to_computecore5
-                  << " memcoreC3_to_computecore5 " << mOP.memcoreC3_to_computecore5
-                  << " is_last_mOP " << mOP.is_last_mOP << std::endl;
-#endif
+
           stream_mOP_mesh_sendA.write(mOP);
         }
       } else {
@@ -1076,19 +767,7 @@ INST_PKT:
           mOP.memcore2_to_computecore4 = inst.inst_val.memcore2_to_computecore4;
           mOP.memcore2_to_computecore5 = inst.inst_val.memcore2_to_computecore5;
           mOP.is_last_mOP = false;
-#ifdef SW_EMU_PRINT
-          outFile << "mop_mesh_sendB_type: repeat_num " << mOP.repeat_num
-                  << " mop_buffer_window_size" << mOP.mop_buffer_window_size << " size " << mOP.size
-                  << " memcore0_to_computecore0 " << mOP.memcore0_to_computecore0
-                  << " memcore0_to_computecore2 " << mOP.memcore0_to_computecore2
-                  << " memcore0_to_computecore4 " << mOP.memcore0_to_computecore4
-                  << " memcore1_to_computecore1 " << mOP.memcore1_to_computecore1
-                  << " memcore1_to_computecore3 " << mOP.memcore1_to_computecore3
-                  << " memcore1_to_computecore5 " << mOP.memcore1_to_computecore5
-                  << " memcore2_to_computecore4 " << mOP.memcore2_to_computecore4
-                  << " memcore2_to_computecore5 " << mOP.memcore2_to_computecore5 << " is_last_mOP "
-                  << mOP.is_last_mOP << std::endl;
-#endif
+
           stream_mOP_mesh_sendB.write(mOP);
         }
       } else {
@@ -1102,10 +781,7 @@ INST_PKT:
     }
   }
 
-#ifdef SW_EMU_PRINT
-  outFile << "EXIT instructions_to_mop_dispenser ================= " << std::endl;
-  outFile.close();
-#endif
+
 }
 
 void decoder_uop(uint32_t *vliw_memory, hls::stream<uop_ddr_type> &stream_uOP_ddr,
@@ -1126,15 +802,7 @@ void decoder_uop(uint32_t *vliw_memory, hls::stream<uop_ddr_type> &stream_uOP_dd
                  hls::stream<uop_mesh_sendB_type> &stream_uOP_mesh_sendB) {
 #pragma HLS dataflow
 
-#ifdef SW_EMU_PRINT
-  std::ofstream outFile(
-      "/home/cw4/github/versal-float32/20-inputlen384/design/pl_src/output/decoder_uop.txt",
-      std::ios_base::app);
-  if (!outFile.is_open()) {
-    std::cerr << "Unable to open file for writing." << std::endl;
-  }
-  outFile << "\n\nENTER decoder_uop ================= " << std::endl;
-#endif
+
 
   hls::stream<mop_ddr_type> stream_mOP_ddr;
   hls::stream<mop_loadB_dram_type> stream_mOP_loadB_dram;
@@ -1183,72 +851,45 @@ void decoder_uop(uint32_t *vliw_memory, hls::stream<uop_ddr_type> &stream_uOP_dd
   mop2uop_loadB_dram(stream_mOP_loadB_dram, stream_uOP_loadB_dram);
 
   mop2uop_memcore_A(
-#ifdef SW_EMU_PRINT
-      0,
-#endif
+
       stream_mOP_memcore0_A, stream_uOP_memcore0_A);
   mop2uop_memcore_A(
-#ifdef SW_EMU_PRINT
-      1,
-#endif
+
       stream_mOP_memcore1_A, stream_uOP_memcore1_A);
   mop2uop_memcore_A(
-#ifdef SW_EMU_PRINT
-      2,
-#endif
+
       stream_mOP_memcore2_A, stream_uOP_memcore2_A);
   mop2uop_memcore_B(
-#ifdef SW_EMU_PRINT
-      0,
-#endif
+
       stream_mOP_memcore0_B, stream_uOP_memcore0_B);
   mop2uop_memcore_B(
-#ifdef SW_EMU_PRINT
-      1,
-#endif
+      
       stream_mOP_memcore1_B, stream_uOP_memcore1_B);
   mop2uop_memcore_B(
-#ifdef SW_EMU_PRINT
-      2,
-#endif
+
       stream_mOP_memcore2_B, stream_uOP_memcore2_B);
 
   mop2uop_memcore_C(
-#ifdef SW_EMU_PRINT
-      0,
-#endif
+
       stream_mOP_memcore0_C, stream_uOP_memcore0_C);
   mop2uop_memcore_C(
-#ifdef SW_EMU_PRINT
-      1,
-#endif
+
       stream_mOP_memcore1_C, stream_uOP_memcore1_C);
   mop2uop_memcore_C(
-#ifdef SW_EMU_PRINT
-      2,
-#endif
+
       stream_mOP_memcore2_C, stream_uOP_memcore2_C);
   mop2uop_memcore_C(
-#ifdef SW_EMU_PRINT
-      3,
-#endif
+
       stream_mOP_memcore3_C, stream_uOP_memcore3_C);
   mop2uop_memcore_C(
-#ifdef SW_EMU_PRINT
-      4,
-#endif
+
       stream_mOP_memcore4_C, stream_uOP_memcore4_C);
   mop2uop_memcore_C(
-#ifdef SW_EMU_PRINT
-      5,
-#endif
+
       stream_mOP_memcore5_C, stream_uOP_memcore5_C);
 
   mop2uop_mesh_sendA(stream_mOP_mesh_sendA, stream_uOP_mesh_sendA);
   mop2uop_mesh_sendB(stream_mOP_mesh_sendB, stream_uOP_mesh_sendB);
 
-#ifdef SW_EMU_PRINT
-  outFile << "EXIT decoder_uop ================= " << std::endl;
-  outFile.close();
-#endif
+
 }
