@@ -1,7 +1,6 @@
 #Copyright (C) 2023, Advanced Micro Devices, Inc. All rights reserved.
 #SPDX-License-Identifier: X11
 
-# Chengyue: 
 # This file is modified from https://github.com/Xilinx/Vitis-Tutorials/blob/2024.2/AI_Engine_Development/AIE/Design_Tutorials/10-GeMM_AIEvsDSP/AIE/Makefile
 
 
@@ -252,7 +251,7 @@ AIE_FLAGS += --pl-freq=$(PL_FREQ)
 # aids in timeing closure of the design...
 AIE_FLAGS += --constraints=$(AIE_SRC_REPO)/constraints.aiecst
 
-AIE_FLAGS += --xlopt=0 # chengyue add
+AIE_FLAGS += --xlopt=0
 AIE_FLAGS += --Xmapper=BufferOptLevel0 #--Xmapper=DisableFloorplanning
 AIE_FLAGS += --Xrouter=DMAFIFOsInFreeBankOnly
 
@@ -324,7 +323,7 @@ DATAMOVER_KERNEL_VPP_FLAGS += --hls.pre_tcl $(DIRECTIVES_REPO)/hls.tcl
 VPP_LINK_FLAGS := --clock.freqHz $(VPP_CLOCK_FREQ):$(DATAMOVER_KERNEL_TOP)_0
 # VPP_LINK_FLAGS += --clock.defaultTolerance 0.001
 
-VPP_LINK_FLAGS += --clock.defaultTolerance 0.1 # @@ chengyue add
+VPP_LINK_FLAGS += --clock.defaultTolerance 0.1
 VPP_LINK_FLAGS += --clock.defaultFreqHz $(VPP_CLOCK_FREQ)
 
 

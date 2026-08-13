@@ -15,7 +15,6 @@
 #include "hls_math.h"
 
 
-
 #define OPCODE_NULL 0
 #define OPCODE_DDR_DRAM 1
 #define OPCODE_LOADB_DRAM 2

@@ -653,7 +653,6 @@ void dma_hls(
   hls_thread_local hls::stream<uop_mesh_sendB_type> stream_uOP_mesh_sendB;
 
 
-
   hls_thread_local hls::stream<ap_uint<64>> from_memCore0_to_mesh_A0_CASC0,
       from_memCore0_to_mesh_A0_CASC1, from_memCore0_to_mesh_A0_CASC2,
       from_memCore0_to_mesh_A0_CASC3;
@@ -954,7 +953,6 @@ void dma_hls(
       data_channel_core3to2_recvmesh, data_channel_core2to3, data_channel_core2to3_recvmesh);
 
 
-
   mesh_sendB(stream_uOP_mesh_sendB, from_memCore0_to_mesh_B0_CASC0, from_memCore0_to_mesh_B0_CASC1,
              from_memCore0_to_mesh_B0_CASC2, from_memCore0_to_mesh_B0_CASC3,
              from_memCore0_to_mesh_B1_CASC0, from_memCore0_to_mesh_B1_CASC1,
@@ -1119,7 +1117,6 @@ void dma_hls(
             from_computeCore5_C21, from_computeCore5_C22, from_computeCore5_C23,
             from_computeCore5_C30, from_computeCore5_C31, from_computeCore5_C32,
             from_computeCore5_C33, data_channel_core5to4, data_channel_core4to5);
-
 
 
   return;

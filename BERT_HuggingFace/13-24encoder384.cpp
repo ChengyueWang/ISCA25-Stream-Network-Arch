@@ -39,30 +39,6 @@ void printMatrixToFile(float* matrix, int rows, int cols, const std::string& fil
 }
 
 
-// void printMatrixToFile(float* matrix, int rows, int cols, const std::string& filename) {
-//     std::ofstream outfile(filename, std::ios::binary);  // Open the file for binary writing
-
-//     // Check if the file is open
-//     if (!outfile.is_open()) {
-//         std::cerr << "Failed to open the file." << std::endl;
-//         return;
-//     }
-
-//     // Write the matrix dimensions first, so you know how to read it back
-//     outfile.write(reinterpret_cast<char*>(&rows), sizeof(int));
-//     outfile.write(reinterpret_cast<char*>(&cols), sizeof(int));
-
-//     // Write the matrix data
-//     outfile.write(reinterpret_cast<char*>(matrix), rows * cols * sizeof(float));
-
-//     // Close the file
-//     outfile.close();
-// }
-
-
-
-
-
 void print_matrix_to_file(const std::string &filename, const float *matrix, int row, int col) {
     std::ofstream outFile(filename);
     if (!outFile.is_open()) {
@@ -82,7 +58,6 @@ void print_matrix_to_file(const std::string &filename, const float *matrix, int 
         outFile << std::setw(7) << i; // Row header
         for (int j = 0; j < col; j++) {
             outFile << std::setw(7) << std::fixed << std::setprecision(4) << matrix[i * col + j];
-            // outFile << std::setw(7) << matrix[i * col + j] << " " ;
         }
         outFile << "\n";
     }
@@ -224,7 +199,6 @@ void convert_blocked_to_2AXI_layout(float *matrix, int row, int col) {
 }
 
 
-
 void valid (float * host_outC_port, float * gold_val, size_t size){
     int wrong_count = 0;
     for (int i=0; i<size; i++){
@@ -257,12 +231,9 @@ void calculate_matrix_with_bias(float* host_inA_port, float* host_inB_port, floa
                 sum += host_inA_port[i*K+k] * host_inB_port[k*B+j];
             }
             gold_val[i*B+j] = sum + bias[j];
-            // printf("bias = %f\n", bias[j]);
-            // printf("sum = %f\n", sum);
         }
     }
 }
-
 
 
 int load_data(const std::string &filename, float *data, size_t num_elements) {
@@ -471,7 +442,6 @@ int cal_encoder_layer (float * input, float * output, int encode_id){
         }
         transpose_matrix(k, k_transposed, 384, 64);
         calculate_matrix(q, k_transposed, qk, 384, 384, 64);
-        // matrix_scale (qk, 1.0/8, 384, 384);
         calculate_softmax(qk, qk_softmax, 384, 384);
         calculate_matrix(qk_softmax, v, qkv, 384, 64, 384);
 
@@ -524,8 +494,6 @@ int cal_encoder_layer (float * input, float * output, int encode_id){
         }
     }
     // first add weight and bias to norm1, then calculate dense2
-    // calculate_matrix_with_bias (norm1, norm1_weight_diag, norm1_bias, norm1_wb, 384, 1024, 1024);
-    // calculate_matrix_with_bias (norm1_wb, data_weight, data_bias, dense2, 384, 4096, 1024);
 
     // merge norm1_weight and dense2_weight together
     // prepare weight offline
@@ -560,8 +528,6 @@ int cal_encoder_layer (float * input, float * output, int encode_id){
     matrix_add (dense3, norm1_wb, 384, 1024);
     
 
-    // float* norm2_weight = (float*)malloc(1024 * 4);
-    // float* norm2_bias = (float*)malloc(1024 * 4);
     load_success = load_data("12-gold_384/encoder"+std::to_string(encode_id) + "/7-output.LayerNorm-weight.txt", norm2_weight, 1024); if (load_success == -1) return -1;
     load_success = load_data("12-gold_384/encoder"+std::to_string(encode_id) + "/7-output.LayerNorm-bias.txt", norm2_bias, 1024); if (load_success == -1) return -1;
     load_success = load_data("12-gold_384/encoder"+std::to_string(encode_id) + "/7-output.LayerNorm-output.txt", gold_val, 384*1024); if (load_success == -1) return -1;
@@ -635,14 +601,12 @@ int main() {
     matrix_scale (gold_val, 1.0/8, 384, 1024);
     valid(data_query, gold_val, 384*1024);
 
-    // load_success = load_data("12-gold_384/encoder0/1-attention.self.key-input.txt", data_input, 384*1024); if (load_success == -1) return -1;
     load_success = load_data("12-gold_384/encoder0/1-attention.self.key-weight.txt", data_weight, 1024*1024); if (load_success == -1) return -1;
     load_success = load_data("12-gold_384/encoder0/1-attention.self.key-bias.txt", data_bias, 1024); if (load_success == -1) return -1;
     load_success = load_data("12-gold_384/encoder0/1-attention.self.key-output.txt", gold_val, 384*1024); if (load_success == -1) return -1;
     calculate_matrix_with_bias (data_input, data_weight, data_bias, data_key, 384, 1024, 1024);
     valid(data_key, gold_val, 384*1024);
 
-    // load_success = load_data("12-gold_384/encoder0/2-attention.self.value-input.txt", data_input, 384*1024); if (load_success == -1) return -1;
     load_success = load_data("12-gold_384/encoder0/2-attention.self.value-weight.txt", data_weight, 1024*1024); if (load_success == -1) return -1;
     load_success = load_data("12-gold_384/encoder0/2-attention.self.value-bias.txt", data_bias, 1024); if (load_success == -1) return -1;
     load_success = load_data("12-gold_384/encoder0/2-attention.self.value-output.txt", gold_val, 384*1024); if (load_success == -1) return -1;
@@ -668,7 +632,6 @@ int main() {
         }
         transpose_matrix(k, k_transposed, 384, 64);
         calculate_matrix(q, k_transposed, qk, 384, 384, 64);
-        // matrix_scale (qk, 1.0/8, 384, 384);
         calculate_softmax(qk, qk_softmax, 384, 384);
         calculate_matrix(qk_softmax, v, qkv, 384, 64, 384);
 
@@ -720,8 +683,6 @@ int main() {
         }
     }
     // first add weight and bias to norm1, then calculate dense2
-    // calculate_matrix_with_bias (norm1, norm1_weight_diag, norm1_bias, norm1_wb, 384, 1024, 1024);
-    // calculate_matrix_with_bias (norm1_wb, data_weight, data_bias, dense2, 384, 4096, 1024);
 
     // merge norm1_weight and dense2_weight together
     // prepare weight offline
@@ -765,17 +726,9 @@ int main() {
     layer_normalization_no_weightbias(dense3, norm2, 384, 1024);
     printMatrixToFile(norm2, 384, 1024, "12-gold_384/encoder0/7-fused_dense3_norm2.txt");
 
-    // layer_normalization (dense3, norm2, norm2_weight, norm2_bias, 384, 1024);
-    // valid(norm2, gold_val, 384*1024);
-
-    // cal_encoder_layer(norm2, norm2, 1);
-    // cal_encoder_layer(norm2, norm2, 2);
-
     for (int en=1; en<24; en++){
         cal_encoder_layer(norm2, norm2, en);
     }
-
-
 
 
     free(data_input);
@@ -788,9 +741,6 @@ int main() {
 }
 
 
-
-
     
-
 
 

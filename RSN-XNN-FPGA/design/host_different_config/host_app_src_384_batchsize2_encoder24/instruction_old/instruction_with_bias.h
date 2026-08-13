@@ -2,7 +2,6 @@
 #include "instruction.h"
 
 
-
 void generate_bias(uint32_t *inst_sequence, uint32_t & count4B,  uint32_t & countInstPkt, ParamsOneLayer params){
 
     union_inst_header inst_header;
@@ -92,9 +91,6 @@ void generate_bias(uint32_t *inst_sequence, uint32_t & count4B,  uint32_t & coun
 }
 
 
-
-
-
 void generate_instruction_onelayer_with_bias ( uint32_t *inst_sequence, uint32_t & count4B,  uint32_t & countInstPkt, ParamsOneLayer params){
     uint32_t a_iter = params.a_iter;
     uint32_t b_iter = params.b_iter;
@@ -116,7 +112,6 @@ void generate_instruction_onelayer_with_bias ( uint32_t *inst_sequence, uint32_t
 
     generate_last_inst_for_all_modules(inst_sequence, count4B, countInstPkt);
 }
-
 
 
 void generate_instruction_onelayer_overlap_128_512_A4B1K8_with_bias  ( uint32_t *inst_sequence, uint32_t & count4B,  uint32_t & countInstPkt, ParamsOneLayer params){

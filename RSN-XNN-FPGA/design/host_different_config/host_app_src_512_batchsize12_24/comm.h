@@ -35,10 +35,6 @@ using namespace std;
 #define ENABLE_TEST_NORM2
 
 
-
-// #define SW_EMU_PRINT
-
-
 class Timer {
 	std::chrono::high_resolution_clock::time_point mTimeStart;
    public:
@@ -50,7 +46,6 @@ class Timer {
 	}
   	void reset() { mTimeStart = std::chrono::high_resolution_clock::now(); }
 };
-
 
 
 static std::vector<char>
@@ -98,10 +93,6 @@ private:
    uint32_t pl_tile_a = 3 * 256;
    uint32_t pl_tile_b = 2 * 512;
    uint32_t pl_tile_k = 128;
-
-   // uint32_t matrix_size_a = pl_tile_a * a_iter;
-   // uint32_t matrix_size_b = pl_tile_b * b_iter;
-   // uint32_t matrix_size_k = pl_tile_k * k_iter;
 
 public:
 
@@ -171,9 +162,6 @@ public:
 };
 
 
-
-
-
 class ParamsFusedLayer {
 private:
 
@@ -188,8 +176,6 @@ public:
    size_t ddr_offset_512b_inB_L1 = 0;
    size_t ddr_offset_512b_inB_L2 = 0;
    size_t ddr_offset_512b_outC_L2 = 0;
-
-
 
 
    // Constructor
@@ -250,6 +236,5 @@ public:
    }
 
 };
-
 
 

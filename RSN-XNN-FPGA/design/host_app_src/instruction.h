@@ -63,35 +63,6 @@ struct INST_HEADER_TYPE {
   uint32_t repeat_num : LEN_REPEAT_NUM;                          // 16 bits for repeat_num
 };
 
-// struct INST_DDR_TYPE{
-//     uint32_t start_address;
-//     uint32_t address_offset; // address offset for loop at the level of repeat_num
-//     uint32_t chunck_size; // the size of data that is accessed contiguously
-//     uint32_t stride_offset; // the gap between the start of two chunk of data
-//     uint32_t chunk_count      :16; // the number of chunks of data
-//     uint32_t is_store: 1;
-//     uint32_t is_load: 1;
-//     uint32_t load_to_memcoreA0: 1;
-//     uint32_t load_to_memcoreA1: 1;
-//     uint32_t load_to_memcoreA2: 1;
-//     uint32_t load_to_memcoreB0: 1;
-//     uint32_t load_to_memcoreB1: 1;
-//     uint32_t load_to_memcoreB2: 1;
-//     uint32_t load_to_memcoreC0: 1;
-//     uint32_t load_to_memcoreC1: 1;
-//     uint32_t load_to_memcoreC2: 1;
-//     uint32_t load_to_memcoreC3: 1;
-//     uint32_t load_to_memcoreC4: 1;
-//     uint32_t load_to_memcoreC5: 1;
-//     uint32_t store_from_memcoreC0 : 1;
-//     uint32_t store_from_memcoreC1 : 1;
-//     uint32_t store_from_memcoreC2 : 1;
-//     uint32_t store_from_memcoreC3 : 1;
-//     uint32_t store_from_memcoreC4 : 1;
-//     uint32_t store_from_memcoreC5 : 1;
-//     uint32_t zero_padding  : 28;
-// };
-
 struct INST_DDR_TYPE {
   uint32_t start_address;
   uint32_t chunck_size;          // the size of data that is accessed contiguously
@@ -123,17 +94,6 @@ struct INST_DDR_TYPE {
 };
 
 // 5 32-bit
-// struct INST_LOAD_B_DRAM_TYPE{
-//     uint32_t start_address;
-//     uint32_t address_offset; // address offset for loop at the level of repeat_num
-//     uint32_t chunck_size; // the size of data that is accessed contiguously
-//     uint32_t stride_offset ; // the gap between the start of two chunk of data
-//     uint32_t chunk_count :16; // the number of chunks of data
-//     uint32_t load_to_memcoreB0 :1;
-//     uint32_t load_to_memcoreB1 :1;
-//     uint32_t is_loading_bias :1;
-//     uint32_t zero_padding  : 13;
-// } ;
 
 struct INST_LOAD_B_DRAM_TYPE {
   uint32_t start_address;
@@ -158,8 +118,6 @@ struct INST_MEMCORE_A_TYPE {
   uint32_t zero_padding : 7;
 
   // second 32-bit
-  // uint32_t one_compute_tile_dim1 :8;  // max 128
-  // uint32_t one_compute_tile_dim2 :8;  // max 128
 };
 
 // 2 32-bit => 33 bits
@@ -178,8 +136,6 @@ struct INST_MEMCORE_B_TYPE {
   uint32_t is_loading_bias : 1;
   uint32_t zero_padding : 31;
 
-  // uint32_t one_compute_tile_dim1 :8;  // max 128
-  // uint32_t one_compute_tile_dim2 :8;  // max 128
 };
 
 // 2 32-bit => 59 bits
@@ -202,8 +158,6 @@ struct INST_MEMCORE_C_TYPE {
   uint32_t enable_gelu : 1;
   uint32_t enable_layer_norm : 1;
   uint32_t zero_padding : 5;
-  // uint32_t one_compute_tile_dim1   :16;
-  // uint32_t one_compute_tile_dim2   :16;
 };
 
 // 2 32-bit

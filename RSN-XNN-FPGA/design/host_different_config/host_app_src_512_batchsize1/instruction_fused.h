@@ -571,8 +571,6 @@ void generate_instruction_fusedlayer ( uint32_t *inst_sequence, uint32_t & count
     for (int i = 0; i < CNT4B_MESH_B ; i++) {inst_sequence[count4B++] = inst_mesh_B.raw_32b[i];}
 
 
-    // assert(num_layer == 96);
-
     int gap_num = 16; 
 
 
@@ -1375,9 +1373,6 @@ void generate_instruction_fusedlayer ( uint32_t *inst_sequence, uint32_t & count
 }
 
 
-
-
-
 void generate_instruction_fusedlayer_numlayer1 ( uint32_t *inst_sequence, uint32_t & count4B,  uint32_t & countInstPkt, ParamsFusedLayer & params) {
 
     union_inst_header inst_header;
@@ -1624,7 +1619,6 @@ void generate_instruction_fusedlayer_numlayer1 ( uint32_t *inst_sequence, uint32
     for (int i = 0; i < CNT4B_MEMCORE_A ; i++) {inst_sequence[count4B++] = inst_memcore_A.raw_32b[i];    }
 
 
-
     inst_header.inst_val.opcode = OPCODE_MEMCORE_B;
     inst_header.inst_val.mask = 0b000011;
     inst_header.inst_val.is_last_mOP = false;
@@ -1664,7 +1658,6 @@ void generate_instruction_fusedlayer_numlayer1 ( uint32_t *inst_sequence, uint32
     for (int i = 0; i < CNT4B_MEMCORE_B ; i++) {inst_sequence[count4B++] = inst_memcore_B.raw_32b[i];}
 
 
-
     inst_header.inst_val.opcode = OPCODE_MEMCORE_B;
     inst_header.inst_val.mask = 0b000100;
     inst_header.inst_val.is_last_mOP = false;
@@ -1702,7 +1695,6 @@ void generate_instruction_fusedlayer_numlayer1 ( uint32_t *inst_sequence, uint32
     inst_memcore_B.inst_val.compute_tile_access_B = 1;
     inst_memcore_B.inst_val.compute_tile_access_K = 4;
     for (int i = 0; i < CNT4B_MEMCORE_B ; i++) {inst_sequence[count4B++] = inst_memcore_B.raw_32b[i];}
-
 
 
     inst_header.inst_val.opcode = OPCODE_MEMCORE_C;
@@ -1756,7 +1748,6 @@ void generate_instruction_fusedlayer_numlayer1 ( uint32_t *inst_sequence, uint32
     for (int i = 0; i < CNT4B_MEMCORE_C ; i++) {inst_sequence[count4B++] = inst_memcore_C.raw_32b[i]; }
 
 
-
     inst_header.inst_val.opcode = OPCODE_MEMCORE_C;
     inst_header.inst_val.mask = 0b110000;
     inst_header.inst_val.is_last_mOP = false;
@@ -1806,7 +1797,6 @@ void generate_instruction_fusedlayer_numlayer1 ( uint32_t *inst_sequence, uint32
     inst_memcore_C.inst_val.compute_tile_send_access_K = 0;
     inst_memcore_C.inst_val.k_iter = 1;
     for (int i = 0; i < CNT4B_MEMCORE_C ; i++) {inst_sequence[count4B++] = inst_memcore_C.raw_32b[i];}
-
 
 
     inst_header.inst_val.opcode = OPCODE_MESH_SEND_A;

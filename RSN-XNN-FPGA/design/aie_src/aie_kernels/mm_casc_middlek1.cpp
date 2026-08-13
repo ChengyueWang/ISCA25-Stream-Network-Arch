@@ -10,26 +10,6 @@ void mm_casc_middlek1(input_async_buffer<float, adf::extents<NSAMPLES_WINDOW_F_A
   uint32_t print_code = opcode_mem[0];
   uint32_t opcode_len = opcode_mem[1];
 
-#ifdef SW_EMU_PRINT
-  std::ofstream outFile("/home/cw4/github/versal-float32/20-inputlen384/design/pl_src/output/aie" +
-                            std::to_string(print_code) + "_mm_casc_middlek1.txt",
-                        std::ios_base::app);
-  if (!outFile.is_open()) {
-    std::cerr << "Unable to open file for writing." << std::endl;
-  }
-
-  if (print_code > 0) {
-    outFile << "ENTER _mm_casc_middlek1 =================== " << std::endl;
-    outFile << " opcode_len = " << opcode_len << std::endl;
-  }
-
-  float k1_local_buf[128] = {0.0};  // double declare as vitis-tutorial
-  for (int i = 0; i < 128; i++) {
-    k1_local_buf[i] = 0.0;
-  }
-
-#endif
-
   for (int op_id = 2; op_id < opcode_len + 2; op_id++) {
     uint32_t opcode = opcode_mem[op_id];
 
@@ -78,44 +58,9 @@ void mm_casc_middlek1(input_async_buffer<float, adf::extents<NSAMPLES_WINDOW_F_A
       b_round = 16 / 8;
     }
 
-#ifdef SW_EMU_PRINT
-    if (print_code > 0) {
-      outFile << "op_id = " << op_id << std::endl;
-      outFile << "opcode = " << opcode << std::endl;
-      outFile << "a_iter = " << a_iter << "b_iter = " << b_iter << " k_iter = " << k_iter
-              << " compute_tile_access_A = " << compute_tile_access_A
-              << " compute_tile_access_B = " << compute_tile_access_B
-              << " enable_load_pre_norm_weight = " << enable_load_pre_norm_weight
-              << " enable_bias = " << enable_bias << " dimb_is_32 = " << dimb_is_32
-              << " dimk_is_32 = " << dimk_is_32 << " enable_accum_kiter = " << enable_accum_kiter
-              << " print_code = " << print_code << std::endl;
-      outFile << "round = " << round << " b_round = " << b_round << std::endl;
-      outFile << "enable_muladd_pre_layer = " << enable_muladd_pre_layer << std::endl;
-      outFile << "need_muladd_pre_layer_in_cur_aie = " << need_muladd_pre_layer_in_cur_aie
-              << std::endl;
-    }
-#endif
-
     if (enable_load_pre_norm_weight == true) {
       matB.acquire();
       matB.release();
-#ifdef SW_EMU_PRINT
-      if (print_code > 0) {
-        outFile << "before load_pre_norm_weight = " << std::endl;
-        outFile << "k1_local_buf (declare inside kernel in simulation)= " << std::endl;
-        auto local_buf_print = begin(k1_local_buf);
-        for (int row = 0; row < 4; row++) {
-          for (int col = 0; col < 32; col++) {
-            float val = *local_buf_print++;
-            outFile << val << " ";
-          }
-          outFile << std::endl;
-        }
-        outFile << std::endl;
-        outFile << std::endl;
-        outFile << std::endl;
-      }
-#endif
 
       auto ptrv8_local_buf = begin_vector_random_circular<8>(k1_local_buf);
       for (int i = 0; i < 128 / 8; i++) {  // always 1024 / 4 aie per core / 2 core = 128 weight
@@ -131,23 +76,6 @@ void mm_casc_middlek1(input_async_buffer<float, adf::extents<NSAMPLES_WINDOW_F_A
         ptrv8_local_buf++;
       }
 
-#ifdef SW_EMU_PRINT
-      if (print_code > 0) {
-        outFile << "after load_pre_norm_weight = " << std::endl;
-        outFile << "k1_local_buf = " << std::endl;
-        auto local_buf_print = begin(k1_local_buf);
-        for (int row = 0; row < 4; row++) {
-          for (int col = 0; col < 32; col++) {
-            float val = *local_buf_print++;
-            outFile << val << " ";
-          }
-          outFile << std::endl;
-        }
-        outFile << std::endl;
-        outFile << std::endl;
-        outFile << std::endl;
-      }
-#endif
     }
 
     if (enable_bias == true) {
@@ -155,7 +83,6 @@ void mm_casc_middlek1(input_async_buffer<float, adf::extents<NSAMPLES_WINDOW_F_A
       matB.release();
     }
 
-    // for (int r=0; r<; r++){
     if (dimk_is_32 == 1) {
     L_AI:
       for (int ai = 0; ai < a_iter; ai++) {
@@ -167,22 +94,6 @@ void mm_casc_middlek1(input_async_buffer<float, adf::extents<NSAMPLES_WINDOW_F_A
                 matA.acquire();
 
                 auto pA = begin_vector_random_circular<8>(matA);
-
-#ifdef SW_EMU_PRINT
-                if (print_code > 0) {
-                  outFile << "access_a = " << access_a << " access_b = " << access_b
-                          << " ai = " << ai << " bi = " << bi << std::endl;
-                  outFile << "matA.acquire(); = " << std::endl;
-                  auto pA_print = begin(matA);
-                  for (int row = 0; row < 32; row++) {
-                    for (int col = 0; col < 32; col++) {
-                      float val = *pA_print++;
-                      outFile << val << " ";
-                    }
-                    outFile << std::endl;
-                  }
-                }
-#endif
 
                 for (int b = 0; b < b_round; b++)
                   chess_prepare_for_pipelining chess_loop_range(4, ) {
@@ -467,12 +378,5 @@ void mm_casc_middlek1(input_async_buffer<float, adf::extents<NSAMPLES_WINDOW_F_A
         matB.release();
       }
     }
-    // }
   }
-#ifdef SW_EMU_PRINT
-  if (print_code > 0) {
-    outFile << "EXIT  ================= \n" << std::endl;
-    outFile.close();
-  }
-#endif
 }

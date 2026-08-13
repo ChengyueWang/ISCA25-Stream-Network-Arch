@@ -17,7 +17,6 @@ void generate_instruction_fused384_coreA(bool enable_load, bool enable_send, int
     bool enable_softmax = true;
 
 
-
     inst_header.inst_val.opcode = OPCODE_MEMCORE_A;
     inst_header.inst_val.mask = 0b000001;
     inst_header.inst_val.is_last_mOP = false;
@@ -51,7 +50,6 @@ void generate_instruction_fused384_coreA(bool enable_load, bool enable_send, int
     for (int i = 0; i < CNT4B_MEMCORE_A ; i++) {inst_sequence[count4B++] = inst_memcore_A.raw_32b[i];    }
 
 
-
 }
 
 
@@ -66,7 +64,6 @@ void generate_instruction_fused384_coreB(bool enable_load, bool enable_send, int
     union_inst_mesh_B inst_mesh_B;
 
     bool enable_softmax = true;
-
 
 
     inst_header.inst_val.opcode = OPCODE_MEMCORE_B;
@@ -126,7 +123,6 @@ void generate_instruction_fused384_coreB(bool enable_load, bool enable_send, int
     inst_memcore_B.inst_val.compute_tile_access_B = 1;
     inst_memcore_B.inst_val.compute_tile_access_K = 3;
     for (int i = 0; i < CNT4B_MEMCORE_B ; i++) {inst_sequence[count4B++] = inst_memcore_B.raw_32b[i];}
-
 
 
 }
@@ -248,10 +244,6 @@ void generate_instruction_fused384_coreC0123(bool enable_recv, bool enable_send,
     for (int i = 0; i < CNT4B_MEMCORE_C ; i++) {inst_sequence[count4B++] = inst_memcore_C.raw_32b[i]; }
 
 
-
-
-
-
 }
 
 void generate_instruction_fused384_coreC45(bool enable_recv, bool enable_store, int repeat_num,  uint32_t *inst_sequence, uint32_t & count4B,  uint32_t & countInstPkt, ParamsFusedLayer & params) {
@@ -319,9 +311,7 @@ void generate_instruction_fused384_coreC45(bool enable_recv, bool enable_store, 
     for (int i = 0; i < CNT4B_MEMCORE_C ; i++) {inst_sequence[count4B++] = inst_memcore_C.raw_32b[i];}
 
 
-
 }
-
 
 
 void generate_instruction_fused384_meshA( uint32_t *inst_sequence, uint32_t & count4B,  uint32_t & countInstPkt, ParamsFusedLayer & params) {
@@ -394,8 +384,6 @@ void generate_instruction_fused384_meshA( uint32_t *inst_sequence, uint32_t & co
     inst_mesh_A.inst_val.memcoreC2_to_computecore5 = false;
     inst_mesh_A.inst_val.memcoreC3_to_computecore5 = false;
     for (int i = 0; i < CNT4B_MESH_A ; i++) {inst_sequence[count4B++] = inst_mesh_A.raw_32b[i];}
-
-
 
 
     inst_header.inst_val.opcode = OPCODE_MESH_SEND_A;
@@ -504,8 +492,6 @@ void generate_instruction_fused384_meshA( uint32_t *inst_sequence, uint32_t & co
     for (int i = 0; i < CNT4B_MESH_A ; i++) {inst_sequence[count4B++] = inst_mesh_A.raw_32b[i];} 
 
 
-
-
     inst_header.inst_val.opcode = OPCODE_MESH_SEND_A;
     inst_header.inst_val.mask = false;
     inst_header.inst_val.is_last_mOP = false;
@@ -564,11 +550,6 @@ void generate_instruction_fused384_meshA( uint32_t *inst_sequence, uint32_t & co
     for (int i = 0; i < CNT4B_MESH_A ; i++) {inst_sequence[count4B++] = inst_mesh_A.raw_32b[i];} 
 
 
-
-
-
-
-
 }
 
 
@@ -623,7 +604,6 @@ void generate_instruction_fused384_meshB( uint32_t *inst_sequence, uint32_t & co
     inst_mesh_B.inst_val.memcore2_to_computecore4 = false;
     inst_mesh_B.inst_val.memcore2_to_computecore5 = false;
     for (int i = 0; i < CNT4B_MESH_B ; i++) {inst_sequence[count4B++] = inst_mesh_B.raw_32b[i];}
-
 
 
     inst_header.inst_val.opcode = OPCODE_MESH_SEND_B;
@@ -715,9 +695,7 @@ void generate_instruction_fused384_meshB( uint32_t *inst_sequence, uint32_t & co
     for (int i = 0; i < CNT4B_MESH_B ; i++) {inst_sequence[count4B++] = inst_mesh_B.raw_32b[i];}
 
 
-
 }
-
 
 
 void generate_instruction_fused384 ( uint32_t *inst_sequence, uint32_t & count4B,  uint32_t & countInstPkt, ParamsFusedLayer & params) {
@@ -770,12 +748,6 @@ void generate_instruction_fused384 ( uint32_t *inst_sequence, uint32_t & count4B
     generate_instruction_fused384_coreC45(enable_recv, enable_store, repeat_num, inst_sequence, count4B, countInstPkt, params);
 
 
-
-    // generate_instruction_fused384_meshB(inst_sequence, count4B, countInstPkt, params);
-
-    // generate_instruction_fused384_meshA(inst_sequence, count4B, countInstPkt, params);
-
-
     inst_header.inst_val.opcode = OPCODE_MESH_SEND_B;
     inst_header.inst_val.mask = false;
     inst_header.inst_val.is_last_mOP = false;
@@ -814,8 +786,6 @@ void generate_instruction_fused384 ( uint32_t *inst_sequence, uint32_t & count4B
     inst_mesh_B.inst_val.memcore2_to_computecore4 = false;
     inst_mesh_B.inst_val.memcore2_to_computecore5 = false;
     for (int i = 0; i < CNT4B_MESH_B ; i++) {inst_sequence[count4B++] = inst_mesh_B.raw_32b[i];}
-
-
 
 
     inst_header.inst_val.opcode = OPCODE_MESH_SEND_A;
@@ -874,10 +844,6 @@ void generate_instruction_fused384 ( uint32_t *inst_sequence, uint32_t & count4B
     inst_mesh_A.inst_val.memcoreC2_to_computecore5 = false;
     inst_mesh_A.inst_val.memcoreC3_to_computecore5 = false;
     for (int i = 0; i < CNT4B_MESH_A ; i++) {inst_sequence[count4B++] = inst_mesh_A.raw_32b[i];}
-
-
-
-
 
 
     inst_header.inst_val.opcode = OPCODE_DDR_DRAM;
@@ -1020,8 +986,6 @@ void generate_instruction_fused384 ( uint32_t *inst_sequence, uint32_t & count4B
     for (int i = 0; i < CNT4B_DDR ; i++) { inst_sequence[count4B++] = inst_ddr.raw_32b[i];    }
 
 
-
-
     inst_header.inst_val.opcode = OPCODE_MESH_SEND_A;
     inst_header.inst_val.mask = false;
     inst_header.inst_val.is_last_mOP = false;
@@ -1128,8 +1092,6 @@ void generate_instruction_fused384 ( uint32_t *inst_sequence, uint32_t & count4B
     for (int i = 0; i < CNT4B_MESH_A ; i++) {inst_sequence[count4B++] = inst_mesh_A.raw_32b[i];} 
 
 
-
-
     inst_header.inst_val.opcode = OPCODE_MESH_SEND_A;
     inst_header.inst_val.mask = false;
     inst_header.inst_val.is_last_mOP = false;
@@ -1186,8 +1148,6 @@ void generate_instruction_fused384 ( uint32_t *inst_sequence, uint32_t & count4B
     inst_mesh_A.inst_val.memcoreC2_to_computecore5 = false;
     inst_mesh_A.inst_val.memcoreC3_to_computecore5 = true;   
     for (int i = 0; i < CNT4B_MESH_A ; i++) {inst_sequence[count4B++] = inst_mesh_A.raw_32b[i];} 
-
-
 
 
     inst_header.inst_val.opcode = OPCODE_MESH_SEND_B;
@@ -1485,14 +1445,9 @@ void generate_instruction_fused384 ( uint32_t *inst_sequence, uint32_t & count4B
     for (int i = 0; i < CNT4B_DDR ; i++) {inst_sequence[count4B++] = inst_ddr.raw_32b[i];    }
 
 
-
-
     ddr_addr_L1_inA  +=  (64*128/16) * 46 ;
     ddr_addr_L1_inB  +=  (64*128/16) * 46 ;
     ddr_addr_L2_inB  +=  (64*128/16) * 46 ;
-    // ddr_addr_L1_inA  +=  (64*128/16) * 62 ;
-    // ddr_addr_L1_inB  +=  (64*128/16) * 62 ;
-    // ddr_addr_L2_inB  +=  (64*128/16) * 62 ;
     ddr_addr_L2_outC +=  (64*128/16) * 14 ;
 
     inst_header.inst_val.opcode = OPCODE_DDR_DRAM;
@@ -1693,14 +1648,10 @@ void generate_instruction_fused384 ( uint32_t *inst_sequence, uint32_t & count4B
     for (int i = 0; i < CNT4B_DDR ; i++) {inst_sequence[count4B++] = inst_ddr.raw_32b[i];    }
 
 
-        // ddr_addr_L2_outC +=  (64*128/16) * 50 ;
         ddr_addr_L2_outC +=  (64*128/16) * 34 ;
 
 
     }
-
-
-
 
 
     ddr_addr_L1_inA  +=  (64*128/16) * 2 ;
@@ -1906,8 +1857,6 @@ void generate_instruction_fused384 ( uint32_t *inst_sequence, uint32_t & count4B
     for (int i = 0; i < CNT4B_DDR ; i++) {inst_sequence[count4B++] = inst_ddr.raw_32b[i];    }
 
 
-
-
     ddr_addr_L2_outC +=  (64*128/16) * 14 ;
 
     inst_header.inst_val.opcode = OPCODE_DDR_DRAM;
@@ -1970,12 +1919,6 @@ void generate_instruction_fused384 ( uint32_t *inst_sequence, uint32_t & count4B
     inst_ddr.inst_val.store_from_memcoreC4 = false;
     inst_ddr.inst_val.store_from_memcoreC5 = true;
     for (int i = 0; i < CNT4B_DDR ; i++) {inst_sequence[count4B++] = inst_ddr.raw_32b[i];    }
-
-
-
-
-
-
 
 
 }
@@ -2318,7 +2261,6 @@ void generate_instruction_fused384_numlayer1 ( uint32_t *inst_sequence, uint32_t
     for (int i = 0; i < CNT4B_MEMCORE_B ; i++) {inst_sequence[count4B++] = inst_memcore_B.raw_32b[i];}
 
 
-
     inst_header.inst_val.opcode = OPCODE_MEMCORE_B;
     inst_header.inst_val.mask = 0b000010;
     inst_header.inst_val.is_last_mOP = false;
@@ -2337,10 +2279,6 @@ void generate_instruction_fused384_numlayer1 ( uint32_t *inst_sequence, uint32_t
     inst_memcore_B.inst_val.compute_tile_access_B = 2;
     inst_memcore_B.inst_val.compute_tile_access_K = 1;
     for (int i = 0; i < CNT4B_MEMCORE_B ; i++) {inst_sequence[count4B++] = inst_memcore_B.raw_32b[i];}
-
-
-
-
 
 
     inst_header.inst_val.opcode = OPCODE_MEMCORE_B;
@@ -2380,7 +2318,6 @@ void generate_instruction_fused384_numlayer1 ( uint32_t *inst_sequence, uint32_t
     inst_memcore_B.inst_val.compute_tile_access_B = 1;
     inst_memcore_B.inst_val.compute_tile_access_K = 3;
     for (int i = 0; i < CNT4B_MEMCORE_B ; i++) {inst_sequence[count4B++] = inst_memcore_B.raw_32b[i];}
-
 
 
     inst_header.inst_val.opcode = OPCODE_MEMCORE_C;
@@ -2485,12 +2422,6 @@ void generate_instruction_fused384_numlayer1 ( uint32_t *inst_sequence, uint32_t
     for (int i = 0; i < CNT4B_MEMCORE_C ; i++) {inst_sequence[count4B++] = inst_memcore_C.raw_32b[i]; }
 
 
-
-
-
-
-
-
     inst_header.inst_val.opcode = OPCODE_MEMCORE_C;
     inst_header.inst_val.mask = 0b000001;
     inst_header.inst_val.is_last_mOP = false;
@@ -2593,11 +2524,6 @@ void generate_instruction_fused384_numlayer1 ( uint32_t *inst_sequence, uint32_t
     for (int i = 0; i < CNT4B_MEMCORE_C ; i++) {inst_sequence[count4B++] = inst_memcore_C.raw_32b[i]; }
 
 
-
-
-
-
-
     inst_header.inst_val.opcode = OPCODE_MEMCORE_C;
     inst_header.inst_val.mask = 0b010000;
     inst_header.inst_val.is_last_mOP = false;
@@ -2650,7 +2576,6 @@ void generate_instruction_fused384_numlayer1 ( uint32_t *inst_sequence, uint32_t
     for (int i = 0; i < CNT4B_MEMCORE_C ; i++) {inst_sequence[count4B++] = inst_memcore_C.raw_32b[i];}
 
 
-
     inst_header.inst_val.opcode = OPCODE_MEMCORE_C;
     inst_header.inst_val.mask = 0b010000;
     inst_header.inst_val.is_last_mOP = false;
@@ -2701,8 +2626,6 @@ void generate_instruction_fused384_numlayer1 ( uint32_t *inst_sequence, uint32_t
     inst_memcore_C.inst_val.compute_tile_send_access_K = 0;
     inst_memcore_C.inst_val.k_iter = 1;
     for (int i = 0; i < CNT4B_MEMCORE_C ; i++) {inst_sequence[count4B++] = inst_memcore_C.raw_32b[i];}
-
-
 
 
     inst_header.inst_val.opcode = OPCODE_MESH_SEND_A;
@@ -2886,239 +2809,7 @@ void generate_instruction_fused384_numlayer1 ( uint32_t *inst_sequence, uint32_t
     for (int i = 0; i < CNT4B_MESH_B ; i++) {inst_sequence[count4B++] = inst_mesh_B.raw_32b[i];}
 
 
-
-
-
     return;
 }
 
-
-
-
-
-
-// void generate_instruction_fused384_meshA( uint32_t *inst_sequence, uint32_t & count4B,  uint32_t & countInstPkt, ParamsFusedLayer & params) {
-
-//     union_inst_header inst_header;
-//     union_inst_ddr inst_ddr;
-//     union_inst_memcore_A inst_memcore_A;
-//     union_inst_memcore_B inst_memcore_B;
-//     union_inst_memcore_C inst_memcore_C;
-//     union_inst_mesh_A inst_mesh_A;
-//     union_inst_mesh_B inst_mesh_B;
-//     uint32_t num_layer = params.num_layer;
-
-//     bool enable_softmax = true;
-//     uint32_t ddr_addr_L1_inA  = params.ddr_offset_512b_inA_L1;
-//     uint32_t ddr_addr_L1_inB  = params.ddr_offset_512b_inB_L1;
-//     uint32_t ddr_addr_L2_inB  = params.ddr_offset_512b_inB_L2;
-//     uint32_t ddr_addr_L2_outC = params.ddr_offset_512b_outC_L2;
-
-
-
-
-//     inst_header.inst_val.opcode = OPCODE_MESH_SEND_A;
-//     inst_header.inst_val.mask = false;
-//     inst_header.inst_val.is_last_mOP = false;
-//     inst_header.inst_val.mop_buffer_window_size = 8;
-//     inst_header.inst_val.repeat_num = num_layer;
-//     inst_sequence[count4B++] = inst_header.raw_32b;
-//     printHeaderInst(inst_header.inst_val, countInstPkt);
-//     countInstPkt ++;
-//     // tile 0, upper left
-//     inst_mesh_A.inst_val.size = 1 * 1 * 32 * 32 /2 ;
-//     inst_mesh_A.inst_val.memcoreA0_to_computecore0 = true;
-//     inst_mesh_A.inst_val.memcoreA0_to_computecore1 = true;
-//     inst_mesh_A.inst_val.memcoreA1_to_computecore2 = true;
-//     inst_mesh_A.inst_val.memcoreA1_to_computecore3 = true;
-//     inst_mesh_A.inst_val.memcoreA2_to_computecore4 = false;
-//     inst_mesh_A.inst_val.memcoreA2_to_computecore5 = false;
-//     inst_mesh_A.inst_val.memcoreC0_to_computecore4 = false;
-//     inst_mesh_A.inst_val.memcoreC1_to_computecore4 = false;
-//     inst_mesh_A.inst_val.memcoreC2_to_computecore5 = false;
-//     inst_mesh_A.inst_val.memcoreC3_to_computecore5 = false;
-//     for (int i = 0; i < CNT4B_MESH_A ; i++) {inst_sequence[count4B++] = inst_mesh_A.raw_32b[i];}
-//     // tile 1, upper right
-//     inst_mesh_A.inst_val.size = 1 * 1 * 32 * 32 /2 ;
-//     inst_mesh_A.inst_val.memcoreA0_to_computecore0 = false;
-//     inst_mesh_A.inst_val.memcoreA0_to_computecore1 = true;
-//     inst_mesh_A.inst_val.memcoreA1_to_computecore2 = false;
-//     inst_mesh_A.inst_val.memcoreA1_to_computecore3 = true;
-//     inst_mesh_A.inst_val.memcoreA2_to_computecore4 = false;
-//     inst_mesh_A.inst_val.memcoreA2_to_computecore5 = false;
-//     inst_mesh_A.inst_val.memcoreC0_to_computecore4 = false;
-//     inst_mesh_A.inst_val.memcoreC1_to_computecore4 = false;
-//     inst_mesh_A.inst_val.memcoreC2_to_computecore5 = false;
-//     inst_mesh_A.inst_val.memcoreC3_to_computecore5 = false;
-//     for (int i = 0; i < CNT4B_MESH_A ; i++) {inst_sequence[count4B++] = inst_mesh_A.raw_32b[i];}
-//     // tile 2, low left
-//     inst_mesh_A.inst_val.size = 1 * 1 * 32 * 32 /2 ;
-//     inst_mesh_A.inst_val.memcoreA0_to_computecore0 = false;
-//     inst_mesh_A.inst_val.memcoreA0_to_computecore1 = false;
-//     inst_mesh_A.inst_val.memcoreA1_to_computecore2 = true;
-//     inst_mesh_A.inst_val.memcoreA1_to_computecore3 = true;
-//     inst_mesh_A.inst_val.memcoreA2_to_computecore4 = false;
-//     inst_mesh_A.inst_val.memcoreA2_to_computecore5 = false;
-//     inst_mesh_A.inst_val.memcoreC0_to_computecore4 = false;
-//     inst_mesh_A.inst_val.memcoreC1_to_computecore4 = false;
-//     inst_mesh_A.inst_val.memcoreC2_to_computecore5 = false;
-//     inst_mesh_A.inst_val.memcoreC3_to_computecore5 = false;
-//     for (int i = 0; i < CNT4B_MESH_A ; i++) {inst_sequence[count4B++] = inst_mesh_A.raw_32b[i];}
-//     // tile 3, low right
-//     inst_mesh_A.inst_val.size = 1 * 1 * 32 * 32 /2 ;
-//     inst_mesh_A.inst_val.memcoreA0_to_computecore0 = false;
-//     inst_mesh_A.inst_val.memcoreA0_to_computecore1 = false;
-//     inst_mesh_A.inst_val.memcoreA1_to_computecore2 = false;
-//     inst_mesh_A.inst_val.memcoreA1_to_computecore3 = true;
-//     inst_mesh_A.inst_val.memcoreA2_to_computecore4 = false;
-//     inst_mesh_A.inst_val.memcoreA2_to_computecore5 = false;
-//     inst_mesh_A.inst_val.memcoreC0_to_computecore4 = false;
-//     inst_mesh_A.inst_val.memcoreC1_to_computecore4 = false;
-//     inst_mesh_A.inst_val.memcoreC2_to_computecore5 = false;
-//     inst_mesh_A.inst_val.memcoreC3_to_computecore5 = false;
-//     for (int i = 0; i < CNT4B_MESH_A ; i++) {inst_sequence[count4B++] = inst_mesh_A.raw_32b[i];}
-//     inst_mesh_A.inst_val.size = 1 * 1 * 32 * 32 /2 ;
-//     inst_mesh_A.inst_val.memcoreA0_to_computecore0 = false;
-//     inst_mesh_A.inst_val.memcoreA0_to_computecore1 = false; 
-//     inst_mesh_A.inst_val.memcoreA1_to_computecore2 = false;
-//     inst_mesh_A.inst_val.memcoreA1_to_computecore3 = false;
-//     inst_mesh_A.inst_val.memcoreA2_to_computecore4 = false;
-//     inst_mesh_A.inst_val.memcoreA2_to_computecore5 = false;
-//     inst_mesh_A.inst_val.memcoreC0_to_computecore4 = true;
-//     inst_mesh_A.inst_val.memcoreC1_to_computecore4 = false;
-//     inst_mesh_A.inst_val.memcoreC2_to_computecore5 = true;
-//     inst_mesh_A.inst_val.memcoreC3_to_computecore5 = false;    
-//     for (int i = 0; i < CNT4B_MESH_A ; i++) {inst_sequence[count4B++] = inst_mesh_A.raw_32b[i]; }
-//     inst_mesh_A.inst_val.size = 1 * 2 * 32 * 32 /2 ; 
-//     inst_mesh_A.inst_val.memcoreA0_to_computecore0 = false;
-//     inst_mesh_A.inst_val.memcoreA0_to_computecore1 = false; 
-//     inst_mesh_A.inst_val.memcoreA1_to_computecore2 = false;
-//     inst_mesh_A.inst_val.memcoreA1_to_computecore3 = false;
-//     inst_mesh_A.inst_val.memcoreA2_to_computecore4 = false;
-//     inst_mesh_A.inst_val.memcoreA2_to_computecore5 = false;
-//     inst_mesh_A.inst_val.memcoreC0_to_computecore4 = false;
-//     inst_mesh_A.inst_val.memcoreC1_to_computecore4 = true;
-//     inst_mesh_A.inst_val.memcoreC2_to_computecore5 = false;
-//     inst_mesh_A.inst_val.memcoreC3_to_computecore5 = true;   
-//     for (int i = 0; i < CNT4B_MESH_A ; i++) {inst_sequence[count4B++] = inst_mesh_A.raw_32b[i];} 
-//     inst_mesh_A.inst_val.size = 1 * 1 * 32 * 32 /2 ;
-//     inst_mesh_A.inst_val.memcoreA0_to_computecore0 = false;
-//     inst_mesh_A.inst_val.memcoreA0_to_computecore1 = false; 
-//     inst_mesh_A.inst_val.memcoreA1_to_computecore2 = false;
-//     inst_mesh_A.inst_val.memcoreA1_to_computecore3 = false;
-//     inst_mesh_A.inst_val.memcoreA2_to_computecore4 = false;
-//     inst_mesh_A.inst_val.memcoreA2_to_computecore5 = false;
-//     inst_mesh_A.inst_val.memcoreC0_to_computecore4 = false;
-//     inst_mesh_A.inst_val.memcoreC1_to_computecore4 = false;
-//     inst_mesh_A.inst_val.memcoreC2_to_computecore5 = true;
-//     inst_mesh_A.inst_val.memcoreC3_to_computecore5 = false;    
-//     for (int i = 0; i < CNT4B_MESH_A ; i++) {inst_sequence[count4B++] = inst_mesh_A.raw_32b[i];    }
-//     inst_mesh_A.inst_val.size = 1 * 2 * 32 * 32 /2 ; 
-//     inst_mesh_A.inst_val.memcoreA0_to_computecore0 = false;
-//     inst_mesh_A.inst_val.memcoreA0_to_computecore1 = false; 
-//     inst_mesh_A.inst_val.memcoreA1_to_computecore2 = false;
-//     inst_mesh_A.inst_val.memcoreA1_to_computecore3 = false;
-//     inst_mesh_A.inst_val.memcoreA2_to_computecore4 = false;
-//     inst_mesh_A.inst_val.memcoreA2_to_computecore5 = false;
-//     inst_mesh_A.inst_val.memcoreC0_to_computecore4 = false;
-//     inst_mesh_A.inst_val.memcoreC1_to_computecore4 = false;
-//     inst_mesh_A.inst_val.memcoreC2_to_computecore5 = false;
-//     inst_mesh_A.inst_val.memcoreC3_to_computecore5 = true;   
-//     for (int i = 0; i < CNT4B_MESH_A ; i++) {inst_sequence[count4B++] = inst_mesh_A.raw_32b[i];} 
-
-// }
-
-
-
-// void generate_instruction_fused384_meshB( uint32_t *inst_sequence, uint32_t & count4B,  uint32_t & countInstPkt, ParamsFusedLayer & params) {
-
-//     union_inst_header inst_header;
-//     union_inst_ddr inst_ddr;
-//     union_inst_memcore_A inst_memcore_A;
-//     union_inst_memcore_B inst_memcore_B;
-//     union_inst_memcore_C inst_memcore_C;
-//     union_inst_mesh_A inst_mesh_A;
-//     union_inst_mesh_B inst_mesh_B;
-//     uint32_t num_layer = params.num_layer;
-
-//     bool enable_softmax = true;
-//     uint32_t ddr_addr_L1_inA  = params.ddr_offset_512b_inA_L1;
-//     uint32_t ddr_addr_L1_inB  = params.ddr_offset_512b_inB_L1;
-//     uint32_t ddr_addr_L2_inB  = params.ddr_offset_512b_inB_L2;
-//     uint32_t ddr_addr_L2_outC = params.ddr_offset_512b_outC_L2;
-
-
-
-//     inst_header.inst_val.opcode = OPCODE_MESH_SEND_B;
-//     inst_header.inst_val.mask = false;
-//     inst_header.inst_val.is_last_mOP = false;
-//     inst_header.inst_val.mop_buffer_window_size = 6;
-//     inst_header.inst_val.repeat_num = num_layer;
-//     inst_sequence[count4B++] = inst_header.raw_32b;
-//     printHeaderInst(inst_header.inst_val, countInstPkt);
-//     countInstPkt ++;
-//     inst_mesh_B.inst_val.size = 1 * 1 * 32 * 32 /2 ;
-//     inst_mesh_B.inst_val.memcore0_to_computecore0 = true;
-//     inst_mesh_B.inst_val.memcore0_to_computecore2 = true;
-//     inst_mesh_B.inst_val.memcore0_to_computecore4 = false;
-//     inst_mesh_B.inst_val.memcore1_to_computecore1 = true;
-//     inst_mesh_B.inst_val.memcore1_to_computecore3 = true;
-//     inst_mesh_B.inst_val.memcore1_to_computecore5 = false;
-//     inst_mesh_B.inst_val.memcore2_to_computecore4 = false;
-//     inst_mesh_B.inst_val.memcore2_to_computecore5 = false;
-//     for (int i = 0; i < CNT4B_MESH_B ; i++) {inst_sequence[count4B++] = inst_mesh_B.raw_32b[i];}
-//     inst_mesh_B.inst_val.size = 1 * 1 * 32 * 32 /2 ;
-//     inst_mesh_B.inst_val.memcore0_to_computecore0 = false;
-//     inst_mesh_B.inst_val.memcore0_to_computecore2 = false;
-//     inst_mesh_B.inst_val.memcore0_to_computecore4 = false;
-//     inst_mesh_B.inst_val.memcore1_to_computecore1 = true;
-//     inst_mesh_B.inst_val.memcore1_to_computecore3 = true;
-//     inst_mesh_B.inst_val.memcore1_to_computecore5 = false;
-//     inst_mesh_B.inst_val.memcore2_to_computecore4 = false;
-//     inst_mesh_B.inst_val.memcore2_to_computecore5 = false;
-//     for (int i = 0; i < CNT4B_MESH_B ; i++) {inst_sequence[count4B++] = inst_mesh_B.raw_32b[i];}
-//     inst_mesh_B.inst_val.size = 1 * 1 * 32 * 32 /2 ;
-//     inst_mesh_B.inst_val.memcore0_to_computecore0 = false;
-//     inst_mesh_B.inst_val.memcore0_to_computecore2 = true;
-//     inst_mesh_B.inst_val.memcore0_to_computecore4 = false;
-//     inst_mesh_B.inst_val.memcore1_to_computecore1 = false;
-//     inst_mesh_B.inst_val.memcore1_to_computecore3 = true;
-//     inst_mesh_B.inst_val.memcore1_to_computecore5 = false;
-//     inst_mesh_B.inst_val.memcore2_to_computecore4 = false;
-//     inst_mesh_B.inst_val.memcore2_to_computecore5 = false;
-//     for (int i = 0; i < CNT4B_MESH_B ; i++) {inst_sequence[count4B++] = inst_mesh_B.raw_32b[i];}
-//     inst_mesh_B.inst_val.size = 1 * 1 * 32 * 32 /2 ;
-//     inst_mesh_B.inst_val.memcore0_to_computecore0 = false;
-//     inst_mesh_B.inst_val.memcore0_to_computecore2 = false;
-//     inst_mesh_B.inst_val.memcore0_to_computecore4 = false;
-//     inst_mesh_B.inst_val.memcore1_to_computecore1 = false;
-//     inst_mesh_B.inst_val.memcore1_to_computecore3 = true;
-//     inst_mesh_B.inst_val.memcore1_to_computecore5 = false;
-//     inst_mesh_B.inst_val.memcore2_to_computecore4 = false;
-//     inst_mesh_B.inst_val.memcore2_to_computecore5 = false;
-//     for (int i = 0; i < CNT4B_MESH_B ; i++) {inst_sequence[count4B++] = inst_mesh_B.raw_32b[i];}
-//     inst_mesh_B.inst_val.size =  1 * 3 * 32 * 32 / 2;
-//     inst_mesh_B.inst_val.memcore0_to_computecore0 = false;
-//     inst_mesh_B.inst_val.memcore0_to_computecore2 = false;
-//     inst_mesh_B.inst_val.memcore0_to_computecore4 = false;
-//     inst_mesh_B.inst_val.memcore1_to_computecore1 = false;
-//     inst_mesh_B.inst_val.memcore1_to_computecore3 = false;
-//     inst_mesh_B.inst_val.memcore1_to_computecore5 = false;
-//     inst_mesh_B.inst_val.memcore2_to_computecore4 = true;
-//     inst_mesh_B.inst_val.memcore2_to_computecore5 = true;
-//     for (int i = 0; i < CNT4B_MESH_B ; i++) {inst_sequence[count4B++] = inst_mesh_B.raw_32b[i];}
-//     inst_mesh_B.inst_val.size =  1 * 3 * 32 * 32 / 2;
-//     inst_mesh_B.inst_val.memcore0_to_computecore0 = false;
-//     inst_mesh_B.inst_val.memcore0_to_computecore2 = false;
-//     inst_mesh_B.inst_val.memcore0_to_computecore4 = false;
-//     inst_mesh_B.inst_val.memcore1_to_computecore1 = false;
-//     inst_mesh_B.inst_val.memcore1_to_computecore3 = false;
-//     inst_mesh_B.inst_val.memcore1_to_computecore5 = false;
-//     inst_mesh_B.inst_val.memcore2_to_computecore4 = false;
-//     inst_mesh_B.inst_val.memcore2_to_computecore5 = true;
-//     for (int i = 0; i < CNT4B_MESH_B ; i++) {inst_sequence[count4B++] = inst_mesh_B.raw_32b[i];}
-
-
-
-// }
 

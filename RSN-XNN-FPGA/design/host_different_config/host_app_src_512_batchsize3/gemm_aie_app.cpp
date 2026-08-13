@@ -7,7 +7,6 @@
 #include "instruction_overlaplayers.h"
 
 
-
 int main(int argc, char ** argv)
 {
       if(argc==2 || (argc==3 && strcmp(argv[2],"RUN_CODE")==0)) {
@@ -17,14 +16,6 @@ int main(int argc, char ** argv)
       if (getcwd(pwd_print_buffer, sizeof(pwd_print_buffer)) != NULL) {
             std::cout << "Current Directory: " << pwd_print_buffer << std::endl;
       }
-
-      #ifdef SW_EMU_PRINT
-      std::string command = "rm -f /home/cw4/github/versal-float32/19-gelu-norm-bias/design/pl_src/output/*";
-      int result = std::system(command.c_str());
-      std::ofstream outFile("/home/cw4/github/versal-float32/19-gelu-norm-bias/design/pl_src/output/00_out_main.txt");
-      outFile<< "test number 1" << std::endl;
-      outFile.close();
-      #endif
 
       const char* xclbinFilename = argv[1];
       auto dhdl = xrtDeviceOpen(0);
@@ -142,11 +133,7 @@ int main(int argc, char ** argv)
       
 
       std::string python_gold_file;
-      #ifdef SW_EMU_PRINT
-      python_gold_file = "/home/cw4/github/versal-float32/19-gelu-norm-bias/workspace/app_component/host_app_src/python_gold/";
-      #else
       python_gold_file = "/home/root/python_gold/";
-      #endif
 
       std::cout<<"layer query"<<std::endl;
       
@@ -159,13 +146,8 @@ int main(int argc, char ** argv)
       replicate_matrix (fmap0_embedding, 512, 1024, 6);
       replicate_matrix (load_gold_query, 512, 1024, 6);
       #endif
-      // calculate_matrix (fmap0_embedding, weight0_query, fmap1_query, 6 * 512, 1024, 1024);
-      // add_matrix_with_bias(fmap1_query, bias0_query, 6 * 512, 1024);
-      // print_matrix_to_file("/home/cw4/github/versal-float32/19-gelu-norm-bias/design/pl_src/output/01_0-attention.self.query-output.txt", fmap1_query, 512, 1024);
-      // valid(fmap1_query, gold_query, 6*512*1024);
 
       ParamsOneLayer params_query;
-      // params_query.set_iter(2, 1, 1);
       params_query.set_iter(2, 1, 8);
       params_query.enable_bias = true;
       params_query.enable_gelu = false;
@@ -235,16 +217,6 @@ int main(int argc, char ** argv)
 
       std::cout<<"layer fused_dense1_norm1"<<std::endl;
 
-      // load_data(python_gold_file + "3-attention.output.dense-input.txt", fmap4_self_attention, 512*1024); 
-      // replicate_matrix (fmap4_self_attention, 512, 1024, 6);
-      // convert_simple_to_blocked_layout(fmap4_self_attention, 6 * 512, 1024, 128, 64);
-      // convert_blocked_to_2AXI_layout(fmap4_self_attention, 6 * 512, 1024);
-
-      // load_data(python_gold_file + "0-attention.self.query-input.txt" , fmap0_embedding, 512*1024);
-      // replicate_matrix (fmap0_embedding, 512, 1024, 6);
-      // convert_simple_to_blocked_layout(fmap0_embedding, 6 * 512, 1024, 128, 64);
-      // convert_blocked_to_2AXI_layout(fmap0_embedding, 6 * 512, 1024);
-
 
       // dense1 and norm1 are fused together
       float* load_gold_fuseddense1norm1 = (float*)malloc(6 * 512 * 1024 * 4);
@@ -257,7 +229,6 @@ int main(int argc, char ** argv)
       init_matrix (weight4_norm1, 1, 1024, 1.0); 
       #endif
       ParamsOneLayer params_norm1;
-      // params_norm1.set_iter(2, 1, 1);
       params_norm1.set_iter(2, 1, 8);
       params_norm1.enable_bias = true;
       params_norm1.enable_norm = true;
@@ -272,9 +243,6 @@ int main(int argc, char ** argv)
       
 
       std::cout<<"layer fused_norm1_dense2_gelu"<<std::endl;
-
-      // load_data(python_gold_file + "4-fused_dense1_norm1_output.txt", fmap6_norm1, 512*1024);
-      // replicate_matrix (fmap6_norm1, 512, 1024, 6);
 
       float* load_gold_norm1dense2gelu = (float*)malloc(6 * 512 * 4096 * 4);
       #ifdef ENABLE_TEST_GELU
@@ -324,56 +292,15 @@ int main(int argc, char ** argv)
       
 
 
-
-      // generate_data_onelayer_with_bias(fmap6_norm1, weight5_dense2, bias5_dense2, fmap7_dense2, load_gold_norm1dense2gelu, params_dense2);
-      // generate_data_onelayer_with_bias(fmap0_embedding, weight0_query, bias0_query, fmap1_query, load_gold_query, params_query);
-      // generate_data_fusedlayer(fmap1_query, fmap2_key, fmap3_value, fmap4_self_attention, load_gold_attention, params_attention);
-      // generate_data_onelayer_norm(
       //       fmap4_self_attention , fmap0_embedding,
       //       weight4_norm1 ,
       //       weight3_dense1 , bias3_dense1  , 
       //       fmap6_norm1    , load_gold_fuseddense1norm1 , 
       //       params_norm1
-      // );
 
       uint32_t count4B      = 0;
       uint32_t countInstPkt = 0;
 
-      // generate_instruction_onelayer_overlap_128_512_A4B1K8(host_instruction + 2, count4B, countInstPkt, params_query);
-      // generate_instruction_onelayer(host_instruction + 2, count4B, countInstPkt, params_dense2);
-      // generate_instruction_onelayer_overlap_128_512_A4B4K8(host_instruction + 2, count4B, countInstPkt, params_dense2);
-      // generate_instruction_fusedlayer_numlayer1(host_instruction + 2 , count4B, countInstPkt, params_attention);
-      // generate_instruction_onelayer_norm_overlap_A4B1K8(host_instruction + 2, count4B, countInstPkt, params_norm1);
-      // generate_instruction_onelayer_overlap_128_512_A4B1K8(host_instruction + 2, count4B, countInstPkt, params_query);
-
-
-      // #ifdef ENABLE_TEST_Q
-      // // generate_instruction_onelayer(host_instruction + 2, count4B, countInstPkt, params_query);
-      // generate_instruction_onelayer_overlap_128_512_A4B1K8(host_instruction + 2, count4B, countInstPkt, params_query);
-      // #endif
-      // #ifdef ENABLE_TEST_K
-      // // generate_instruction_onelayer(host_instruction + 2, count4B, countInstPkt, params_key);
-      // generate_instruction_onelayer_overlap_128_512_A4B1K8(host_instruction + 2, count4B, countInstPkt, params_key);
-      // #endif
-      // #ifdef ENABLE_TEST_V
-      // // generate_instruction_onelayer(host_instruction + 2, count4B, countInstPkt, params_value);
-      // generate_instruction_onelayer_overlap_128_512_A4B1K8(host_instruction + 2, count4B, countInstPkt, params_value);
-      // #endif
-      // #ifdef ENABLE_TEST_ATTENTION 
-      // generate_instruction_fusedlayer(host_instruction + 2 , count4B, countInstPkt, params_attention);
-      // #endif
-      // #ifdef ENABLE_TEST_NORM1
-      // // generate_instruction_onelayer_norm(host_instruction + 2, count4B, countInstPkt, params_norm1);
-      // generate_instruction_onelayer_norm_overlap_A4B1K8(host_instruction + 2, count4B, countInstPkt, params_norm1);
-      // #endif
-      // #ifdef ENABLE_TEST_GELU
-      // // generate_instruction_onelayer(host_instruction + 2, count4B, countInstPkt, params_dense2);
-      // generate_instruction_onelayer_first2load_A4B4K8(host_instruction + 2, count4B, countInstPkt, params_dense2);
-      // #endif
-      // #ifdef ENABLE_TEST_NORM2
-      // // generate_instruction_onelayer_norm(host_instruction + 2, count4B, countInstPkt, params_norm2);
-      // generate_instruction_onelayer_norm_overlap_A4B1K32(host_instruction + 2, count4B, countInstPkt, params_norm2);
-      // #endif
 
       #if defined(ENABLE_TEST_Q) && defined(ENABLE_TEST_K) && defined(ENABLE_TEST_V)
       generate_instruction_query_key_value(host_instruction + 2, count4B, countInstPkt, params_query, params_key, params_value);
@@ -419,21 +346,12 @@ int main(int argc, char ** argv)
       xrtRunStart(rhdl_hls[0]);
       Timer timer;      
       xrtRunWait(rhdl_hls[0]);
-      // sleep(1);
       double timer_stop=timer.stop();
 
       // xrtGraphEnd(gemm_aie_gr, 0); // if use xrtGraphEnd(gemm_aie_gr, 16) or xrtGraphWait the sw emu report undefined warming
       xrtBOSync(ddr_port, XCL_BO_SYNC_BO_FROM_DEVICE, sizeBytes_ddr, 0);
 
       std::cout<<"Duration ="<<timer_stop<<" us"<<std::endl;
-      // double throughput = params_query.calThroughput(timer_stop);
-      // std::cout<<"Throughput = "<<throughput<<" GOPS/s"<<std::endl;
-
-      #ifdef SW_EMU_PRINT
-      std::string file_name = "/home/cw4/github/versal-float32/19-gelu-norm-bias/design/pl_src/output/03_";
-      print_matrix_to_file( file_name + "fmap1_query_2AXI.txt", fmap1_query, params_query.getMatrixDim_A(), params_query.getMatrixDim_B());
-      #endif
-
 
 
       #ifdef ENABLE_TEST_Q
@@ -484,8 +402,6 @@ int main(int argc, char ** argv)
       xrtGraphClose(gemm_aie_gr);
       std::cout<<"Close Device"<<std::endl;
       xrtDeviceClose(dhdl);
-
-      // free(gold_query);
 
       return 0; 
       

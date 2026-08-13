@@ -38,7 +38,6 @@ void print_matrix_to_file(const std::string &filename, const float *matrix, int 
         outFile << std::setw(7) << i; // Row header
         for (int j = 0; j < col; j++) {
             outFile << std::setw(7) << std::fixed << std::setprecision(4) << matrix[i * col + j];
-            // outFile << std::setw(7) << matrix[i * col + j] << " " ;
         }
         outFile << "\n";
     }
@@ -67,7 +66,6 @@ int main() {
     std::string filename = "cpp_out/embedding.txt";
 
     print_matrix_to_file( filename, data, 512, 1024);
-
 
 
     free(data);

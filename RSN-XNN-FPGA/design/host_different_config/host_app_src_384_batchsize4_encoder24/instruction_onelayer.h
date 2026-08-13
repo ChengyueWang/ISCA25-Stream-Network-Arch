@@ -166,7 +166,6 @@ void generate_instruction_onelayer_coresAB_meshesAB ( uint32_t *inst_sequence, u
     for (int i = 0; i < CNT4B_MESH_B ; i++) { inst_sequence[count4B++] = inst_mesh_B.raw_32b[i];}
 
 
-
     
 }
 
@@ -428,7 +427,6 @@ void generate_bias(uint32_t *inst_sequence, uint32_t & count4B,  uint32_t & coun
     uint32_t b_iter = params.b_iter;
     uint32_t k_iter = params.k_iter;
     uint32_t loadB_address = params.lpddr_offset_512b_bias;
-
 
 
     inst_header.inst_val.opcode = OPCODE_LOADB_DRAM;
@@ -1386,9 +1384,6 @@ void generate_instruction_K8_steady_ddr (int loadA_a, int loadA_b, int storeC_a,
     for (int i = 0; i < CNT4B_DDR ; i++) { inst_sequence[count4B++] = inst_ddr.raw_32b[i];}
 
 
-
-
-
     inst_ddr.inst_val.start_address = storeC_address + 128*512/16 + 128*1024*b_iter/16;
     inst_ddr.inst_val.address_offset = 0; 
     inst_ddr.inst_val.chunck_size = 128*512;
@@ -1603,8 +1598,6 @@ void generate_instruction_K8_steady_ddr (int loadA_a, int loadA_b, int storeC_a,
     inst_ddr.inst_val.store_from_memcoreC4 = false;
     inst_ddr.inst_val.store_from_memcoreC5 = false;
     for (int i = 0; i < CNT4B_DDR ; i++) { inst_sequence[count4B++] = inst_ddr.raw_32b[i];}
-
-
 
 
     inst_ddr.inst_val.start_address = storeC_address + (4*b_iter)*128*512/16 + 128*1024*b_iter/16;
@@ -2316,9 +2309,6 @@ void generate_instruction_K8_steady_colapsetwolayer_storeCloadA (int loadA_a, in
     for (int i = 0; i < CNT4B_DDR ; i++) { inst_sequence[count4B++] = inst_ddr.raw_32b[i];}
 
 
-
-
-
     inst_ddr.inst_val.start_address = storeC_address + 128*512/16 + 128*1024*b_iter/16;
     inst_ddr.inst_val.address_offset = 0; 
     inst_ddr.inst_val.chunck_size = 128*512;
@@ -2533,8 +2523,6 @@ void generate_instruction_K8_steady_colapsetwolayer_storeCloadA (int loadA_a, in
     inst_ddr.inst_val.store_from_memcoreC4 = false;
     inst_ddr.inst_val.store_from_memcoreC5 = false;
     for (int i = 0; i < CNT4B_DDR ; i++) { inst_sequence[count4B++] = inst_ddr.raw_32b[i];}
-
-
 
 
     inst_ddr.inst_val.start_address = storeC_address + (4*b_iter)*128*512/16 + 128*1024*b_iter/16;
@@ -2789,8 +2777,6 @@ void generate_instruction_onelayer_overlap_128_512_A4B1K8  ( uint32_t *inst_sequ
 
     a = 3; b = 0; generate_instruction_storeC(a, b, inst_sequence, count4B, countInstPkt, params);
 
-    // generate_last_inst_for_all_modules(inst_sequence, count4B, countInstPkt);
-
 }
 
 void generate_instruction_query_key  ( uint32_t *inst_sequence, uint32_t & count4B,  uint32_t & countInstPkt, ParamsOneLayer params_query,  ParamsOneLayer params_key){
@@ -2877,8 +2863,6 @@ void generate_instruction_query_key  ( uint32_t *inst_sequence, uint32_t & count
     loadA_a = 3; loadA_b = 0; storeC_a = 2; storeC_b = 0;
     generate_instruction_K8_steady_ddr(loadA_a, loadA_b, storeC_a, storeC_b, inst_sequence, count4B, countInstPkt, params_query);
 
-    // a = 3; b = 0; generate_instruction_storeC(a, b, inst_sequence, count4B, countInstPkt, params_query);
-
 
     generate_bias(inst_sequence, count4B, countInstPkt, params_key);
 
@@ -2931,8 +2915,6 @@ void generate_instruction_query_key  ( uint32_t *inst_sequence, uint32_t & count
     for (int i = 0; i < CNT4B_MEMCORE_C ; i++) { inst_sequence[count4B++] = inst_memcore_C.raw_32b[i]; }
 
     a = 0; b = 0; generate_instruction_loadB(a, b, inst_sequence, count4B, countInstPkt, params_key);
-    // a = 0; b = 0; offset = 0; repeat_num = k_iter; 
-    // generate_instruction_loadA(a, b, offset, repeat_num, inst_sequence, count4B, countInstPkt, params_key);
     loadA_a = 0; loadA_b = 0; storeC_a = 3; storeC_b = 0; 
     generate_instruction_K8_steady_colapsetwolayer_storeCloadA(loadA_a, loadA_b, storeC_a, storeC_b, inst_sequence, count4B, countInstPkt, params_query, params_key);
 
@@ -2950,7 +2932,6 @@ void generate_instruction_query_key  ( uint32_t *inst_sequence, uint32_t & count
     generate_instruction_K8_steady_ddr(loadA_a, loadA_b, storeC_a, storeC_b, inst_sequence, count4B, countInstPkt, params_key);
 
     a = 3; b = 0; generate_instruction_storeC(a, b, inst_sequence, count4B, countInstPkt, params_key);
-
 
 
     generate_last_inst_for_all_modules(inst_sequence, count4B, countInstPkt);
@@ -3061,8 +3042,6 @@ void generate_instruction_query_key_value  ( uint32_t *inst_sequence, uint32_t &
     for (int i = 0; i < CNT4B_MEMCORE_C ; i++) { inst_sequence[count4B++] = inst_memcore_C.raw_32b[i]; }
 
     a = 0; b = 0; generate_instruction_loadB(a, b, inst_sequence, count4B, countInstPkt, params_key);
-    // a = 0; b = 0; offset = 0; repeat_num = k_iter; 
-    // generate_instruction_loadA(a, b, offset, repeat_num, inst_sequence, count4B, countInstPkt, params_key);
     loadA_a = 0; loadA_b = 0; storeC_a = 1; storeC_b = 0; 
     generate_instruction_K8_steady_colapsetwolayer_storeCloadA(loadA_a, loadA_b, storeC_a, storeC_b, inst_sequence, count4B, countInstPkt, params_query, params_key);
 
@@ -3070,8 +3049,6 @@ void generate_instruction_query_key_value  ( uint32_t *inst_sequence, uint32_t &
     a = 1; b = 0; generate_instruction_loadB(a, b, inst_sequence, count4B, countInstPkt, params_key);
     loadA_a = 1; loadA_b = 0; storeC_a = 0; storeC_b = 0; 
     generate_instruction_K8_steady_ddr(loadA_a, loadA_b, storeC_a, storeC_b, inst_sequence, count4B, countInstPkt, params_key);
-
-    // a = 3; b = 0; generate_instruction_storeC(a, b, inst_sequence, count4B, countInstPkt, params_key);
 
     generate_bias(inst_sequence, count4B, countInstPkt, params_value);
     generate_instruction_onelayer_coresAB_meshesAB(inst_sequence, count4B, countInstPkt, params_value);
@@ -3123,8 +3100,6 @@ void generate_instruction_query_key_value  ( uint32_t *inst_sequence, uint32_t &
     for (int i = 0; i < CNT4B_MEMCORE_C ; i++) { inst_sequence[count4B++] = inst_memcore_C.raw_32b[i]; }
 
     a = 0; b = 0; generate_instruction_loadB(a, b, inst_sequence, count4B, countInstPkt, params_value);
-    // a = 0; b = 0; offset = 0; repeat_num = k_iter; 
-    // generate_instruction_loadA(a, b, offset, repeat_num, inst_sequence, count4B, countInstPkt, params_value);
     loadA_a = 0; loadA_b = 0; storeC_a = 1; storeC_b = 0; 
     generate_instruction_K8_steady_colapsetwolayer_storeCloadA(loadA_a, loadA_b, storeC_a, storeC_b, inst_sequence, count4B, countInstPkt, params_key, params_value);
 
@@ -3140,8 +3115,6 @@ void generate_instruction_onelayer ( uint32_t *inst_sequence, uint32_t & count4B
     uint32_t a_iter = params.a_iter;
     uint32_t b_iter = params.b_iter;
     uint32_t k_iter = params.k_iter;
-
-    // assert(b_iter == 1);
 
 
     // MOP OPCODE_MEMCORE_B needs the depth of 2
@@ -3521,9 +3494,6 @@ void generate_instruction_ddr_K8_steady_for_gelu (int loadA_a, int loadA_b, int 
     for (int i = 0; i < CNT4B_DDR ; i++) { inst_sequence[count4B++] = inst_ddr.raw_32b[i];}
 
 
-
-
-
     loadA_address = loadA_address + 128*128 / 16; 
     inst_ddr.inst_val.start_address = loadA_address +  0 / 16; // divided by 16 because 1 address hold 16 32float (512bit)
     inst_ddr.inst_val.address_offset =  128*128 / 16; 
@@ -3603,11 +3573,6 @@ void generate_instruction_ddr_K8_steady_for_gelu (int loadA_a, int loadA_b, int 
     inst_ddr.inst_val.store_from_memcoreC4 = false;
     inst_ddr.inst_val.store_from_memcoreC5 = false;
     for (int i = 0; i < CNT4B_DDR ; i++) { inst_sequence[count4B++] = inst_ddr.raw_32b[i];}
-
-
-
-
-
 
 
     loadA_address = loadA_address + 128*128 / 16; 
@@ -3800,10 +3765,6 @@ void generate_instruction_ddr_K8_steady_for_gelu (int loadA_a, int loadA_b, int 
     for (int i = 0; i < CNT4B_DDR ; i++) { inst_sequence[count4B++] = inst_ddr.raw_32b[i];}
 
 
-
-
-
-
     inst_ddr.inst_val.start_address = storeC_address + 0 + 128*1024*b_iter/16;
     inst_ddr.inst_val.address_offset = 0; 
     inst_ddr.inst_val.chunck_size = 128*512;
@@ -3913,8 +3874,6 @@ void generate_instruction_ddr_K8_steady_for_gelu (int loadA_a, int loadA_b, int 
     for (int i = 0; i < CNT4B_DDR ; i++) { inst_sequence[count4B++] = inst_ddr.raw_32b[i];}
 
 
-
-
     inst_ddr.inst_val.start_address = storeC_address + 128*512/16;
     inst_ddr.inst_val.address_offset = 0; 
     inst_ddr.inst_val.chunck_size = 128*512;
@@ -3971,7 +3930,6 @@ void generate_instruction_ddr_K8_steady_for_gelu (int loadA_a, int loadA_b, int 
     for (int i = 0; i < CNT4B_DDR ; i++) { inst_sequence[count4B++] = inst_ddr.raw_32b[i]; }
 
 
-
     inst_ddr.inst_val.start_address = storeC_address + (4*b_iter)*128*512/16;
     inst_ddr.inst_val.address_offset = 0; 
     inst_ddr.inst_val.chunck_size = 128*512;
@@ -4026,7 +3984,6 @@ void generate_instruction_ddr_K8_steady_for_gelu (int loadA_a, int loadA_b, int 
     inst_ddr.inst_val.store_from_memcoreC4 = false;
     inst_ddr.inst_val.store_from_memcoreC5 = false;
     for (int i = 0; i < CNT4B_DDR ; i++) { inst_sequence[count4B++] = inst_ddr.raw_32b[i]; }
-
 
 
     inst_ddr.inst_val.start_address = storeC_address + (4*b_iter+1)*128*512/16;
@@ -4112,10 +4069,6 @@ void generate_instruction_ddr_K8_steady_for_gelu (int loadA_a, int loadA_b, int 
 }
 
 
-
-
-
-
 void generate_instruction_onelayer_first2load_A4B4K8 ( uint32_t *inst_sequence, uint32_t & count4B,  uint32_t & countInstPkt, ParamsOneLayer params){
     uint32_t a_iter = params.a_iter;
     uint32_t b_iter = params.b_iter;
@@ -4142,8 +4095,6 @@ void generate_instruction_onelayer_first2load_A4B4K8 ( uint32_t *inst_sequence, 
             generate_instruction_loadB(a, b, inst_sequence, count4B, countInstPkt, params);
             loadA_a = a; loadA_b = b; 
             generate_instruction_ddr_K8_steady_for_gelu(loadA_a, loadA_b, storeC_a, storeC_b, inst_sequence, count4B, countInstPkt, params);
-            // generate_instruction_loadA(loadA_a, loadA_b, 0, k_iter, inst_sequence, count4B, countInstPkt, params);
-            // generate_instruction_storeC(storeC_a, storeC_b, inst_sequence, count4B, countInstPkt, params);
             
             
             storeC_a = a; storeC_b = b; 
@@ -4155,9 +4106,6 @@ void generate_instruction_onelayer_first2load_A4B4K8 ( uint32_t *inst_sequence, 
     loadA_a = 3; loadA_b = 3; storeC_a = 3; storeC_b = 2;
     generate_instruction_ddr_K8_steady_for_gelu(loadA_a, loadA_b, storeC_a, storeC_b, inst_sequence, count4B, countInstPkt, params);
     
-    // generate_instruction_loadA(loadA_a, loadA_b, 0, k_iter, inst_sequence, count4B, countInstPkt, params);
-    // generate_instruction_storeC(storeC_a, storeC_b, inst_sequence, count4B, countInstPkt, params);
-            
     generate_instruction_storeC(a, b, inst_sequence, count4B, countInstPkt, params);
 
 }

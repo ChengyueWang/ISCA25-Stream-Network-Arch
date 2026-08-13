@@ -371,7 +371,6 @@ void generate_instruction_fusedlayer_numlayer3 ( uint32_t *inst_sequence, uint32
     for (int i = 0; i < CNT4B_MESH_B ; i++) {inst_sequence[count4B++] = inst_mesh_B.raw_32b[i];}
 
 
-
     inst_header.inst_val.opcode = OPCODE_DDR_DRAM;
     inst_header.inst_val.mask = false;
     inst_header.inst_val.is_last_mOP = false;
@@ -510,7 +509,6 @@ void generate_instruction_fusedlayer_numlayer3 ( uint32_t *inst_sequence, uint32
     inst_ddr.inst_val.load_to_memcoreC4 = false;
     inst_ddr.inst_val.load_to_memcoreC5 = false;
     for (int i = 0; i < CNT4B_DDR ; i++) { inst_sequence[count4B++] = inst_ddr.raw_32b[i];    }
-
 
 
     ddr_addr_L1_inA  +=  (64*128/16) * 2 ;
@@ -777,7 +775,6 @@ void generate_instruction_fusedlayer_numlayer3 ( uint32_t *inst_sequence, uint32
 }
 
 
-
 void generate_instruction_fusedlayer_numlayer1 ( uint32_t *inst_sequence, uint32_t & count4B,  uint32_t & countInstPkt, ParamsFusedLayer & params) {
 
     union_inst_header inst_header;
@@ -1007,7 +1004,6 @@ void generate_instruction_fusedlayer_numlayer1 ( uint32_t *inst_sequence, uint32
     for (int i = 0; i < CNT4B_MEMCORE_A ; i++) {inst_sequence[count4B++] = inst_memcore_A.raw_32b[i];    }
 
 
-
     inst_header.inst_val.opcode = OPCODE_MEMCORE_B;
     inst_header.inst_val.mask = 0b000011;
     inst_header.inst_val.is_last_mOP = false;
@@ -1045,7 +1041,6 @@ void generate_instruction_fusedlayer_numlayer1 ( uint32_t *inst_sequence, uint32
     inst_memcore_B.inst_val.compute_tile_access_B = 1;
     inst_memcore_B.inst_val.compute_tile_access_K = 4;
     for (int i = 0; i < CNT4B_MEMCORE_B ; i++) {inst_sequence[count4B++] = inst_memcore_B.raw_32b[i];}
-
 
 
     inst_header.inst_val.opcode = OPCODE_MEMCORE_C;

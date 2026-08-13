@@ -9,25 +9,6 @@ void mm_casc_endk3(input_async_buffer<float, adf::extents<NSAMPLES_WINDOW_F_A>>&
   uint32_t print_code = opcode_mem[0];
   uint32_t opcode_len = opcode_mem[1];
 
-#ifdef SW_EMU_PRINT
-  std::ofstream outFile("/home/cw4/github/versal-float32/20-inputlen384/design/pl_src/output/aie" +
-                            std::to_string(print_code) + "_mm_casc_end.txt",
-                        std::ios_base::app);
-  if (!outFile.is_open()) {
-    std::cerr << "Unable to open file for writing." << std::endl;
-  }
-
-  if (print_code > 0) {
-    outFile << "ENTER mm_casc_end =================== " << std::endl;
-    outFile << " opcode_len = " << opcode_len << std::endl;
-  }
-  float k3_local_buf[128] = {0.0};
-  for (int i = 0; i < 128; i++) {
-    k3_local_buf[i] = 0.0;
-  }
-
-#endif
-
   for (int op_id = 2; op_id < opcode_len + 2; op_id++) {
     uint32_t opcode = opcode_mem[op_id];
 
@@ -68,52 +49,9 @@ void mm_casc_endk3(input_async_buffer<float, adf::extents<NSAMPLES_WINDOW_F_A>>&
       b_round = 16 / 8;
     }
 
-#ifdef SW_EMU_PRINT
-    std::ofstream outFile(
-        "/home/cw4/github/versal-float32/20-inputlen384/design/pl_src/output/aie" +
-            std::to_string(print_code) + "_mm_casc_end.txt",
-        std::ios_base::app);
-    if (!outFile.is_open()) {
-      std::cerr << "Unable to open file for writing." << std::endl;
-    }
-    if (print_code > 0) {
-      outFile << "op_id = " << op_id << std::endl;
-      outFile << "opcode = " << opcode << std::endl;
-      outFile << "a_iter = " << a_iter << "b_iter = " << b_iter << " k_iter = " << k_iter
-              << " compute_tile_access_A = " << compute_tile_access_A
-              << " compute_tile_access_B = " << compute_tile_access_B
-              << " enable_load_pre_norm_weight = " << enable_load_pre_norm_weight
-              << " enable_bias = " << enable_bias << " dimb_is_32 = " << dimb_is_32
-              << " dimk_is_32 = " << dimk_is_32 << " enable_accum_kiter = " << enable_accum_kiter
-              << " print_code = " << print_code << std::endl;
-      outFile << "round = " << round << " accum_kiter = " << accum_kiter << " b_round = " << b_round
-              << std::endl;
-      outFile << "enable_muladd_pre_layer = " << enable_muladd_pre_layer << std::endl;
-      outFile << "need_muladd_pre_layer_in_cur_aie = " << need_muladd_pre_layer_in_cur_aie
-              << std::endl;
-    }
-#endif
-
     if (enable_load_pre_norm_weight == true) {
       matB.acquire();
       matB.release();
-#ifdef SW_EMU_PRINT
-      if (print_code > 0) {
-        outFile << "before load_pre_norm_weight = " << std::endl;
-        outFile << "k3_local_buf (declare inside kernel in simulation)= " << std::endl;
-        auto local_buf_print = begin(k3_local_buf);
-        for (int row = 0; row < 4; row++) {
-          for (int col = 0; col < 32; col++) {
-            float val = *local_buf_print++;
-            outFile << val << " ";
-          }
-          outFile << std::endl;
-        }
-        outFile << std::endl;
-        outFile << std::endl;
-        outFile << std::endl;
-      }
-#endif
 
       if (need_muladd_pre_layer_in_cur_aie == true) {
         auto ptrv8_local_buf = begin_vector_random_circular<8>(k3_local_buf);
@@ -130,23 +68,6 @@ void mm_casc_endk3(input_async_buffer<float, adf::extents<NSAMPLES_WINDOW_F_A>>&
           ptrv8_local_buf++;
         }
       }
-#ifdef SW_EMU_PRINT
-      if (print_code > 0) {
-        outFile << "after load_pre_norm_weight = " << std::endl;
-        outFile << "k3_local_buf = " << std::endl;
-        auto local_buf_print = begin(k3_local_buf);
-        for (int row = 0; row < 4; row++) {
-          for (int col = 0; col < 32; col++) {
-            float val = *local_buf_print++;
-            outFile << val << " ";
-          }
-          outFile << std::endl;
-        }
-        outFile << std::endl;
-        outFile << std::endl;
-        outFile << std::endl;
-      }
-#endif
     }
 
     if (enable_bias == true) {
@@ -175,33 +96,11 @@ void mm_casc_endk3(input_async_buffer<float, adf::extents<NSAMPLES_WINDOW_F_A>>&
                 auto pC = begin_vector_random_circular<8>(matC);
                 auto pA = begin_vector_random_circular<8>(matA);
 
-#ifdef SW_EMU_PRINT
-                if (print_code > 0) {
-                  outFile << "access_a = " << access_a << " access_b = " << access_b
-                          << " ai = " << ai << " bi = " << bi << std::endl;
-                  outFile << "matA.acquire(); = " << std::endl;
-                  auto pA_print = begin(matA);
-                  for (int row = 0; row < 32; row++) {
-                    for (int col = 0; col < 32; col++) {
-                      float val = *pA_print++;
-                      outFile << val << " ";
-                    }
-                    outFile << std::endl;
-                  }
-                }
-#endif
-
                 for (int b = 0; b < b_round; b++)
                   chess_prepare_for_pipelining chess_loop_range(4, ) {
                     pA = begin_vector_random_circular<8>(matA) + 2 * b;
 
                     int local_buf_offset = bi * compute_tile_access_B * 32 / 8 + access_b * 4 + b;
-
-#ifdef SW_EMU_PRINT
-                    if (print_code > 0) {
-                      outFile << "local_buf_offset = " << local_buf_offset << std::endl;
-                    }
-#endif
 
                     auto ptrv8_local_buf = begin_vector_random_circular<8>(k3_local_buf);
                     vector<float, 8> cur_norm_weight;
@@ -240,22 +139,6 @@ void mm_casc_endk3(input_async_buffer<float, adf::extents<NSAMPLES_WINDOW_F_A>>&
                         *pC++ = acc2;
                       }
                   }
-
-#ifdef SW_EMU_PRINT
-                if (print_code > 0) {
-                  outFile << "access_a = " << access_a << " access_b = " << access_b
-                          << " ai = " << ai << " bi = " << bi << std::endl;
-                  outFile << "matC.release(); = " << std::endl;
-                  auto pC_print = begin(matC);
-                  for (int row = 0; row < 32; row++) {
-                    for (int col = 0; col < 32; col++) {
-                      float val = *pC_print++;
-                      outFile << val << " ";
-                    }
-                    outFile << std::endl;
-                  }
-                }
-#endif
 
                 matA.release();
                 matC.release();
@@ -403,41 +286,6 @@ void mm_casc_endk3(input_async_buffer<float, adf::extents<NSAMPLES_WINDOW_F_A>>&
                 pB = pB + AIE_TILE_AB;
                 pA = pA - (AIE_TILE_A * AIE_TILE_AB / 8);
               }
-
-#ifdef SW_EMU_PRINT
-            if (print_code > 0) {
-              if (r == 0) {
-                outFile << "matA = " << std::endl;
-                auto pA_print = begin(matA);
-                for (int row = 0; row < 32; row++) {
-                  for (int col = 0; col < 32; col++) {
-                    float val = *pA_print++;
-                    outFile << val << " ";
-                  }
-                  outFile << std::endl;
-                }
-                outFile << "matB = " << std::endl;
-                auto pB_print = begin(matB);
-                for (int row = 0; row < 32; row++) {
-                  for (int col = 0; col < 32; col++) {
-                    float val = *pB_print++;
-                    outFile << val << " ";
-                  }
-                  outFile << std::endl;
-                }
-
-                outFile << "matC = " << std::endl;
-                auto pC_print = begin(matC);
-                for (int row = 0; row < 32; row++) {
-                  for (int col = 0; col < 32; col++) {
-                    float val = *pC_print++;
-                    outFile << val << " ";
-                  }
-                  outFile << std::endl;
-                }
-              }
-            }
-#endif
 
             matA.release();
             matB.release();
@@ -590,59 +438,10 @@ void mm_casc_endk3(input_async_buffer<float, adf::extents<NSAMPLES_WINDOW_F_A>>&
                   pA = pA - (AIE_TILE_A * AIE_TILE_AB / 8);
                 }
 
-#ifdef SW_EMU_PRINT
-              if (print_code > 0) {
-                if (r == 0) {
-                  outFile << "matA = " << std::endl;
-                  auto pA_print = begin(matA);
-                  for (int row = 0; row < 32; row++) {
-                    for (int col = 0; col < 32; col++) {
-                      float val = *pA_print++;
-                      outFile << val << " ";
-                    }
-                    outFile << std::endl;
-                  }
-                  outFile << "matB = " << std::endl;
-                  auto pB_print = begin(matB);
-                  for (int row = 0; row < 32; row++) {
-                    for (int col = 0; col < 32; col++) {
-                      float val = *pB_print++;
-                      outFile << val << " ";
-                    }
-                    outFile << std::endl;
-                  }
-
-                  outFile << "matC = " << std::endl;
-                  auto pC_print = begin(matC);
-                  for (int row = 0; row < 32; row++) {
-                    for (int col = 0; col < 32; col++) {
-                      float val = *pC_print++;
-                      outFile << val << " ";
-                    }
-                    outFile << std::endl;
-                  }
-                }
-              }
-#endif
-
               matA.release();
               matB.release();
               pC = pC - (AIE_TILE_A * b_round);
             }
-
-#ifdef SW_EMU_PRINT
-            if (print_code > 0) {
-              outFile << "matC.release(); = " << std::endl;
-              auto pC_print = begin(matC);
-              for (int row = 0; row < 32; row++) {
-                for (int col = 0; col < 32; col++) {
-                  float val = *pC_print++;
-                  outFile << val << " ";
-                }
-                outFile << std::endl;
-              }
-            }
-#endif
 
             matC.release();
           }
@@ -737,41 +536,6 @@ void mm_casc_endk3(input_async_buffer<float, adf::extents<NSAMPLES_WINDOW_F_A>>&
             pA = pA - (AIE_TILE_A * AIE_TILE_AB / 8);
           }
 
-#ifdef SW_EMU_PRINT
-        if (print_code > 0) {
-          if (r == 0) {
-            outFile << "matA = " << std::endl;
-            auto pA_print = begin(matA);
-            for (int row = 0; row < 32; row++) {
-              for (int col = 0; col < 32; col++) {
-                float val = *pA_print++;
-                outFile << val << " ";
-              }
-              outFile << std::endl;
-            }
-            outFile << "matB = " << std::endl;
-            auto pB_print = begin(matB);
-            for (int row = 0; row < 32; row++) {
-              for (int col = 0; col < 32; col++) {
-                float val = *pB_print++;
-                outFile << val << " ";
-              }
-              outFile << std::endl;
-            }
-
-            outFile << "matC = " << std::endl;
-            auto pC_print = begin(matC);
-            for (int row = 0; row < 32; row++) {
-              for (int col = 0; col < 32; col++) {
-                float val = *pC_print++;
-                outFile << val << " ";
-              }
-              outFile << std::endl;
-            }
-          }
-        }
-#endif
-
         matA.release();
         matB.release();
         matC.release();
@@ -779,10 +543,4 @@ void mm_casc_endk3(input_async_buffer<float, adf::extents<NSAMPLES_WINDOW_F_A>>&
     }
   }
 
-#ifdef SW_EMU_PRINT
-  if (print_code > 0) {
-    outFile << "EXIT mm_casc_start ================= \n" << std::endl;
-    outFile.close();
-  }
-#endif
 }

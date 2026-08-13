@@ -105,8 +105,6 @@ void calculate_matrix_with_bias(float* host_inA_port, float* host_inB_port, floa
                 sum += host_inA_port[i*K+k] * host_inB_port[k*B+j];
             }
             gold_val[i*B+j] = sum + bias[j];
-            // printf("bias = %f\n", bias[j]);
-            // printf("sum = %f\n", sum);
         }
     }
 }
@@ -120,8 +118,6 @@ void add_matrix_with_bias(float* matrix, float * bias, int A, int B){
         }
     }
 }
-
-
 
 
 void init_matrix (float * matrix, int row, int col, float val){
@@ -158,33 +154,6 @@ void init_matrix_random(float *matrix, int row, int col) {
 
 
 void print_matrix_to_file(const std::string &filename, const float *matrix, int row, int col) {
-    #ifdef SW_EMU_PRINT
-    std::ofstream outFile(filename);
-    if (!outFile.is_open()) {
-        std::cerr << "Error opening file for writing: " << filename << std::endl;
-        return;
-    }
-    // Print matrix size
-    outFile << "Size: (" << row << ", " << col << ")\n";
-    // Print column headers
-    outFile << "      "; // Indentation for row headers
-    for (int j = 0; j < col; j++) {
-        outFile << std::setw(7) << j;
-    }
-    outFile << "\n";
-
-    // Print matrix data with row headers
-    for (int i = 0; i < row; i++) {
-        outFile << std::setw(7) << i; // Row header
-        for (int j = 0; j < col; j++) {
-            outFile << std::setw(7) << std::fixed << std::setprecision(4) << matrix[i * col + j];
-            // outFile << std::setw(7) << matrix[i * col + j] << " " ;
-        }
-        outFile << "\n";
-    }
-
-    outFile.close();
-    #endif
 }
 
 void calculate_matrix(float* host_inA_port, float* host_inB_port, float* gold_val, int A, int B, int K){
@@ -343,7 +312,6 @@ ParamsOneLayer params
 }
 
 
-
 void convert_weight_gold_to_2AXI (
 float * weight0_query,
 float * load_gold_query,
@@ -361,244 +329,6 @@ ParamsOneLayer params
     convert_blocked_to_2AXI_layout(weight0_query, K, B);
     convert_blocked_to_2AXI_layout(load_gold_query, A, B);
 
-}
-
-
-
-void generate_data_onelayer_with_bias( float* host_inA_port, float* host_inB_port, float* bias, float* host_outC_port, float* gold_val, ParamsOneLayer params){
-    std::cout<< "generate_data_onelayer_with_bias" << std::endl;
-    params.print();
-    int A = params.getMatrixDim_A();
-    int B = params.getMatrixDim_B();
-    int K = params.getMatrixDim_K();
-
-    std::cout<< "init matrices" << std::endl;
-
-    init_matrix (host_inA_port, A, K, 1.0);
-    init_matrix (host_inB_port, K, B, 1.0);
-    init_matrix (host_outC_port, A, B, 0.0);
-
-    init_matrix (bias, 1, B, 1.0);
-    // init_matrix_blocked (bias, 1, B, 1, 1);
-
-    // init_matrix_blocked (host_inA_port, A, K, 128, 64);
-    // init_matrix_blocked (host_inB_port, K, B, 128, 64);
-
-    // init_matrix_blocked (host_inA_port, A, K, 256, 128);
-    // init_matrix_blocked (host_inB_port, K, B, 128, 1024);
-
-    // for (int r=0; r<16; r++){
-    //     for (int c=0; c<16; c++){
-    //         host_inA_port[r*K+c] = r+1;
-    //     }
-    // }
-    // for (int r=0; r<16; r++){
-    //     for (int c=0; c<16; c++){
-    //         host_inB_port[r*B+c] = r+1;
-    //     }
-    // }
-    // for (int i=0; i<4; i++){
-    //     host_inA_port[i] = i+1;
-    //     host_inB_port[i] = i+1;
-    // }
-
-    // init_matrix_random (host_inA_port, A, K);
-    // init_matrix_random (host_inB_port, K, B);
-    // init_matrix_random (bias, 1, B);
-
-    calculate_matrix_with_bias(host_inA_port, host_inB_port, bias, gold_val, A, B, K);
-    
-    std::string file_name = "/home/cw4/github/versal-float32/19-gelu-norm-bias/design/pl_src/output/0_onelayer_";
-
-    print_matrix_to_file( file_name + "inA_matrix.txt", host_inA_port, A, K);
-    print_matrix_to_file( file_name + "inB_matrix.txt", host_inB_port, K, B);
-    print_matrix_to_file( file_name + "gold_val_matrix.txt", gold_val, A, B);
-    
-    convert_simple_to_blocked_layout(host_inA_port, A, K, 128, 64);
-    print_matrix_to_file( file_name + "inA_matrix_blocked.txt", host_inA_port, A, K);
-
-    convert_simple_to_blocked_layout(host_inB_port, K, B, 128, 64);
-    print_matrix_to_file( file_name + "inB_matrix_blocked.txt", host_inB_port, K, B);
-
-    convert_simple_to_blocked_layout(gold_val, A, B, 128, 64);
-    print_matrix_to_file( file_name + "gold_val_matrix_blocked.txt", gold_val, A, B);
-
-
-    convert_blocked_to_2AXI_layout(host_inA_port, A, K);
-    print_matrix_to_file( file_name + "inA_matrix_2AXI.txt", host_inA_port, A, K);
-
-    convert_blocked_to_2AXI_layout(host_inB_port, K, B);
-    print_matrix_to_file( file_name + "inB_matrix_2AXI.txt", host_inB_port, K, B);
-    
-    convert_blocked_to_2AXI_layout(gold_val, A, B);
-    print_matrix_to_file( file_name + "gold_val_matrix_2AXI.txt", gold_val, A, B);
-}
-
-
-
-
-void generate_data_onelayer( float* host_inA_port, float* host_inB_port, float* host_outC_port, float* gold_val, ParamsOneLayer params){
-    std::cout<< "generate_data_onelayer" << std::endl;
-    params.print();
-    int A = params.getMatrixDim_A();
-    int B = params.getMatrixDim_B();
-    int K = params.getMatrixDim_K();
-
-    std::cout<< "init matrices" << std::endl;
-
-    init_matrix (host_inA_port, A, K, 0.0);
-    init_matrix (host_inB_port, K, B, 0.0);
-    init_matrix (host_outC_port, A, B, 0.0);
-
-    init_matrix_blocked (host_inA_port, A, K, 128, 64);
-    init_matrix_blocked (host_inB_port, K, B, 128, 64);
-
-    // init_matrix_blocked (host_inA_port, A, K, 256, 128);
-    // init_matrix_blocked (host_inB_port, K, B, 128, 1024);
-
-    // for (int r=0; r<16; r++){
-    //     for (int c=0; c<16; c++){
-    //         host_inA_port[r*K+c] = r+1;
-    //     }
-    // }
-    // for (int r=0; r<16; r++){
-    //     for (int c=0; c<16; c++){
-    //         host_inB_port[r*B+c] = r+1;
-    //     }
-    // }
-    // for (int i=0; i<4; i++){
-    //     host_inA_port[i] = i+1;
-    //     host_inB_port[i] = i+1;
-    // }
-
-    // init_matrix_random (host_inA_port, A, K);
-    // init_matrix_random (host_inB_port, K, B);
-
-    calculate_matrix(host_inA_port, host_inB_port, gold_val, A, B, K);
-    
-    std::string file_name = "/home/cw4/github/versal-float32/19-gelu-norm-bias/design/pl_src/output/0_onelayer_";
-
-    print_matrix_to_file( file_name + "inA_matrix.txt", host_inA_port, A, K);
-    print_matrix_to_file( file_name + "inB_matrix.txt", host_inB_port, K, B);
-    print_matrix_to_file( file_name + "gold_val_matrix.txt", gold_val, A, B);
-    
-    convert_simple_to_blocked_layout(host_inA_port, A, K, 128, 64);
-    print_matrix_to_file( file_name + "inA_matrix_blocked.txt", host_inA_port, A, K);
-
-    convert_simple_to_blocked_layout(host_inB_port, K, B, 128, 64);
-    print_matrix_to_file( file_name + "inB_matrix_blocked.txt", host_inB_port, K, B);
-
-    convert_simple_to_blocked_layout(gold_val, A, B, 128, 64);
-    print_matrix_to_file( file_name + "gold_val_matrix_blocked.txt", gold_val, A, B);
-
-
-    convert_blocked_to_2AXI_layout(host_inA_port, A, K);
-    print_matrix_to_file( file_name + "inA_matrix_2AXI.txt", host_inA_port, A, K);
-
-    convert_blocked_to_2AXI_layout(host_inB_port, K, B);
-    print_matrix_to_file( file_name + "inB_matrix_2AXI.txt", host_inB_port, K, B);
-    
-    convert_blocked_to_2AXI_layout(gold_val, A, B);
-    print_matrix_to_file( file_name + "gold_val_matrix_2AXI.txt", gold_val, A, B);
-}
-
-
-
-void generate_data_fusedlayer ( float* host_L1_inA, float* host_L1_inB, float* host_L2_inB, float* host_L2_outC, float* gold_val, ParamsFusedLayer params){
-    
-    std::cout<< "generate_data_fusedlayer" << std::endl;
-    params.print();
-
-    int num_layer = params.num_layer;
-    
-    init_matrix (host_L1_inA, 512, 64 * num_layer, 1.0);
-    init_matrix (host_L1_inB, 512, 64 * num_layer, 1.0);
-    init_matrix (host_L2_inB, 512, 64 * num_layer, 1.0);
-    init_matrix (host_L2_outC, 512, 64 * num_layer,  0);
-
-    std::string file_name = "/home/cw4/github/versal-float32/19-gelu-norm-bias/design/pl_src/output/0_fuse_";
-
-
-    init_matrix_blocked (host_L1_inA, 512, 64 * num_layer, 128, 64);
-    init_matrix_blocked (host_L1_inB, 512, 64 * num_layer, 128, 64);
-    init_matrix_blocked (host_L2_inB, 512, 64 * num_layer, 128, 64);
-
-    // init_matrix_random(host_L1_inA, 512, 64);
-    // init_matrix_random(host_L1_inB, 512, 64);
-    // init_matrix_random(host_L2_inB, 512, 64);
-
-    for (int l=0; l<num_layer; l++){
-
-        float * curlayer_L1_outC = (float *)malloc(512 * 512 * sizeof(float));
-        float * curlayer_softmax_out = (float *)malloc(512 * 512 * sizeof(float));
-        float * curlayer_transposed = (float *)malloc(512 * 512 * sizeof(float));
-        float * curlayer_L1_inA = (float *)malloc(64 * 512 * sizeof(float));
-        float * curlayer_L1_inB = (float *)malloc(64 * 512 * sizeof(float));
-        float * curlayer_L2_inB = (float *)malloc(64 * 512 * sizeof(float));
-        float * curlayer_L2_outC = (float *)malloc(64 * 512 * sizeof(float));
-
-        // assert(num_layer <=16);
-
-        for (int i=0; i<512; i++){
-            for (int j=0; j<64; j++){
-                curlayer_L1_inA[i*64+j] = host_L1_inA[i*64*num_layer+64*l+j];
-                curlayer_L1_inB[i*64+j] = host_L1_inB[i*64*num_layer+64*l+j];
-                curlayer_L2_inB[i*64+j] = host_L2_inB[i*64*num_layer+64*l+j];
-            }
-        }
-
-        transpose_matrix(curlayer_L1_inB, curlayer_transposed, 512, 64);
-        calculate_matrix(curlayer_L1_inA, curlayer_transposed, curlayer_L1_outC, 512, 512, 64);
-        
-        calculate_softmax(curlayer_L1_outC, curlayer_softmax_out, 512, 512);
-        calculate_matrix(curlayer_softmax_out, curlayer_L2_inB, curlayer_L2_outC, 512, 64, 512);
-
-        // calculate_matrix(curlayer_L1_outC, curlayer_L2_inB, curlayer_L2_outC, 512, 64, 512);
-
-
-        std::cout<< "move data back" << std::endl;
-        for (int i=0; i<512; i++){
-            for (int j=0; j<64; j++){
-                gold_val[i*64*num_layer+64*l+j] = curlayer_L2_outC[i*64+j];
-            }
-        }
-
-        print_matrix_to_file( file_name + "0_l" + to_string(l) + "_L1_outC.txt", curlayer_L1_outC, 512, 512);
-        print_matrix_to_file( file_name + "0_l" + to_string(l) + "_softmax_out.txt", curlayer_softmax_out, 512, 512);
-        free(curlayer_L1_outC);
-        free(curlayer_softmax_out);
-        free(curlayer_transposed);
-        free(curlayer_L1_inA);
-        free(curlayer_L1_inB);
-        free(curlayer_L2_inB);
-        free(curlayer_L2_outC);
-    }
-
-
-    print_matrix_to_file( file_name + "L1_inA_matrix.txt", host_L1_inA, 512, 64*num_layer);
-    print_matrix_to_file( file_name + "L1_inB_matrix.txt", host_L1_inB, 512, 64*num_layer);
-    print_matrix_to_file( file_name + "L2_inB_matrix.txt", host_L2_inB, 512, 64*num_layer);
-    print_matrix_to_file( file_name + "gold_L2_outC.txt" , gold_val   , 512, 64*num_layer);
-
-    convert_simple_to_blocked_layout(host_L1_inA, 512, 64*num_layer, 128, 64);
-    convert_simple_to_blocked_layout(host_L1_inB, 512, 64*num_layer, 128, 64);
-    convert_simple_to_blocked_layout(host_L2_inB, 512, 64*num_layer, 128, 64);
-    convert_simple_to_blocked_layout(gold_val   , 512, 64*num_layer, 128, 64);
-
-    print_matrix_to_file( file_name + "L1_inA_matrix_blocked.txt", host_L1_inA, 512, 64*num_layer);
-    print_matrix_to_file( file_name + "L1_inB_matrix_blocked.txt", host_L1_inB, 512, 64*num_layer);
-    print_matrix_to_file( file_name + "L2_inB_matrix_blocked.txt", host_L2_inB, 512, 64*num_layer);
-    print_matrix_to_file( file_name + "gold_L2_outC_blocked.txt" , gold_val   , 512, 64*num_layer);
-
-    convert_blocked_to_2AXI_layout(host_L1_inA, 512, 64*num_layer);
-    convert_blocked_to_2AXI_layout(host_L1_inB, 512, 64*num_layer);
-    convert_blocked_to_2AXI_layout(host_L2_inB, 512, 64*num_layer);
-    convert_blocked_to_2AXI_layout(gold_val   , 512, 64*num_layer);
-
-    print_matrix_to_file( file_name + "L1_inA_matrix_2AXI.txt", host_L1_inA, 512, 64*num_layer);
-    print_matrix_to_file( file_name + "L1_inB_matrix_2AXI.txt", host_L1_inB, 512, 64*num_layer);
-    print_matrix_to_file( file_name + "L2_inB_matrix_2AXI.txt", host_L2_inB, 512, 64*num_layer);
-    print_matrix_to_file( file_name + "gold_L2_outC_2AXI.txt", gold_val, 512, 64*num_layer);
 }
 
 
@@ -638,85 +368,4 @@ void cal_mulweight_add_prev_layer (float * pre_layer, float * weight_mul_pre_lay
     free(pre_layer_tmp);
 }
 
-
-void generate_data_onelayer_norm( 
-    float* input, float * pre_layer,
-    float* weight_mul_pre_layer, 
-    float* weight_dense, float* bias_dense,
-    float* output,       float* gold_val, 
-    ParamsOneLayer params
-){
-    std::cout<< "generate_data_onelayer_norm" << std::endl;
-    params.print();
-    int A = params.getMatrixDim_A();
-    int B = params.getMatrixDim_B();
-    int K = params.getMatrixDim_K();
-
-    std::cout<< "init matrices" << std::endl;
-    init_matrix (output, A, B, 0.0);
-    init_matrix_blocked (input, A, K, 128, 64);
-    init_matrix_blocked (pre_layer, A, B, 128, 512);
-    init_matrix_blocked (weight_mul_pre_layer, 1, B, 1, 256);
-    init_matrix_blocked (weight_dense, K, B, 128, 512);
-    init_matrix_blocked (bias_dense, 1, B, 1, 256);
-
-    // init_matrix(input, A, K, 0.0);
-    // init_matrix(pre_layer, A, B, 0.0);
-    // init_matrix(weight_mul_pre_layer, 1, B, 1.0);
-    // init_matrix(weight_dense, K, B, 0.0);
-    // init_matrix(bias_dense, 1, B, 0.0);
-
-    // init_matrix_random(input, A, K);
-    // init_matrix_random(pre_layer, A, B);
-    // init_matrix_random(weight_mul_pre_layer, 1, B);
-    // init_matrix_random(weight_dense, K, B);
-    // init_matrix_random(bias_dense, 1, B);
-    
-    if (params.enable_bias == true){
-        std::cout<< "NOT CALCULATE" << std::endl;
-        // calculate_matrix_with_bias(input, weight_dense, bias_dense, gold_val, A, B, K);
-    }else{
-        calculate_matrix(input, weight_dense, gold_val, A, B, K);
-    }
-
-    if (params.enable_addmul_pre_layer == true){
-        cal_mulweight_add_prev_layer(pre_layer, weight_mul_pre_layer, gold_val, A, B);
-    }
-
-
-    if (params.enable_norm == true){
-        layer_normalization_no_weightbias(gold_val, A, B);
-    }
-    
-    std::string file_name = "/home/cw4/github/versal-float32/19-gelu-norm-bias/design/pl_src/output/0_onelayer_";
-
-    print_matrix_to_file( file_name + "input.txt", input, A, K);
-    convert_simple_to_blocked_layout(input, A, K, 128, 64);
-    print_matrix_to_file( file_name + "input_blocked.txt", input, A, K);
-    convert_blocked_to_2AXI_layout(input, A, K);
-    print_matrix_to_file( file_name + "input_2AXI.txt", input, A, K);
-
-    print_matrix_to_file( file_name + "pre_layer.txt", pre_layer, A, B);
-    convert_simple_to_blocked_layout(pre_layer, A, B, 128, 64);
-    print_matrix_to_file( file_name + "pre_layer_blocked.txt", pre_layer, A, B);
-    convert_blocked_to_2AXI_layout(pre_layer, A, B);
-    print_matrix_to_file( file_name + "pre_layer_2AXI.txt", pre_layer, A, B);
-
-    print_matrix_to_file( file_name + "weight_mul_pre_layer.txt", weight_mul_pre_layer, 1, B);
-
-    print_matrix_to_file( file_name + "weight_dense.txt", weight_dense, K, B);
-    convert_simple_to_blocked_layout(weight_dense, K, B, 128, 64);
-    print_matrix_to_file( file_name + "weight_dense_blocked.txt", weight_dense, K, B);
-    convert_blocked_to_2AXI_layout(weight_dense, K, B);
-    print_matrix_to_file( file_name + "weight_dense_2AXI.txt", weight_dense, K, B);
-
-    print_matrix_to_file( file_name + "bias_dense.txt", bias_dense, 1, B);
-
-    print_matrix_to_file( file_name + "gold_val.txt", gold_val, A, B);
-    convert_simple_to_blocked_layout(gold_val, A, B, 128, 64);
-    print_matrix_to_file( file_name + "gold_val_blocked.txt", gold_val, A, B);
-    convert_blocked_to_2AXI_layout(gold_val, A, B);
-    print_matrix_to_file( file_name + "gold_val_2AXI.txt", gold_val, A, B);
-
-}
 

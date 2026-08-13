@@ -189,7 +189,6 @@ After completion, you should see a `python_gold/` folder under `BERT_HuggingFace
      #SBATCH --cpus-per-task=48
      #SBATCH --mem=180G
      #SBATCH -p batch
-     #SBATCH -w c04
      ```
    - Submit the job:
      ```bash

@@ -13,50 +13,6 @@ uint32_t read_opcode_mem (uint32_t* array, int core_id, int dima_id, int dimb_id
 }
 
 
-void print_opcode_mem_array (uint32_t* array){
-   #ifdef SW_EMU_PRINT
-   std::ofstream outFile("/home/cw4/github/versal-float32/19-gelu-norm-bias/design/pl_src/output/01_opcode_mem_array.txt", std::ios_base::app); 
-   if (!outFile.is_open()){ std::cerr << "Unable to open file for writing." << std::endl;}
-   
-   for (int core_id = 0; core_id < 6; core_id++){
-      for (int dima_id = 0; dima_id < 4; dima_id++){
-         for (int dimb_id = 0; dimb_id < 4; dimb_id++){
-            for (int csc = 0; csc < 4; csc++){
-               outFile << "core_id = " << core_id << " dima_id = " << dima_id << " dimb_id = " << dimb_id << " csc = " << csc << std::endl;
-               uint32_t print_code = read_opcode_mem(array, core_id, dima_id, dimb_id, csc, 0);
-               outFile << "print_code = " << print_code << std::endl;
-               uint32_t opcode_len = read_opcode_mem(array, core_id, dima_id, dimb_id, csc, 1);
-               outFile << "opcode_len = " << opcode_len << std::endl;
-               for (int i=2; i<16; i++){
-                  uint32_t opcode = read_opcode_mem(array, core_id, dima_id, dimb_id, csc, i);
-                  int a_iter = opcode & 0x0000000F;
-                  int b_iter = (opcode & 0x000000F0) >> 4;
-                  int k_iter = (opcode & 0x00007F00) >> 8;
-                  int compute_tile_access_A = (opcode & 0x00018000) >> 15;
-                  int compute_tile_access_B = (opcode & 0x000E0000) >> 17;
-                  bool enable_load_pre_norm_weight = (opcode & 0x00100000) >> 20;
-                  bool enable_bias = (opcode & 0x00200000) >> 21;
-                  bool dimb_is_32  = (opcode & 0x00400000) >> 22; 
-                  bool dimk_is_32  = (opcode & 0x00800000) >> 23;
-                  bool enable_accum_kiter = (opcode & 0x01000000) >> 24;
-                  bool enable_muladd_pre_layer = (opcode & 0x02000000) >> 25;
-                  bool need_muladd_pre_layer_in_cur_aie = (opcode & 0x04000000) >> 26;
-                  outFile << "a_iter = " << a_iter << " b_iter = " << b_iter << " k_iter = " << k_iter;
-                  outFile << " compute_tile_access_A = " << compute_tile_access_A << " compute_tile_access_B = " << compute_tile_access_B;
-                  outFile << " enable_load_pre_norm_weight = " << enable_load_pre_norm_weight << " enable_bias = " << enable_bias;
-                  outFile << " dimb_is_32 = " << dimb_is_32 << " dimk_is_32 = " << dimk_is_32;
-                  outFile << " enable_accum_kiter = " << enable_accum_kiter << " enable_muladd_pre_layer = " << enable_muladd_pre_layer;
-                  outFile << " need_muladd_pre_layer_in_cur_aie = " << need_muladd_pre_layer_in_cur_aie << std::endl;
-               }
-            }
-         }
-      }
-   }
-   outFile.close();
-   #endif
-}
-
-
 void generate_aie_rtp_opcode_mem ( xrtGraphHandle gemm_aie_gr) {
 
    std::cout<<"generate_aie_rtp_opcode_mem" << std::endl;
@@ -94,9 +50,6 @@ void generate_aie_rtp_opcode_mem ( xrtGraphHandle gemm_aie_gr) {
          }
       }
    }
-
-
-
 
 
    std::cout<<"Query Key Value " << std::endl;
@@ -182,8 +135,6 @@ void generate_aie_rtp_opcode_mem ( xrtGraphHandle gemm_aie_gr) {
    opcode = opcode | (0x01000000 & (enable_accum_kiter    << 24)) ;
    opcode = opcode | (0x02000000 & (enable_muladd_pre_layer    << 25)) ;
    opcode = opcode | (0x04000000 & (need_muladd_pre_layer_in_cur_aie << 26)) ;
-
-
 
 
    for (int core_id = 0; core_id < 4; core_id++){
@@ -377,10 +328,6 @@ void generate_aie_rtp_opcode_mem ( xrtGraphHandle gemm_aie_gr) {
    }
 
 
-
-
-
-
    std::cout<<"Print " << std::endl;
 
    for (int core_id = 0; core_id < 6; core_id++){
@@ -393,8 +340,6 @@ void generate_aie_rtp_opcode_mem ( xrtGraphHandle gemm_aie_gr) {
          }
       }
    }
-
-   print_opcode_mem_array(opcode_mem);
 
    
    for (int core_id = 0; core_id < 6; core_id++){

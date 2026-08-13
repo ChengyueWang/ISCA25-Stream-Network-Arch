@@ -85,7 +85,6 @@ void mop2uop_memcore_C(
     hls::stream<uop_memcore_C_type> &stream_uOP_memcore_C) {
 
 
-
   mop_memcore_C_type mOP;
 
   bool is_last_mOP = false;
@@ -801,7 +800,6 @@ void decoder_uop(uint32_t *vliw_memory, hls::stream<uop_ddr_type> &stream_uOP_dd
                  hls::stream<uop_mesh_sendA_type> &stream_uOP_mesh_sendA,
                  hls::stream<uop_mesh_sendB_type> &stream_uOP_mesh_sendB) {
 #pragma HLS dataflow
-
 
 
   hls::stream<mop_ddr_type> stream_mOP_ddr;

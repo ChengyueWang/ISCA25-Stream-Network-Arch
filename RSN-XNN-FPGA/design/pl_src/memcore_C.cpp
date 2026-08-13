@@ -225,13 +225,11 @@ void storeC_to_dramStream(
       }
 
 
-
     RECV_MEAN:
       for (uint16_t row = 0; row < size_dim1; row = row + 1) {
 #pragma HLS PIPELINE II = 1
         mean_buf[row] += data_channel_from_neighbour.read();
       }
-
 
 
     // calculate variance
@@ -256,7 +254,6 @@ void storeC_to_dramStream(
                (buf_C[row + 3][col][1] - mean_r3) * (buf_C[row + 3][col][1] - mean_r3));
         }
       }
-
 
 
     SEND_VAR:
@@ -422,7 +419,6 @@ void storeC_to_dramStream(
         }
       }
     }
-    // init_C(buf_C, size_dim1/128, size_dim2/128);
   }
 
 
@@ -635,7 +631,6 @@ void memcore_C(
 WHILE_LOOP:
   while (is_last_uOP == false) {
     uOP = stream_uOP_memcore_C.read();
-
 
 
     is_last_uOP = uOP.is_last_uOP;

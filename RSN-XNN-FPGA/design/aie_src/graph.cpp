@@ -11,11 +11,6 @@ TopGraph G;
 int main(int argc, char** argv) {
   printf("=========== START AIE simulation ============================================\n");
 
-  // event::handle handle = event::start_profiling(g.matC_out[0][0][0][0],
-  // event::io_stream_start_to_bytes_transferred_cycles, TOTAL_BYTES);
-  // if(handle==event::invalid_handle){printf("ERROR:Invalid handle. Only two performance counter in
-  // a AIE-PL interface tile\n");return 1;}
-
   printf("Expected cycles for 1 32x32x32: %d\n",
          (AIE_TILE_A * AIE_TILE_B * AIE_TILE_AB) / (8 * 64 / 68));
   printf("Expected cycles for 1 32x16x32: %d\n", (AIE_TILE_A * AIE_TILE_B * 16) / (8 * 64 / 68));
@@ -58,15 +53,8 @@ int main(int argc, char** argv) {
 
   // when use synchronize parementer, the order of G.update and G.run can re ordered freely
   // synchronize:
-  // G.update;
-  // G.run(2);
-  // G.update;
   // asynchronize:
-  // G.update;
-  // G.run(2);
   // G.wait(); // need to have wait otherwise will Assertion failure
-  // G.update;
-  // G.run(2);
 
   uint32_t opcode_mem[512];
 
@@ -85,20 +73,7 @@ int main(int argc, char** argv) {
     }
   }
 
-  // G.wait();
-  // G.update(G.k_iter0, 2);
-  // G.update(G.k_iter1, 2);
-  // G.update(G.k_iter2, 2);
-  // G.update(G.k_iter3, 2);
-  // G.run(1);
   G.end();
-
-  // long long cycle_count = event::read_profiling(handle); event::stop_profiling(handle);
-  // double cycle_per_iter = (double) cycle_count / (GRAPH_ITER_CNT-1);
-  // double throughput = (double) TOTAL_FLOPS / (cycle_count);
-  // printf("Cycle count: %lld\n", cycle_count);
-  // printf("Cycle per iteration: %f\n", cycle_per_iter);
-  // printf("Throughput: %f GFLOP/s\n", throughput);
 
   printf("=========== Stop AIE simulation ============================================\n");
 

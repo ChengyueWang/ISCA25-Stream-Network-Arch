@@ -56,8 +56,6 @@
 #define CNT4B_MESH_B 2
 
 
-
-
 // 1 32-bit
 struct INST_HEADER_TYPE{
     uint32_t opcode      : LEN_OPCODE;                  // 4 bits for opcode
@@ -109,7 +107,6 @@ struct INST_LOAD_B_DRAM_TYPE{
     uint32_t is_loading_bias :1;
     uint32_t zero_padding  : 13; 
 } ;
-
 
 
 // 1 32-bit  => 25 bits
@@ -249,7 +246,6 @@ typedef union{
 } union_inst_mesh_B;
 
 
-
 void printOpcode ( uint32_t opcode) {
     switch (opcode) {
         case OPCODE_NULL:
@@ -359,9 +355,6 @@ void generate_last_inst_for_all_modules ( uint32_t *inst_sequence, uint32_t & co
 }
 
 
-
-
-
 void generate_instruction_onelayer_cores_meshes ( uint32_t *inst_sequence, uint32_t & count4B,  uint32_t & countInstPkt, ParamsOneLayer params){
 
     uint32_t a_iter = params.a_iter;
@@ -411,7 +404,6 @@ void generate_instruction_onelayer_cores_meshes ( uint32_t *inst_sequence, uint3
     inst_memcore_B.inst_val.compute_tile_access_B = 4;
     inst_memcore_B.inst_val.compute_tile_access_K = 1;
     for (int i = 0; i < CNT4B_MEMCORE_B ; i++) { inst_sequence[count4B++] = inst_memcore_B.raw_32b[i];}
-
 
 
     inst_header.inst_val.opcode = OPCODE_MESH_SEND_A;
@@ -815,8 +807,6 @@ void generate_instruction_storeC(int a, int b, uint32_t *inst_sequence, uint32_t
     inst_ddr.inst_val.store_from_memcoreC5 = true;
     for (int i = 0; i < CNT4B_DDR ; i++) { inst_sequence[count4B++] = inst_ddr.raw_32b[i]; }
 }
-
-
 
 
 void generate_instruction_K8_steady_ddr (int loadA_a, int loadA_b, int storeC_a, int storeC_b, uint32_t *inst_sequence, uint32_t & count4B,  uint32_t & countInstPkt, ParamsOneLayer params){
@@ -1338,9 +1328,6 @@ void generate_instruction_K8_steady_ddr (int loadA_a, int loadA_b, int storeC_a,
     for (int i = 0; i < CNT4B_DDR ; i++) { inst_sequence[count4B++] = inst_ddr.raw_32b[i];}
 
 
-
-
-
     inst_ddr.inst_val.start_address = storeC_address + 128*512/16 + 128*1024*b_iter/16;
     inst_ddr.inst_val.address_offset = 0; 
     inst_ddr.inst_val.chunck_size = 128*512;
@@ -1557,8 +1544,6 @@ void generate_instruction_K8_steady_ddr (int loadA_a, int loadA_b, int storeC_a,
     for (int i = 0; i < CNT4B_DDR ; i++) { inst_sequence[count4B++] = inst_ddr.raw_32b[i];}
 
 
-
-
     inst_ddr.inst_val.start_address = storeC_address + (4*b_iter)*128*512/16 + 128*1024*b_iter/16;
     inst_ddr.inst_val.address_offset = 0; 
     inst_ddr.inst_val.chunck_size = 128*512;
@@ -1748,12 +1733,6 @@ void generate_instruction_K8_steady_ddr (int loadA_a, int loadA_b, int storeC_a,
 
 
 }
-
-
-
-
-
-
 
 
 void generate_instruction_Klarger16_steady_ddr (int loadA_a, int loadA_b, int storeC_a, int storeC_b, uint32_t *inst_sequence, uint32_t & count4B,  uint32_t & countInstPkt, ParamsOneLayer params){
@@ -2266,9 +2245,6 @@ void generate_instruction_Klarger16_steady_ddr (int loadA_a, int loadA_b, int st
     for (int i = 0; i < CNT4B_DDR ; i++) { inst_sequence[count4B++] = inst_ddr.raw_32b[i];}
 
 
-
-
-
     inst_ddr.inst_val.start_address = storeC_address + 128*512/16 + 128*1024*b_iter/16;
     inst_ddr.inst_val.address_offset = 0; 
     inst_ddr.inst_val.chunck_size = 128*512;
@@ -2483,8 +2459,6 @@ void generate_instruction_Klarger16_steady_ddr (int loadA_a, int loadA_b, int st
     inst_ddr.inst_val.store_from_memcoreC4 = false;
     inst_ddr.inst_val.store_from_memcoreC5 = false;
     for (int i = 0; i < CNT4B_DDR ; i++) { inst_sequence[count4B++] = inst_ddr.raw_32b[i];}
-
-
 
 
     inst_ddr.inst_val.start_address = storeC_address + (4*b_iter)*128*512/16 + 128*1024*b_iter/16;
@@ -3168,7 +3142,6 @@ void generate_instruction_Klarger16_steady_ddr (int loadA_a, int loadA_b, int st
     for (int i = 0; i < CNT4B_DDR ; i++) { inst_sequence[count4B++] = inst_ddr.raw_32b[i]; }
 
 
-
     inst_header.inst_val.opcode = OPCODE_DDR_DRAM;
     inst_header.inst_val.mask = false;
     inst_header.inst_val.is_last_mOP = false;
@@ -3259,12 +3232,7 @@ void generate_instruction_Klarger16_steady_ddr (int loadA_a, int loadA_b, int st
     for (int i = 0; i < CNT4B_DDR ; i++) { inst_sequence[count4B++] = inst_ddr.raw_32b[i];}
 
 
-
 }
-
-
-
-
 
 
 void generate_instruction_onelayer ( uint32_t *inst_sequence, uint32_t & count4B,  uint32_t & countInstPkt, ParamsOneLayer params){
@@ -3319,8 +3287,6 @@ void generate_instruction_onelayer_overlap_A1B4K2 ( uint32_t *inst_sequence, uin
 }
 
 
-
-
 void generate_instruction_onelayer_overlap_128_512_A4B1K8 ( uint32_t *inst_sequence, uint32_t & count4B,  uint32_t & countInstPkt, ParamsOneLayer params){
     uint32_t a_iter = params.a_iter;
     uint32_t b_iter = params.b_iter;
@@ -3356,7 +3322,6 @@ void generate_instruction_onelayer_overlap_128_512_A4B1K8 ( uint32_t *inst_seque
 }
 
 
-
 void generate_instruction_onelayer_overlap_128_512_A4B1_Klarger16 ( uint32_t *inst_sequence, uint32_t & count4B,  uint32_t & countInstPkt, ParamsOneLayer params){
     uint32_t a_iter = params.a_iter;
     uint32_t b_iter = params.b_iter;
@@ -3390,7 +3355,6 @@ void generate_instruction_onelayer_overlap_128_512_A4B1_Klarger16 ( uint32_t *in
 
     generate_last_inst_for_all_modules(inst_sequence, count4B, countInstPkt);
 }
-
 
 
 void generate_instruction_onelayer_overlap_128_512_A4B4K8 ( uint32_t *inst_sequence, uint32_t & count4B,  uint32_t & countInstPkt, ParamsOneLayer params){
@@ -3431,8 +3395,6 @@ void generate_instruction_onelayer_overlap_128_512_A4B4K8 ( uint32_t *inst_seque
 }
 
 
-
-
 void generate_instruction_onelayer_overlap_128_512_Klarger16 ( uint32_t *inst_sequence, uint32_t & count4B,  uint32_t & countInstPkt, ParamsOneLayer params){
     uint32_t a_iter = params.a_iter;
     uint32_t b_iter = params.b_iter;
@@ -3464,6 +3426,5 @@ void generate_instruction_onelayer_overlap_128_512_Klarger16 ( uint32_t *inst_se
 
     generate_last_inst_for_all_modules(inst_sequence, count4B, countInstPkt);
 }
-
 
 

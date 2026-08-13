@@ -1,7 +1,6 @@
 #include "memcore_C_to_mesh.h"
 
 
-
 float my_tanh_to_mesh(float t_in) {
 #pragma HLS inline recursive
 
@@ -179,7 +178,6 @@ void storeC_to_dramStream_to_mesh(
         for (int col = 0; col < 256; col++) {
 #pragma HLS PIPELINE II = 2
 #pragma HLS UNROLL factor = 4
-          //   #pragma HLS latency min=200
           buf_C[row][col][0] = gelu_to_mesh(buf_C[row][col][0]);
           buf_C[row][col][1] = gelu_to_mesh(buf_C[row][col][1]);
         }
@@ -238,7 +236,6 @@ void storeC_to_dramStream_to_mesh(
       }
 
 
-
     // calculate variance
     CAL_VAR:
       for (uint16_t row = 0; row < size_dim1; row = row + 4) {
@@ -263,7 +260,6 @@ void storeC_to_dramStream_to_mesh(
       }
 
 
-
     SEND_VAR:
       for (uint16_t row = 0; row < size_dim1; row = row + 1) {
 #pragma HLS PIPELINE II = 1
@@ -280,7 +276,6 @@ void storeC_to_dramStream_to_mesh(
 
         var_buf[row] = hls::sqrtf(v0 + 1e-6);
       }
-
 
 
     // normalize
@@ -428,7 +423,6 @@ void storeC_to_dramStream_to_mesh(
         }
       }
     }
-    // init_C_to_mesh(buf_C, 2, 4);
   }
 
 
@@ -593,13 +587,6 @@ void recvC_from_aie_to_mesh(
       float accum_buf[256];  // 8 row, 2 col
 #pragma HLS ARRAY_RESHAPE variable = accum_buf dim = 1 cyclic factor = 4
 #pragma HLS bind_storage variable = accum_buf type = RAM_T2P impl = BRAM
-
-      // INIT_ACCUMBUF: for (int i=0; i<128 * compute_tile_recv_access_A; i = i+4){
-      //    accum_buf[i + 0] = 0;
-      //    accum_buf[i + 1] = 0;
-      //    accum_buf[i + 2] = 0;
-      //    accum_buf[i + 3] = 0;
-      // }
 
       float accum0, accum1, accum2, accum3;
       float accum0_q, accum1_q, accum2_q, accum3_q;
@@ -782,7 +769,6 @@ void recvC_from_aie_to_mesh(
 #pragma HLS STREAM variable = data_channel_from_neighbour depth = 256 type = fifo
 
 
-
       float rcv_accum0, rcv_accum1, rcv_accum2, rcv_accum3;
       float rcv_accum0_q, rcv_accum1_q, rcv_accum2_q, rcv_accum3_q;
       rcv_accum0 = 0;
@@ -866,8 +852,6 @@ void recvC_from_aie_to_mesh(
         }
       }
     }
-
-
 
 
   }

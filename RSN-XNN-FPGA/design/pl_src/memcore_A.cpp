@@ -82,7 +82,6 @@ void sendA_to_aie(
 #pragma HLS bind_op variable = col_addr op = add impl = fabric
 
 
-
 #pragma HLS PIPELINE II = 1
                 ap_uint<64> data_A0_casc0, data_A0_casc1, data_A0_casc2, data_A0_casc3;
                 ap_uint<64> data_A1_casc0, data_A1_casc1, data_A1_casc2, data_A1_casc3;
@@ -199,7 +198,6 @@ WHILE_LOOP:
     ap_uint<3> compute_tile_access_A = uOP.compute_tile_access_A;
     ap_uint<3> compute_tile_access_B = uOP.compute_tile_access_B;
 
-    // bool is_computing_buf1 = uOP.is_computing_buf1;
     uint16_t one_compute_tile_dim1 = 128;
     uint16_t one_compute_tile_dim2 = 128;
 

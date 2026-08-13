@@ -3005,7 +3005,6 @@ void generate_instruction_onelayer_overlap_128_512_A4B1K8(uint32_t *inst_sequenc
   b = 0;
   generate_instruction_storeC(a, b, inst_sequence, count4B, countInstPkt, params);
 
-  // generate_last_inst_for_all_modules(inst_sequence, count4B, countInstPkt);
 }
 
 void generate_instruction_query_key(uint32_t *inst_sequence, uint32_t &count4B,
@@ -3122,9 +3121,6 @@ void generate_instruction_query_key(uint32_t *inst_sequence, uint32_t &count4B,
   generate_instruction_K8_steady_ddr(loadA_a, loadA_b, storeC_a, storeC_b, inst_sequence, count4B,
                                      countInstPkt, params_query);
 
-  // a = 3; b = 0; generate_instruction_storeC(a, b, inst_sequence, count4B, countInstPkt,
-  // params_query);
-
   generate_bias(inst_sequence, count4B, countInstPkt, params_key);
 
   generate_instruction_onelayer_coresAB_meshesAB(inst_sequence, count4B, countInstPkt,
@@ -3183,9 +3179,6 @@ void generate_instruction_query_key(uint32_t *inst_sequence, uint32_t &count4B,
   a = 0;
   b = 0;
   generate_instruction_loadB(a, b, inst_sequence, count4B, countInstPkt, params_key);
-  // a = 0; b = 0; offset = 0; repeat_num = k_iter;
-  // generate_instruction_loadA(a, b, offset, repeat_num, inst_sequence, count4B, countInstPkt,
-  // params_key);
   loadA_a = 0;
   loadA_b = 0;
   storeC_a = 3;
@@ -3376,9 +3369,6 @@ void generate_instruction_query_key_value(uint32_t *inst_sequence, uint32_t &cou
   a = 0;
   b = 0;
   generate_instruction_loadB(a, b, inst_sequence, count4B, countInstPkt, params_key);
-  // a = 0; b = 0; offset = 0; repeat_num = k_iter;
-  // generate_instruction_loadA(a, b, offset, repeat_num, inst_sequence, count4B, countInstPkt,
-  // params_key);
   loadA_a = 0;
   loadA_b = 0;
   storeC_a = 3;
@@ -3416,9 +3406,6 @@ void generate_instruction_query_key_value(uint32_t *inst_sequence, uint32_t &cou
   storeC_b = 0;
   generate_instruction_K8_steady_ddr(loadA_a, loadA_b, storeC_a, storeC_b, inst_sequence, count4B,
                                      countInstPkt, params_key);
-
-  // a = 3; b = 0; generate_instruction_storeC(a, b, inst_sequence, count4B, countInstPkt,
-  // params_key);
 
   generate_bias(inst_sequence, count4B, countInstPkt, params_value);
   generate_instruction_onelayer_coresAB_meshesAB(inst_sequence, count4B, countInstPkt,
@@ -3477,9 +3464,6 @@ void generate_instruction_query_key_value(uint32_t *inst_sequence, uint32_t &cou
   a = 0;
   b = 0;
   generate_instruction_loadB(a, b, inst_sequence, count4B, countInstPkt, params_value);
-  // a = 0; b = 0; offset = 0; repeat_num = k_iter;
-  // generate_instruction_loadA(a, b, offset, repeat_num, inst_sequence, count4B, countInstPkt,
-  // params_value);
   loadA_a = 0;
   loadA_b = 0;
   storeC_a = 3;
@@ -3528,8 +3512,6 @@ void generate_instruction_onelayer(uint32_t *inst_sequence, uint32_t &count4B,
   uint32_t a_iter = params.a_iter;
   uint32_t b_iter = params.b_iter;
   uint32_t k_iter = params.k_iter;
-
-  // assert(b_iter == 1);
 
   // MOP OPCODE_MEMCORE_B needs the depth of 2
   if (params.enable_bias == true) {
@@ -4572,9 +4554,6 @@ void generate_instruction_onelayer_first2load_A4B4K8(uint32_t *inst_sequence, ui
       loadA_b = b;
       generate_instruction_ddr_K8_steady_for_gelu(loadA_a, loadA_b, storeC_a, storeC_b,
                                                   inst_sequence, count4B, countInstPkt, params);
-      // generate_instruction_loadA(loadA_a, loadA_b, 0, k_iter, inst_sequence, count4B,
-      // countInstPkt, params); generate_instruction_storeC(storeC_a, storeC_b, inst_sequence,
-      // count4B, countInstPkt, params);
 
       storeC_a = a;
       storeC_b = b;
@@ -4591,9 +4570,6 @@ void generate_instruction_onelayer_first2load_A4B4K8(uint32_t *inst_sequence, ui
   generate_instruction_ddr_K8_steady_for_gelu(loadA_a, loadA_b, storeC_a, storeC_b, inst_sequence,
                                               count4B, countInstPkt, params);
 
-  // generate_instruction_loadA(loadA_a, loadA_b, 0, k_iter, inst_sequence, count4B, countInstPkt,
-  // params); generate_instruction_storeC(storeC_a, storeC_b, inst_sequence, count4B, countInstPkt,
-  // params);
 
   generate_instruction_storeC(a, b, inst_sequence, count4B, countInstPkt, params);
 }

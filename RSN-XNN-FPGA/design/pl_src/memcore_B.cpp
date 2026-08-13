@@ -249,7 +249,6 @@ WHILE_LOOP:
 
     uint16_t one_compute_tile_dim1 = 128;
     uint16_t one_compute_tile_dim2 = 128;
-    // bool is_computing_buf1  = uOP.is_computing_buf1;
 
     if (is_computing_buf1 == 1) {
       loadB_from_dramStream(

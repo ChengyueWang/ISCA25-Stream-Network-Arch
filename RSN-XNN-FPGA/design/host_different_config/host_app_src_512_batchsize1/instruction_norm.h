@@ -3,8 +3,6 @@
 #include "instruction.h"
 
 
-
-
 void generate_instruction_Klarger16_steady_ddr (int loadA_a, int loadA_b, int storeC_a, int storeC_b, uint32_t *inst_sequence, uint32_t & count4B,  uint32_t & countInstPkt, ParamsOneLayer params){
 
     uint32_t a_iter = params.a_iter;
@@ -515,9 +513,6 @@ void generate_instruction_Klarger16_steady_ddr (int loadA_a, int loadA_b, int st
     for (int i = 0; i < CNT4B_DDR ; i++) { inst_sequence[count4B++] = inst_ddr.raw_32b[i];}
 
 
-
-
-
     inst_ddr.inst_val.start_address = storeC_address + 128*512/16 + 128*1024*b_iter/16;
     inst_ddr.inst_val.address_offset = 0; 
     inst_ddr.inst_val.chunck_size = 128*512;
@@ -732,8 +727,6 @@ void generate_instruction_Klarger16_steady_ddr (int loadA_a, int loadA_b, int st
     inst_ddr.inst_val.store_from_memcoreC4 = false;
     inst_ddr.inst_val.store_from_memcoreC5 = false;
     for (int i = 0; i < CNT4B_DDR ; i++) { inst_sequence[count4B++] = inst_ddr.raw_32b[i];}
-
-
 
 
     inst_ddr.inst_val.start_address = storeC_address + (4*b_iter)*128*512/16 + 128*1024*b_iter/16;
@@ -1417,7 +1410,6 @@ void generate_instruction_Klarger16_steady_ddr (int loadA_a, int loadA_b, int st
     for (int i = 0; i < CNT4B_DDR ; i++) { inst_sequence[count4B++] = inst_ddr.raw_32b[i]; }
 
 
-
     inst_header.inst_val.opcode = OPCODE_DDR_DRAM;
     inst_header.inst_val.mask = false;
     inst_header.inst_val.is_last_mOP = false;
@@ -1508,10 +1500,7 @@ void generate_instruction_Klarger16_steady_ddr (int loadA_a, int loadA_b, int st
     for (int i = 0; i < CNT4B_DDR ; i++) { inst_sequence[count4B++] = inst_ddr.raw_32b[i];}
 
 
-
 }
-
-
 
 
 void generate_load_weight_previous_norm(uint32_t *inst_sequence, uint32_t & count4B,  uint32_t & countInstPkt, ParamsOneLayer params){
@@ -1620,10 +1609,6 @@ void generate_load_weight_previous_norm(uint32_t *inst_sequence, uint32_t & coun
     for (int i = 0; i < CNT4B_MESH_B ; i++) { inst_sequence[count4B++] = inst_mesh_B.raw_32b[i];}
 
 
-
-
-
-
 }
 
 
@@ -1677,22 +1662,6 @@ void generate_instruction_onelayer_cores_meshes_add_prev_layer ( uint32_t *inst_
     inst_memcore_A.inst_val.compute_tile_access_B = 1;  
     for (int i = 0; i < CNT4B_MEMCORE_A ; i++) { inst_sequence[count4B++] = inst_memcore_A.raw_32b[i]; }
 
-    // inst_header.inst_val.opcode = OPCODE_MEMCORE_A;
-    // inst_header.inst_val.mask = 0b000111;
-    // inst_header.inst_val.is_last_mOP = false;
-    // inst_header.inst_val.mop_buffer_window_size = 1;
-    // inst_header.inst_val.repeat_num = 1;
-    // inst_sequence[count4B++] = inst_header.raw_32b;
-    // printHeaderInst(inst_header.inst_val, countInstPkt);
-    // countInstPkt ++;
-    // inst_memcore_A.inst_val.enable_load_from_dram = false;
-    // inst_memcore_A.inst_val.enable_send_to_aie    = true;
-    // inst_memcore_A.inst_val.one_mem_tile_dim1     = false;
-    // inst_memcore_A.inst_val.one_mem_tile_dim2     = false;
-    // inst_memcore_A.inst_val.compute_tile_access_A = 1;
-    // inst_memcore_A.inst_val.compute_tile_access_B = 1;  
-    // for (int i = 0; i < CNT4B_MEMCORE_A ; i++) { inst_sequence[count4B++] = inst_memcore_A.raw_32b[i]; }
-
 
     inst_header.inst_val.opcode = OPCODE_MEMCORE_A;
     inst_header.inst_val.mask = 0b000111;
@@ -1709,7 +1678,6 @@ void generate_instruction_onelayer_cores_meshes_add_prev_layer ( uint32_t *inst_
     inst_memcore_A.inst_val.compute_tile_access_A = 1;
     inst_memcore_A.inst_val.compute_tile_access_B = 1;  
     for (int i = 0; i < CNT4B_MEMCORE_A ; i++) { inst_sequence[count4B++] = inst_memcore_A.raw_32b[i]; }
-
 
 
     inst_header.inst_val.opcode = OPCODE_MESH_SEND_A;
@@ -1745,25 +1713,6 @@ void generate_instruction_onelayer_cores_meshes_add_prev_layer ( uint32_t *inst_
     inst_mesh_A.inst_val.memcoreC3_to_computecore5 = false;
     for (int i = 0; i < CNT4B_MESH_A ; i++) { inst_sequence[count4B++] = inst_mesh_A.raw_32b[i];}
 
-
-
-
-
-    // inst_header.inst_val.opcode = OPCODE_MEMCORE_A;
-    // inst_header.inst_val.mask = 0b000111;
-    // inst_header.inst_val.is_last_mOP = false;
-    // inst_header.inst_val.mop_buffer_window_size = 1;
-    // inst_header.inst_val.repeat_num = 1 ;
-    // inst_sequence[count4B++] = inst_header.raw_32b;
-    // printHeaderInst(inst_header.inst_val, countInstPkt);
-    // countInstPkt ++;
-    // inst_memcore_A.inst_val.enable_load_from_dram = true;
-    // inst_memcore_A.inst_val.enable_send_to_aie    = false;
-    // inst_memcore_A.inst_val.one_mem_tile_dim1     = 256;
-    // inst_memcore_A.inst_val.one_mem_tile_dim2     = 128;
-    // inst_memcore_A.inst_val.compute_tile_access_A = false;
-    // inst_memcore_A.inst_val.compute_tile_access_B = false;  
-    // for (int i = 0; i < CNT4B_MEMCORE_A ; i++) { inst_sequence[count4B++] = inst_memcore_A.raw_32b[i]; }
 
     inst_header.inst_val.opcode = OPCODE_MEMCORE_A;
     inst_header.inst_val.mask = 0b000111;
@@ -2040,7 +1989,6 @@ void generate_instruction_onelayer_cores_meshes_add_prev_layer_prolog ( uint32_t
     for (int i = 0; i < CNT4B_MEMCORE_A ; i++) { inst_sequence[count4B++] = inst_memcore_A.raw_32b[i]; }
 
 
-
     inst_header.inst_val.opcode = OPCODE_MESH_SEND_A;
     inst_header.inst_val.mask = false;
     inst_header.inst_val.is_last_mOP = false;
@@ -2090,22 +2038,6 @@ void generate_instruction_onelayer_cores_meshes_add_prev_layer_prolog ( uint32_t
     inst_memcore_A.inst_val.compute_tile_access_B = 4;  
     for (int i = 0; i < CNT4B_MEMCORE_A ; i++) { inst_sequence[count4B++] = inst_memcore_A.raw_32b[i]; }
 
-    // inst_header.inst_val.opcode = OPCODE_MEMCORE_A;
-    // inst_header.inst_val.mask = 0b000111;
-    // inst_header.inst_val.is_last_mOP = false;
-    // inst_header.inst_val.mop_buffer_window_size = 1;
-    // inst_header.inst_val.repeat_num = 1;
-    // inst_sequence[count4B++] = inst_header.raw_32b;
-    // printHeaderInst(inst_header.inst_val, countInstPkt);
-    // countInstPkt ++;
-    // inst_memcore_A.inst_val.enable_load_from_dram = false;
-    // inst_memcore_A.inst_val.enable_send_to_aie    = true;
-    // inst_memcore_A.inst_val.one_mem_tile_dim1     = false;
-    // inst_memcore_A.inst_val.one_mem_tile_dim2     = false;
-    // inst_memcore_A.inst_val.compute_tile_access_A = 2;
-    // inst_memcore_A.inst_val.compute_tile_access_B = 4;  
-    // for (int i = 0; i < CNT4B_MEMCORE_A ; i++) { inst_sequence[count4B++] = inst_memcore_A.raw_32b[i]; }
-
 
     inst_header.inst_val.opcode = OPCODE_MEMCORE_A;
     inst_header.inst_val.mask = 0b000111;
@@ -2122,9 +2054,6 @@ void generate_instruction_onelayer_cores_meshes_add_prev_layer_prolog ( uint32_t
     inst_memcore_A.inst_val.compute_tile_access_A = 2;
     inst_memcore_A.inst_val.compute_tile_access_B = 4;  
     for (int i = 0; i < CNT4B_MEMCORE_A ; i++) { inst_sequence[count4B++] = inst_memcore_A.raw_32b[i]; }
-
-
-
 
 
     inst_header.inst_val.opcode = OPCODE_MEMCORE_B;
@@ -2296,22 +2225,6 @@ void generate_instruction_onelayer_cores_meshes_add_prev_layer_epilog ( uint32_t
     bool enable_gelu = params.enable_gelu;
     
 
-    // inst_header.inst_val.opcode = OPCODE_MEMCORE_A;
-    // inst_header.inst_val.mask = 0b000111;
-    // inst_header.inst_val.is_last_mOP = false;
-    // inst_header.inst_val.mop_buffer_window_size = 1;
-    // inst_header.inst_val.repeat_num = 1 ;
-    // inst_sequence[count4B++] = inst_header.raw_32b;
-    // printHeaderInst(inst_header.inst_val, countInstPkt);
-    // countInstPkt ++;
-    // inst_memcore_A.inst_val.enable_load_from_dram = true;
-    // inst_memcore_A.inst_val.enable_send_to_aie    = false;
-    // inst_memcore_A.inst_val.one_mem_tile_dim1     = 128;
-    // inst_memcore_A.inst_val.one_mem_tile_dim2     = 128;
-    // inst_memcore_A.inst_val.compute_tile_access_A = 1;
-    // inst_memcore_A.inst_val.compute_tile_access_B = 1;  
-    // for (int i = 0; i < CNT4B_MEMCORE_A ; i++) { inst_sequence[count4B++] = inst_memcore_A.raw_32b[i]; }
-
     inst_header.inst_val.opcode = OPCODE_MEMCORE_A;
     inst_header.inst_val.mask = 0b000111;
     inst_header.inst_val.is_last_mOP = false;
@@ -2343,7 +2256,6 @@ void generate_instruction_onelayer_cores_meshes_add_prev_layer_epilog ( uint32_t
     inst_memcore_A.inst_val.compute_tile_access_A = 1;
     inst_memcore_A.inst_val.compute_tile_access_B = 1;  
     for (int i = 0; i < CNT4B_MEMCORE_A ; i++) { inst_sequence[count4B++] = inst_memcore_A.raw_32b[i]; }
-
 
 
     inst_header.inst_val.opcode = OPCODE_MESH_SEND_A;
@@ -2554,22 +2466,6 @@ void generate_instruction_onelayer_cores_meshes_add_prev_layer_steady ( uint32_t
     bool enable_gelu = params.enable_gelu;
     
 
-    // inst_header.inst_val.opcode = OPCODE_MEMCORE_A;
-    // inst_header.inst_val.mask = 0b000111;
-    // inst_header.inst_val.is_last_mOP = false;
-    // inst_header.inst_val.mop_buffer_window_size = 1;
-    // inst_header.inst_val.repeat_num = 1 ;
-    // inst_sequence[count4B++] = inst_header.raw_32b;
-    // printHeaderInst(inst_header.inst_val, countInstPkt);
-    // countInstPkt ++;
-    // inst_memcore_A.inst_val.enable_load_from_dram = true;
-    // inst_memcore_A.inst_val.enable_send_to_aie    = false;
-    // inst_memcore_A.inst_val.one_mem_tile_dim1     = 128;
-    // inst_memcore_A.inst_val.one_mem_tile_dim2     = 128;
-    // inst_memcore_A.inst_val.compute_tile_access_A = 1;
-    // inst_memcore_A.inst_val.compute_tile_access_B = 1;  
-    // for (int i = 0; i < CNT4B_MEMCORE_A ; i++) { inst_sequence[count4B++] = inst_memcore_A.raw_32b[i]; }
-
     inst_header.inst_val.opcode = OPCODE_MEMCORE_A;
     inst_header.inst_val.mask = 0b000111;
     inst_header.inst_val.is_last_mOP = false;
@@ -2601,7 +2497,6 @@ void generate_instruction_onelayer_cores_meshes_add_prev_layer_steady ( uint32_t
     inst_memcore_A.inst_val.compute_tile_access_A = 1;
     inst_memcore_A.inst_val.compute_tile_access_B = 1;  
     for (int i = 0; i < CNT4B_MEMCORE_A ; i++) { inst_sequence[count4B++] = inst_memcore_A.raw_32b[i]; }
-
 
 
     inst_header.inst_val.opcode = OPCODE_MESH_SEND_A;
@@ -2653,22 +2548,6 @@ void generate_instruction_onelayer_cores_meshes_add_prev_layer_steady ( uint32_t
     inst_memcore_A.inst_val.compute_tile_access_B = 4;  
     for (int i = 0; i < CNT4B_MEMCORE_A ; i++) { inst_sequence[count4B++] = inst_memcore_A.raw_32b[i]; }
 
-    // inst_header.inst_val.opcode = OPCODE_MEMCORE_A;
-    // inst_header.inst_val.mask = 0b000111;
-    // inst_header.inst_val.is_last_mOP = false;
-    // inst_header.inst_val.mop_buffer_window_size = 1;
-    // inst_header.inst_val.repeat_num = 1;
-    // inst_sequence[count4B++] = inst_header.raw_32b;
-    // printHeaderInst(inst_header.inst_val, countInstPkt);
-    // countInstPkt ++;
-    // inst_memcore_A.inst_val.enable_load_from_dram = false;
-    // inst_memcore_A.inst_val.enable_send_to_aie    = true;
-    // inst_memcore_A.inst_val.one_mem_tile_dim1     = false;
-    // inst_memcore_A.inst_val.one_mem_tile_dim2     = false;
-    // inst_memcore_A.inst_val.compute_tile_access_A = 2;
-    // inst_memcore_A.inst_val.compute_tile_access_B = 4;  
-    // for (int i = 0; i < CNT4B_MEMCORE_A ; i++) { inst_sequence[count4B++] = inst_memcore_A.raw_32b[i]; }
-
     inst_header.inst_val.opcode = OPCODE_MEMCORE_A;
     inst_header.inst_val.mask = 0b000111;
     inst_header.inst_val.is_last_mOP = false;
@@ -2684,8 +2563,6 @@ void generate_instruction_onelayer_cores_meshes_add_prev_layer_steady ( uint32_t
     inst_memcore_A.inst_val.compute_tile_access_A = 2;
     inst_memcore_A.inst_val.compute_tile_access_B = 4;  
     for (int i = 0; i < CNT4B_MEMCORE_A ; i++) { inst_sequence[count4B++] = inst_memcore_A.raw_32b[i]; }
-
-
 
 
     inst_header.inst_val.opcode = OPCODE_MEMCORE_B;
@@ -2811,9 +2688,6 @@ void generate_instruction_onelayer_cores_meshes_add_prev_layer_steady ( uint32_t
     inst_memcore_C.inst_val.k_iter =  k_iter+1;
     for (int i = 0; i < CNT4B_MEMCORE_C ; i++) { inst_sequence[count4B++] = inst_memcore_C.raw_32b[i]; }   
 }
-
-
-
 
 
 void generate_instruction_load_prev_layer(int a, int b, uint32_t *inst_sequence, uint32_t & count4B,  uint32_t & countInstPkt, ParamsOneLayer params){
@@ -3212,10 +3086,6 @@ void generate_instruction_onelayer_norm ( uint32_t *inst_sequence, uint32_t & co
 }
 
 
-
-
-
-
 void generate_instruction_onelayer_norm_K32 ( uint32_t *inst_sequence, uint32_t & count4B,  uint32_t & countInstPkt, ParamsOneLayer params){
     uint32_t a_iter = params.a_iter;
     uint32_t b_iter = params.b_iter;
@@ -3262,8 +3132,6 @@ void generate_instruction_onelayer_norm_overlap_A4B1K8 ( uint32_t *inst_sequence
     generate_instruction_onelayer_cores_meshes_add_prev_layer_steady(inst_sequence, count4B, countInstPkt, params);
     generate_instruction_load_prev_layer(a, b, inst_sequence, count4B, countInstPkt, params);
     generate_instruction_loadB(a, b, inst_sequence, count4B, countInstPkt, params);
-    // generate_instruction_loadA(a, b, 0, k_iter, inst_sequence, count4B, countInstPkt, params);
-    // generate_instruction_storeC(a, b, inst_sequence, count4B, countInstPkt, params);
     loadA_a = 1; loadA_b = 0; storeC_a = 0; storeC_b = 0; 
     generate_instruction_K8_steady_ddr(loadA_a, loadA_b, storeC_a, storeC_b, inst_sequence, count4B, countInstPkt, params);
 
@@ -3272,8 +3140,6 @@ void generate_instruction_onelayer_norm_overlap_A4B1K8 ( uint32_t *inst_sequence
     generate_instruction_onelayer_cores_meshes_add_prev_layer_steady(inst_sequence, count4B, countInstPkt, params);
     generate_instruction_load_prev_layer(a, b, inst_sequence, count4B, countInstPkt, params);
     generate_instruction_loadB(a, b, inst_sequence, count4B, countInstPkt, params);
-    // generate_instruction_loadA(a, b, 0, k_iter, inst_sequence, count4B, countInstPkt, params);
-    // generate_instruction_storeC(a, b, inst_sequence, count4B, countInstPkt, params);
     loadA_a = 2; loadA_b = 0; storeC_a = 1; storeC_b = 0;
     generate_instruction_K8_steady_ddr(loadA_a, loadA_b, storeC_a, storeC_b, inst_sequence, count4B, countInstPkt, params);
 
@@ -3282,8 +3148,6 @@ void generate_instruction_onelayer_norm_overlap_A4B1K8 ( uint32_t *inst_sequence
     generate_instruction_onelayer_cores_meshes_add_prev_layer_epilog(inst_sequence, count4B, countInstPkt, params);
     generate_instruction_load_prev_layer(a, b, inst_sequence, count4B, countInstPkt, params);
     generate_instruction_loadB(a, b, inst_sequence, count4B, countInstPkt, params);
-    // generate_instruction_loadA(a, b, 0, k_iter, inst_sequence, count4B, countInstPkt, params);
-    // generate_instruction_storeC(a, b, inst_sequence, count4B, countInstPkt, params);
 
     loadA_a = 3; loadA_b = 0; storeC_a = 2; storeC_b = 0;
     generate_instruction_K8_steady_ddr(loadA_a, loadA_b, storeC_a, storeC_b, inst_sequence, count4B, countInstPkt, params);
@@ -3313,11 +3177,7 @@ void generate_instruction_onelayer_norm_overlap_A1B1K8 ( uint32_t *inst_sequence
     generate_instruction_storeC(a, b, inst_sequence, count4B, countInstPkt, params);
 
 
-
-
 }
-
-
 
 
 void generate_instruction_onelayer_norm_overlap_A4B1K32 ( uint32_t *inst_sequence, uint32_t & count4B,  uint32_t & countInstPkt, ParamsOneLayer params){
@@ -3343,8 +3203,6 @@ void generate_instruction_onelayer_norm_overlap_A4B1K32 ( uint32_t *inst_sequenc
     generate_instruction_onelayer_cores_meshes_add_prev_layer_steady(inst_sequence, count4B, countInstPkt, params);
     generate_instruction_load_prev_layer(a, b, inst_sequence, count4B, countInstPkt, params);
     generate_instruction_loadB(a, b, inst_sequence, count4B, countInstPkt, params);
-    // generate_instruction_loadA(a, b, 0, k_iter, inst_sequence, count4B, countInstPkt, params);
-    // generate_instruction_storeC(a, b, inst_sequence, count4B, countInstPkt, params);
     loadA_a = 1; loadA_b = 0; storeC_a = 0; storeC_b = 0; 
     generate_instruction_Klarger16_steady_ddr(loadA_a, loadA_b, storeC_a, storeC_b, inst_sequence, count4B, countInstPkt, params);
 
@@ -3353,8 +3211,6 @@ void generate_instruction_onelayer_norm_overlap_A4B1K32 ( uint32_t *inst_sequenc
     generate_instruction_onelayer_cores_meshes_add_prev_layer_steady(inst_sequence, count4B, countInstPkt, params);
     generate_instruction_load_prev_layer(a, b, inst_sequence, count4B, countInstPkt, params);
     generate_instruction_loadB(a, b, inst_sequence, count4B, countInstPkt, params);
-    // generate_instruction_loadA(a, b, 0, k_iter, inst_sequence, count4B, countInstPkt, params);
-    // generate_instruction_storeC(a, b, inst_sequence, count4B, countInstPkt, params);
     loadA_a = 2; loadA_b = 0; storeC_a = 1; storeC_b = 0;
     generate_instruction_Klarger16_steady_ddr(loadA_a, loadA_b, storeC_a, storeC_b, inst_sequence, count4B, countInstPkt, params);
 
@@ -3362,14 +3218,11 @@ void generate_instruction_onelayer_norm_overlap_A4B1K32 ( uint32_t *inst_sequenc
     generate_instruction_onelayer_cores_meshes_add_prev_layer_epilog(inst_sequence, count4B, countInstPkt, params);
     generate_instruction_load_prev_layer(a, b, inst_sequence, count4B, countInstPkt, params);
     generate_instruction_loadB(a, b, inst_sequence, count4B, countInstPkt, params);
-    // generate_instruction_loadA(a, b, 0, k_iter, inst_sequence, count4B, countInstPkt, params);
-    // generate_instruction_storeC(a, b, inst_sequence, count4B, countInstPkt, params);
     loadA_a = 3; loadA_b = 0; storeC_a = 2; storeC_b = 0;
     generate_instruction_Klarger16_steady_ddr(loadA_a, loadA_b, storeC_a, storeC_b, inst_sequence, count4B, countInstPkt, params);
     generate_instruction_storeC(a, b, inst_sequence, count4B, countInstPkt, params);
 
 
 }
-
 
 

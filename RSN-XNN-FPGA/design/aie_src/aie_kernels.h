@@ -14,15 +14,6 @@ SPDX-License-Identifier: MIT
 using namespace adf;
 using namespace aie;
 
-// #define SW_EMU_PRINT
-
-#ifdef SW_EMU_PRINT
-#include <aie_api/aie.hpp>
-#include <aie_api/aie_adf.hpp>
-#include <aie_api/utils.hpp>
-#include <fstream>  // Include for file operations
-#include <iostream>
-#endif
 
 void mm_casc_startk0(input_async_buffer<float, adf::extents<NSAMPLES_WINDOW_F_A>>& __restrict matA,
                      input_async_buffer<float, adf::extents<NSAMPLES_WINDOW_F_B>>& __restrict matB,

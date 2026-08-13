@@ -166,7 +166,6 @@ void generate_instruction_onelayer_coresAB_meshesAB ( uint32_t *inst_sequence, u
     for (int i = 0; i < CNT4B_MESH_B ; i++) { inst_sequence[count4B++] = inst_mesh_B.raw_32b[i];}
 
 
-
     
 }
 
@@ -430,7 +429,6 @@ void generate_bias(uint32_t *inst_sequence, uint32_t & count4B,  uint32_t & coun
     uint32_t loadB_address = params.lpddr_offset_512b_bias;
 
 
-
     inst_header.inst_val.opcode = OPCODE_LOADB_DRAM;
     inst_header.inst_val.mask = false;
     inst_header.inst_val.is_last_mOP = false;
@@ -578,7 +576,6 @@ void generate_instruction_loadB (int a, int b, uint32_t *inst_sequence, uint32_t
     inst_loadB_dram.inst_val.load_to_memcoreB1 = true;
     inst_loadB_dram.inst_val.is_loading_bias   = false;
     for (int i = 0; i < CNT4B_LOAD_B_DRAM ; i++) { inst_sequence[count4B++] = inst_loadB_dram.raw_32b[i];}
-
 
 
 }
@@ -1390,9 +1387,6 @@ void generate_instruction_K8_steady_ddr (int loadA_a, int loadA_b, int storeC_a,
     for (int i = 0; i < CNT4B_DDR ; i++) { inst_sequence[count4B++] = inst_ddr.raw_32b[i];}
 
 
-
-
-
     inst_ddr.inst_val.start_address = storeC_address + 128*512/16 + 128*1024*b_iter/16;
     inst_ddr.inst_val.address_offset = 0; 
     inst_ddr.inst_val.chunck_size = 128*512;
@@ -1607,8 +1601,6 @@ void generate_instruction_K8_steady_ddr (int loadA_a, int loadA_b, int storeC_a,
     inst_ddr.inst_val.store_from_memcoreC4 = false;
     inst_ddr.inst_val.store_from_memcoreC5 = false;
     for (int i = 0; i < CNT4B_DDR ; i++) { inst_sequence[count4B++] = inst_ddr.raw_32b[i];}
-
-
 
 
     inst_ddr.inst_val.start_address = storeC_address + (4*b_iter)*128*512/16 + 128*1024*b_iter/16;
@@ -2320,9 +2312,6 @@ void generate_instruction_K8_steady_colapsetwolayer_storeCloadA (int loadA_a, in
     for (int i = 0; i < CNT4B_DDR ; i++) { inst_sequence[count4B++] = inst_ddr.raw_32b[i];}
 
 
-
-
-
     inst_ddr.inst_val.start_address = storeC_address + 128*512/16 + 128*1024*b_iter/16;
     inst_ddr.inst_val.address_offset = 0; 
     inst_ddr.inst_val.chunck_size = 128*512;
@@ -2537,8 +2526,6 @@ void generate_instruction_K8_steady_colapsetwolayer_storeCloadA (int loadA_a, in
     inst_ddr.inst_val.store_from_memcoreC4 = false;
     inst_ddr.inst_val.store_from_memcoreC5 = false;
     for (int i = 0; i < CNT4B_DDR ; i++) { inst_sequence[count4B++] = inst_ddr.raw_32b[i];}
-
-
 
 
     inst_ddr.inst_val.start_address = storeC_address + (4*b_iter)*128*512/16 + 128*1024*b_iter/16;
@@ -2763,10 +2750,6 @@ void generate_instruction_onelayer_overlap_128_512_A4B1K8  ( uint32_t *inst_sequ
     uint32_t b_iter = params.b_iter;
     uint32_t k_iter = params.k_iter;
 
-    // assert(a_iter == 4);
-    // assert(b_iter == 1);
-    // assert(k_iter == 8);
-    
     if (params.enable_bias == true){
         generate_bias(inst_sequence, count4B, countInstPkt, params);
     }
@@ -2779,8 +2762,6 @@ void generate_instruction_onelayer_overlap_128_512_A4B1K8  ( uint32_t *inst_sequ
     a = 0; b = 0; offset = 0; repeat_num = k_iter; 
     generate_instruction_loadA(a, b, offset, repeat_num, inst_sequence, count4B, countInstPkt, params);
     a = 0; b = 0; generate_instruction_storeC(a, b, inst_sequence, count4B, countInstPkt, params);
-
-    // generate_last_inst_for_all_modules(inst_sequence, count4B, countInstPkt);
 
 }
 
@@ -2868,8 +2849,6 @@ void generate_instruction_query_key  ( uint32_t *inst_sequence, uint32_t & count
     loadA_a = 3; loadA_b = 0; storeC_a = 2; storeC_b = 0;
     generate_instruction_K8_steady_ddr(loadA_a, loadA_b, storeC_a, storeC_b, inst_sequence, count4B, countInstPkt, params_query);
 
-    // a = 3; b = 0; generate_instruction_storeC(a, b, inst_sequence, count4B, countInstPkt, params_query);
-
 
     generate_bias(inst_sequence, count4B, countInstPkt, params_key);
 
@@ -2922,8 +2901,6 @@ void generate_instruction_query_key  ( uint32_t *inst_sequence, uint32_t & count
     for (int i = 0; i < CNT4B_MEMCORE_C ; i++) { inst_sequence[count4B++] = inst_memcore_C.raw_32b[i]; }
 
     a = 0; b = 0; generate_instruction_loadB(a, b, inst_sequence, count4B, countInstPkt, params_key);
-    // a = 0; b = 0; offset = 0; repeat_num = k_iter; 
-    // generate_instruction_loadA(a, b, offset, repeat_num, inst_sequence, count4B, countInstPkt, params_key);
     loadA_a = 0; loadA_b = 0; storeC_a = 3; storeC_b = 0; 
     generate_instruction_K8_steady_colapsetwolayer_storeCloadA(loadA_a, loadA_b, storeC_a, storeC_b, inst_sequence, count4B, countInstPkt, params_query, params_key);
 
@@ -2941,7 +2918,6 @@ void generate_instruction_query_key  ( uint32_t *inst_sequence, uint32_t & count
     generate_instruction_K8_steady_ddr(loadA_a, loadA_b, storeC_a, storeC_b, inst_sequence, count4B, countInstPkt, params_key);
 
     a = 3; b = 0; generate_instruction_storeC(a, b, inst_sequence, count4B, countInstPkt, params_key);
-
 
 
     generate_last_inst_for_all_modules(inst_sequence, count4B, countInstPkt);
@@ -3048,8 +3024,6 @@ void generate_instruction_query_key_value  ( uint32_t *inst_sequence, uint32_t &
     for (int i = 0; i < CNT4B_MEMCORE_C ; i++) { inst_sequence[count4B++] = inst_memcore_C.raw_32b[i]; }
 
     a = 0; b = 0; generate_instruction_loadB(a, b, inst_sequence, count4B, countInstPkt, params_key);
-    // a = 0; b = 0; offset = 0; repeat_num = k_iter; 
-    // generate_instruction_loadA(a, b, offset, repeat_num, inst_sequence, count4B, countInstPkt, params_key);
     loadA_a = 0; loadA_b = 0; storeC_a = 0; storeC_b = 0; 
     generate_instruction_K8_steady_colapsetwolayer_storeCloadA(loadA_a, loadA_b, storeC_a, storeC_b, inst_sequence, count4B, countInstPkt, params_query, params_key);
 
@@ -3114,8 +3088,6 @@ void generate_instruction_onelayer ( uint32_t *inst_sequence, uint32_t & count4B
     uint32_t b_iter = params.b_iter;
     uint32_t k_iter = params.k_iter;
 
-    // assert(b_iter == 1);
-
 
     // MOP OPCODE_MEMCORE_B needs the depth of 2
     if (params.enable_bias == true){
@@ -3132,7 +3104,6 @@ void generate_instruction_onelayer ( uint32_t *inst_sequence, uint32_t & count4B
         }
     }
 }
-
 
 
 void generate_instruction_ddr_K8_steady_for_gelu (int loadA_a, int loadA_b, int storeC_a, int storeC_b, uint32_t *inst_sequence, uint32_t & count4B,  uint32_t & countInstPkt, ParamsOneLayer params){
@@ -3495,9 +3466,6 @@ void generate_instruction_ddr_K8_steady_for_gelu (int loadA_a, int loadA_b, int 
     for (int i = 0; i < CNT4B_DDR ; i++) { inst_sequence[count4B++] = inst_ddr.raw_32b[i];}
 
 
-
-
-
     loadA_address = loadA_address + 128*128 / 16; 
     inst_ddr.inst_val.start_address = loadA_address +  0 / 16; // divided by 16 because 1 address hold 16 32float (512bit)
     inst_ddr.inst_val.address_offset =  128*128 / 16; 
@@ -3577,11 +3545,6 @@ void generate_instruction_ddr_K8_steady_for_gelu (int loadA_a, int loadA_b, int 
     inst_ddr.inst_val.store_from_memcoreC4 = false;
     inst_ddr.inst_val.store_from_memcoreC5 = false;
     for (int i = 0; i < CNT4B_DDR ; i++) { inst_sequence[count4B++] = inst_ddr.raw_32b[i];}
-
-
-
-
-
 
 
     loadA_address = loadA_address + 128*128 / 16; 
@@ -3774,38 +3737,6 @@ void generate_instruction_ddr_K8_steady_for_gelu (int loadA_a, int loadA_b, int 
     for (int i = 0; i < CNT4B_DDR ; i++) { inst_sequence[count4B++] = inst_ddr.raw_32b[i];}
 
 
-
-
-
-
-    // inst_ddr.inst_val.start_address = storeC_address + 0 + 128*1024*b_iter/16;
-    // inst_ddr.inst_val.address_offset = 0; 
-    // inst_ddr.inst_val.chunck_size = 128*512;
-    // inst_ddr.inst_val.stride_offset = 128*1024*b_iter/16;
-    // inst_ddr.inst_val.chunk_count = 1; 
-    // inst_ddr.inst_val.is_store = true; 
-    // inst_ddr.inst_val.is_load = false;
-    // inst_ddr.inst_val.load_to_memcoreA0 = false;
-    // inst_ddr.inst_val.load_to_memcoreA1 = false;
-    // inst_ddr.inst_val.load_to_memcoreA2 = false;
-    // inst_ddr.inst_val.load_to_memcoreB0 = false;
-    // inst_ddr.inst_val.load_to_memcoreB1 = false;
-    // inst_ddr.inst_val.load_to_memcoreB2 = false;
-    // inst_ddr.inst_val.load_to_memcoreC0 = false;
-    // inst_ddr.inst_val.load_to_memcoreC1 = false;
-    // inst_ddr.inst_val.load_to_memcoreC2 = false;
-    // inst_ddr.inst_val.load_to_memcoreC3 = false;
-    // inst_ddr.inst_val.load_to_memcoreC4 = false;
-    // inst_ddr.inst_val.load_to_memcoreC5 = false;
-    // inst_ddr.inst_val.store_from_memcoreC0 = true;
-    // inst_ddr.inst_val.store_from_memcoreC1 = false;
-    // inst_ddr.inst_val.store_from_memcoreC2 = false;
-    // inst_ddr.inst_val.store_from_memcoreC3 = false;
-    // inst_ddr.inst_val.store_from_memcoreC4 = false;
-    // inst_ddr.inst_val.store_from_memcoreC5 = false;
-    // for (int i = 0; i < CNT4B_DDR ; i++) { inst_sequence[count4B++] = inst_ddr.raw_32b[i]; }
-
-
     loadA_address = loadA_address + 128*128 / 16; 
     inst_ddr.inst_val.start_address = loadA_address +  0 / 16; // divided by 16 because 1 address hold 16 32float (512bit)
     inst_ddr.inst_val.address_offset =  128*128 / 16; 
@@ -3887,8 +3818,6 @@ void generate_instruction_ddr_K8_steady_for_gelu (int loadA_a, int loadA_b, int 
     for (int i = 0; i < CNT4B_DDR ; i++) { inst_sequence[count4B++] = inst_ddr.raw_32b[i];}
 
 
-
-
     inst_ddr.inst_val.start_address = storeC_address + 128*512/16;
     inst_ddr.inst_val.address_offset = 0; 
     inst_ddr.inst_val.chunck_size = 128*512;
@@ -3917,35 +3846,6 @@ void generate_instruction_ddr_K8_steady_for_gelu (int loadA_a, int loadA_b, int 
     for (int i = 0; i < CNT4B_DDR ; i++) { inst_sequence[count4B++] = inst_ddr.raw_32b[i]; }
 
 
-    // inst_ddr.inst_val.start_address = storeC_address + 128*512/16 + 128*1024*b_iter/16;
-    // inst_ddr.inst_val.address_offset = 0; 
-    // inst_ddr.inst_val.chunck_size = 128*512;
-    // inst_ddr.inst_val.stride_offset = 128*1024*b_iter/16;
-    // inst_ddr.inst_val.chunk_count = 1; 
-    // inst_ddr.inst_val.is_store = true; 
-    // inst_ddr.inst_val.is_load = false;
-    // inst_ddr.inst_val.load_to_memcoreA0 = false;
-    // inst_ddr.inst_val.load_to_memcoreA1 = false;
-    // inst_ddr.inst_val.load_to_memcoreA2 = false;
-    // inst_ddr.inst_val.load_to_memcoreB0 = false;
-    // inst_ddr.inst_val.load_to_memcoreB1 = false;
-    // inst_ddr.inst_val.load_to_memcoreB2 = false;
-    // inst_ddr.inst_val.load_to_memcoreC0 = false;
-    // inst_ddr.inst_val.load_to_memcoreC1 = false;
-    // inst_ddr.inst_val.load_to_memcoreC2 = false;
-    // inst_ddr.inst_val.load_to_memcoreC3 = false;
-    // inst_ddr.inst_val.load_to_memcoreC4 = false;
-    // inst_ddr.inst_val.load_to_memcoreC5 = false;
-    // inst_ddr.inst_val.store_from_memcoreC0 = false;
-    // inst_ddr.inst_val.store_from_memcoreC1 = true;
-    // inst_ddr.inst_val.store_from_memcoreC2 = false;
-    // inst_ddr.inst_val.store_from_memcoreC3 = false;
-    // inst_ddr.inst_val.store_from_memcoreC4 = false;
-    // inst_ddr.inst_val.store_from_memcoreC5 = false;
-    // for (int i = 0; i < CNT4B_DDR ; i++) { inst_sequence[count4B++] = inst_ddr.raw_32b[i]; }
-
-
-
     inst_ddr.inst_val.start_address = storeC_address + (4*b_iter)*128*512/16;
     inst_ddr.inst_val.address_offset = 0; 
     inst_ddr.inst_val.chunck_size = 128*512;
@@ -3972,35 +3872,6 @@ void generate_instruction_ddr_K8_steady_for_gelu (int loadA_a, int loadA_b, int 
     inst_ddr.inst_val.store_from_memcoreC4 = false;
     inst_ddr.inst_val.store_from_memcoreC5 = false;
     for (int i = 0; i < CNT4B_DDR ; i++) { inst_sequence[count4B++] = inst_ddr.raw_32b[i]; }
-
-
-    // inst_ddr.inst_val.start_address = storeC_address + (4*b_iter)*128*512/16 + 128*1024*b_iter/16;
-    // inst_ddr.inst_val.address_offset = 0; 
-    // inst_ddr.inst_val.chunck_size = 128*512;
-    // inst_ddr.inst_val.stride_offset = 128*1024*b_iter/16;
-    // inst_ddr.inst_val.chunk_count = 1; 
-    // inst_ddr.inst_val.is_store = true; 
-    // inst_ddr.inst_val.is_load = false;
-    // inst_ddr.inst_val.load_to_memcoreA0 = false;
-    // inst_ddr.inst_val.load_to_memcoreA1 = false;
-    // inst_ddr.inst_val.load_to_memcoreA2 = false;
-    // inst_ddr.inst_val.load_to_memcoreB0 = false;
-    // inst_ddr.inst_val.load_to_memcoreB1 = false;
-    // inst_ddr.inst_val.load_to_memcoreB2 = false;
-    // inst_ddr.inst_val.load_to_memcoreC0 = false;
-    // inst_ddr.inst_val.load_to_memcoreC1 = false;
-    // inst_ddr.inst_val.load_to_memcoreC2 = false;
-    // inst_ddr.inst_val.load_to_memcoreC3 = false;
-    // inst_ddr.inst_val.load_to_memcoreC4 = false;
-    // inst_ddr.inst_val.load_to_memcoreC5 = false;
-    // inst_ddr.inst_val.store_from_memcoreC0 = false;
-    // inst_ddr.inst_val.store_from_memcoreC1 = false;
-    // inst_ddr.inst_val.store_from_memcoreC2 = true;
-    // inst_ddr.inst_val.store_from_memcoreC3 = false;
-    // inst_ddr.inst_val.store_from_memcoreC4 = false;
-    // inst_ddr.inst_val.store_from_memcoreC5 = false;
-    // for (int i = 0; i < CNT4B_DDR ; i++) { inst_sequence[count4B++] = inst_ddr.raw_32b[i]; }
-
 
 
     inst_ddr.inst_val.start_address = storeC_address + (4*b_iter+1)*128*512/16;

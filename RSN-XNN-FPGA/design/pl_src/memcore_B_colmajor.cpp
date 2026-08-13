@@ -211,7 +211,6 @@ void memcore_B_colmajor(
 #pragma HLS ARRAY_PARTITION variable = buf1_B dim = 2 cyclic factor = 8
 
 
-
   bool is_computing_buf1 = 0;
 
   uop_memcore_B_type uOP;
@@ -230,7 +229,6 @@ WHILE_LOOP:
     ap_uint<3> compute_tile_access_B = uOP.compute_tile_access_B;
     ap_uint<3> compute_tile_access_K = uOP.compute_tile_access_K;
 
-    // bool is_computing_buf1 = uOP.is_computing_buf1;
     uint16_t one_compute_tile_dim1 = 128;
     uint16_t one_compute_tile_dim2 = 128;
 

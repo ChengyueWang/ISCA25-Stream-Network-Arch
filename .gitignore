@@ -26,3 +26,4 @@ isca25-rsn-sandbox/
 xilinx-versal-common-v2024.1/
 no-upload/
 *.out
+__pycache__/
