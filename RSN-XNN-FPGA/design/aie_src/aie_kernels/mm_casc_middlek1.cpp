@@ -1,3 +1,6 @@
+// Copyright (C) 2025 Chengyue Wang
+// SPDX-License-Identifier: AGPL-3.0-only
+
 #include "aie_kernels.h"
 
 float k1_local_buf[128] = {0.0};

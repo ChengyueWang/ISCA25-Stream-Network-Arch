@@ -224,3 +224,9 @@ RSN-XNN-FPGA.........................top-level directory for RSN-XNN FPGA build
    |__full_util_routed.rpt...........reference RSN-XNN report containing overall resource utilization after routing
 
 ```
+
+## License
+
+This project is licensed under the GNU Affero General Public License v3.0 — see [LICENSE](LICENSE).
+Portions derived from AMD/Xilinx Vitis tutorial code retain their original permissive licenses
+(X11/MIT/BSD-3-Clause), as noted in the per-file headers.

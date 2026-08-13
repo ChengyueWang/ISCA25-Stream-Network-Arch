@@ -1,5 +1,6 @@
 #Copyright (C) 2023, Advanced Micro Devices, Inc. All rights reserved.
 #SPDX-License-Identifier: X11
+# Modifications Copyright (C) 2025 Chengyue Wang
 
 # This file is modified from https://github.com/Xilinx/Vitis-Tutorials/blob/2024.2/AI_Engine_Development/AIE/Design_Tutorials/10-GeMM_AIEvsDSP/AIE/Makefile
 

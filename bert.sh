@@ -1,3 +1,6 @@
+# Copyright (C) 2025 Chengyue Wang
+# SPDX-License-Identifier: AGPL-3.0-only
+
 source env.sh 
 module load apptainer
 chmod +wxr -R $CUR_RSN_WORKSPACE

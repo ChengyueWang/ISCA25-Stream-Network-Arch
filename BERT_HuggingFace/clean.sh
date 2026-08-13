@@ -1,3 +1,6 @@
+# Copyright (C) 2025 Chengyue Wang
+# SPDX-License-Identifier: AGPL-3.0-only
+
 mkdir python_gold
 cp output/06-python_gold/0-attention.self.query-bias.txt python_gold/
 cp output/06-python_gold/0-attention.self.query-input.txt python_gold/

@@ -1,4 +1,7 @@
 #!/bin/bash
+# Copyright (C) 2025 Chengyue Wang
+# SPDX-License-Identifier: AGPL-3.0-only
+
 
 # Check if the 'out' directory exists, if not, create it
 if [ ! -d "output" ]; then

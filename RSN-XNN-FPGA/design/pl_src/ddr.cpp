@@ -1,3 +1,6 @@
+// Copyright (C) 2025 Chengyue Wang
+// SPDX-License-Identifier: AGPL-3.0-only
+
 #include "ddr.h"
 
 void ddr(hls::stream<uop_ddr_type> &stream_uOP_ddr, ap_uint<512> *ddr_port0,

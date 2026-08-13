@@ -1,3 +1,6 @@
+// Copyright (C) 2025 Chengyue Wang
+// SPDX-License-Identifier: AGPL-3.0-only
+
 #include "decoder_uop.h"
 
 void mop2uop_memcore_A(

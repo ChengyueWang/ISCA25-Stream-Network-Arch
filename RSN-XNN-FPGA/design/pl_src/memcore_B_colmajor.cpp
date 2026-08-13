@@ -1,3 +1,6 @@
+// Copyright (C) 2025 Chengyue Wang
+// SPDX-License-Identifier: AGPL-3.0-only
+
 #include "memcore_B_colmajor.h"
 
 ap_uint<64> concat_32b_to_64b_coreB_colmajor(ap_uint<32> in0, ap_uint<32> in1) {

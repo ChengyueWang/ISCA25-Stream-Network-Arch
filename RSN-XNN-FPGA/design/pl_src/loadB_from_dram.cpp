@@ -1,3 +1,6 @@
+// Copyright (C) 2025 Chengyue Wang
+// SPDX-License-Identifier: AGPL-3.0-only
+
 #include "loadB_from_dram.h"
 
 void loadB_from_dram(hls::stream<uop_loadB_dram_type>& stream_uOP_loadB_dram,

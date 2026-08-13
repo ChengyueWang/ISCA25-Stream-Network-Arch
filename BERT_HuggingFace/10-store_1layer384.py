@@ -1,3 +1,6 @@
+# Copyright (C) 2025 Chengyue Wang
+# SPDX-License-Identifier: AGPL-3.0-only
+
 from transformers import BertTokenizer, BertModel
 import torch
 import os

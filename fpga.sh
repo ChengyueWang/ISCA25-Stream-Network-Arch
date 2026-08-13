@@ -1,4 +1,7 @@
 #!/bin/bash
+# Copyright (C) 2025 Chengyue Wang
+# SPDX-License-Identifier: AGPL-3.0-only
+
 ### You can also run fpga.sh directly after logging into the server in interactive mode using: srun -c48 --mem=180G --pty bash
 source env.sh 
 source $CUR_RSN_WORKSPACE/env.sh

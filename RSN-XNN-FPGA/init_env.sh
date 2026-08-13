@@ -1,3 +1,6 @@
+# Copyright (C) 2025 Chengyue Wang
+# SPDX-License-Identifier: AGPL-3.0-only
+
 unset LD_LIBRARY_PATH
 
 # export XILINX_VITIS=/tools/Xilinx/Vitis/2024.1

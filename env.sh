@@ -1,3 +1,6 @@
+# Copyright (C) 2025 Chengyue Wang
+# SPDX-License-Identifier: AGPL-3.0-only
+
 export SANDBOX_LOC=~/github/ISCA25-Stream-Network-Arch/isca25-rsn-sandbox
 export CUR_RSN_WORKSPACE=~/github/ISCA25-Stream-Network-Arch
 export VITIS_LIB=~/github/Vitis_Libraries

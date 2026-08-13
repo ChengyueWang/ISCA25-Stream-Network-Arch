@@ -1,4 +1,6 @@
 #!/bin/bash
+# Copyright (C) 2025 Chengyue Wang
+# SPDX-License-Identifier: AGPL-3.0-only
 #SBATCH --job-name=RSN
 #SBATCH -o %x.%J.out
 #SBATCH --cpus-per-task=48
